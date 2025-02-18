@@ -1,0 +1,212 @@
+html, body {
+    font-family: Arial, sans-serif;
+    height:100%;
+    margin:0;
+    padding:0;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+   background-attachment: fixed;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.wallet {
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.logout-btn:hover {
+    background: darkblue;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    padding: 10px;
+}
+
+nav button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+nav button.active {
+    background: blue;
+    color: white;
+}
+nav button:hover {
+    background: darkblue;
+    color:white;
+}
+/* Sidebar */
+aside {
+    width: 200px;
+    position: fixed;
+    top: 155px;
+    left: 0;
+    background: white;
+    padding: 10px;
+    overflow:visible;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Category List */
+aside ul {
+    display:flex;
+    list-style: none;
+    padding: 0px;
+    flex-direction: column;
+    margin: 0;
+}
+ul button {
+    background:white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+ul button:hover {
+    background: rgb(0, 0, 180);
+    color:white;
+}
+ul button.active {
+    background: blue;
+    color: white;
+}
+aside li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Filter Button */
+.filter-container {
+    position: relative;
+    margin-top: auto;
+    text-align: left;
+}
+
+.filter-btn {
+    
+    padding: 10px;
+    background: blue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+.filter-btn:hover {
+    background: darkblue;
+}
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    bottom:auto;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    
+}
+
+
+.filter-container.active .filter-dropdown {
+    display: block;
+}
+
+
+.filter-dropdown label {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+}
+.filter-dropdown input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: blue;
+    cursor:pointer;
+}
+
+
+main {
+    margin-left: 220px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.product {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.cart-icon {
+    
+   padding:10px;
+    cursor: pointer;
+    width: 50px;}
+
+.product img {
+    width: 100%;
+    height: auto;
+}
+.products{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+
+.add-cart {
+    background: green;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 5px;
+}

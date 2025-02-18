@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMart Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="Senior Capstone Project Report.png">
+</head>
+<body>
+    <div class="login-container">
+        <img src="Senior Capstone Project Report.png" alt="UniMart Logo" class="logo">
+        
+        <div class="tabs">
+            <input  type="radio" name="user-type" id="buyer-tab" checked>
+            <label for="buyer-tab" class="tab" >Buyer</label>
+            <input type="radio" name="user-type" id="seller-tab">
+            <label for="seller-tab" class="tab">Seller</label>
+        </div>
+        
+        <form id ="loginForm">
+            <input type="text" id="username" placeholder="User Name">
+            <input type="password" id="password" placeholder="Password">
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <button type="submit">Sign In</button>
+            <p>New User? <button><a href="#" class="signup-link">Sign Up</a></button></p>
+        </form>
+        
+        
+    </div>
+   
+        <script src="loginscpt.js"></script>
+</body>
+</html>

@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniMart Homepage</title>
+    <title>UniMart Cart</title>
     <link rel="stylesheet" href="cart.css"> 
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="Senior Capstone Project Report.png" alt="UniMart Logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
         </div>
 
        
         <div class="user-profile logo">
         <div class="wallet">
-            <span id="wallet-balance">Wallet: $50.00</span>
+            <p>Wallet:<span id="wallet-amount">$50.00</span></p>
         </div>
-            <img src="profile.jpg" alt="User Profile Picture">
+            <img src="images/profile.jpg" alt="User Profile Picture">
             <a href="login.html"><button id="logout">Logout</button></a>
         </div>
         
@@ -25,7 +25,7 @@
 
     
     <nav>
-        <a href="home.html"><button>Home</button></a>
+        <a href="index.html"><button>Home</button></a>
         <button>Trending</button>
         <button>Reviews</button>
         <button>Purchase History</button>
@@ -65,19 +65,20 @@
                 <div id="subtotal-step">
                     <p>Subtotal: <span id="subtotal-price">$0.00</span></p>
                 </div>
-                <div id="shipping-step" class="hidden">
+                <div id="shipping-step" >
                     <label><input type="radio" name="shipping" value="normal" checked> Normal Shipping</label>
                     <label><input type="radio" name="shipping" value="premium"> Premium Shipping</label>
                     <p>Address: <input type="text" id="shipping-address" value="Oakland University"></p>
                 </div>
-                <div id="confirm-step" class="hidden">
+                <div id="confirm-step" >
                     <button id="confirm-purchase">Confirm Purchase</button>
                 </div>
             </div>
         </section>
 
  </main>
-<script src="cartscpt.js"></script> 
+<script src="app.js"></script> 
 <script src="wallet.js"></script>
+
 </body>
 </html>

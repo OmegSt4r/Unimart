@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UniMart Homepage</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="Senior Capstone Project Report.png" alt="UniMart Logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
             <h1>UniMart</h1>
         </div>
         
        
         <div class="user-actions">
             <div class="wallet">
-            <span>Wallet: $50.00</span>
+            <p>Wallet:<span id="wallet-amount">$50.00</span></p>
             </div>
-           <a href="cart.html"><img src = "shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+           <a href="cart.html"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
             <input type="text" placeholder="Search..." id="searchBar">
             <i class="fas fa-shopping-cart"></i>
             <button class="logout-btn">Logout</button>
@@ -68,26 +68,13 @@
 
     <main>
     
-        <div class="products" >
-        <div class="product" data-price="20" data-tags="used, School-Supplies,black">
-            <img src="backpack.jpg" alt="Backpack">
-            <p>Description: <b>#Used #Black</b> 16-inch sport backpack</p>
-            <p><b>Item:</b> Backpack | <b>Price:</b> $20 | <b>Seller:</b> Abby</p>
-            <p>★★★★</p>
-            <button class="add-cart">Add to Cart</button>
-        </div>
-    </div>
+    
         <div class="products">
-        <div class="product" data-price="4.99" data-tags="new">
-            <img src="notebook.jpg" alt="Notebook">
-            <p>Description: <b>#New</b> 6 wide ruled notebooks</p>
-            <p><b>Item:</b> Notebook | <b>Price:</b> $4.99 | <b>Seller:</b> Ken</p>
-            <p>★★★★★</p>
-            <button class="add-cart">Add to Cart</button>
+       
         </div>
-        </div>
-   <ul id = "cart-items"></ul>
+   
  </main>
-<script src="homescpt.js"></script>
+<script src="app.js"></script>
+<script src="wallet.js"></script>
 </body>
 </html>

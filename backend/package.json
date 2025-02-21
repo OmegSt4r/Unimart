@@ -1,0 +1,16 @@
+{
+ "name": "unimart-backend",
+ "version": "1.0.0",
+ "description": "Backend for Unimart",
+ "main": "server.js",
+ "scripts": {
+  "start": "node server.js"
+ },
+ "dependencies": {
+  "body-parser": "^1.20.3",
+  "cors": "^2.8.5",
+  "dotenv": "^8.6.0",
+  "express": "^4.21.2",
+  "mysql2": "^2.3.3"
+ }
+}

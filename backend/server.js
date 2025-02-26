@@ -40,7 +40,7 @@ const cartRoutes = require("./routes/carts");
 const userRoutes = require("./routes/users");
 
 app.use("/products", productRoutes);
-app.use("/cart", cartRoutes);   
+app.use("/carts", cartRoutes);   
 app.use("/users", userRoutes);
 
 

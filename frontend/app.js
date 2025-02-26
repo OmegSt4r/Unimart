@@ -1,3 +1,32 @@
+
+document.addEventListener("DOMContentLoaded", function() {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+        fetch(`http://localhost:5001/users/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                // Display user-specific content
+                const walletAmount = document.getElementById("wallet-amount");
+                walletAmount.textContent = `$${user.wallet_balance}`;
+
+                const userProfile = document.querySelector(".user-actions .logo img");
+                userProfile.src = "images/profile.jpg"; // Update with user's profile picture if available
+
+                const userName = document.createElement("p");
+                userName.textContent = `Welcome, ${user.username}!`;
+                document.querySelector(".user-actions").appendChild(userName);
+            })
+            .catch(error => console.error("Error fetching user data:", error));
+    } else {
+        // Handle case where user is not logged in
+        const contentDiv = document.getElementById("content");
+        contentDiv.innerHTML = `
+            <h1>Welcome to UniMart!</h1>
+            <p>Please <a href="login.html">log in</a> to access your account.</p>
+        `;
+    }
+});
+
 // Search Bar Functionality
 document.getElementById("searchBar").addEventListener("keyup", function(event) {
     let query = event.target.value.toLowerCase();
@@ -13,7 +42,13 @@ document.getElementById("searchBar").addEventListener("keyup", function(event) {
     });
 });
 
-
+document.addEventListener("DOMContentLoaded", function() {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+        const cartLink = document.getElementById("cart-link");
+        cartLink.href = `cart.html?userId=${userId}`;
+    }
+});
 
 document.addEventListener("DOMContentLoaded", function() {
     const filterBtn = document.querySelector(".filter-btn");
@@ -104,56 +139,20 @@ document.addEventListener("DOMContentLoaded", function() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ user_id, product_id, quantity }),
+            body: JSON.stringify({ user_id, item_id: product_id, quantity }),
         })
         .then(response => response.json())
         .then(data => {
-            alert(`${product_name} added to cart!`);
+            if (data.message) {
+                alert(`${product_name} added to cart!`);
+            } else {
+                alert("Failed to add item to cart.");
+            }
         })
         .catch(error => console.error("Error adding item to cart:", error));
     }
     
-    // Load Cart Items & Display on Cart Page
-    function loadCart() {
-        const user_id = localStorage.getItem("userId"); // Retrieve user ID from local storage
-        if (!user_id) {
-            console.error("User not logged in!");
-            return;
-        }
-        fetch(`http://localhost:5001/carts/${user_id}`)
-            .then(response => response.json())
-            .then(data => displayCartItems(data))
-            .catch(error => console.error("Error fetching cart items:", error));
-    }
-    
-    function displayCartItems(cartItems) {
-        const cartItemsContainer = document.getElementById("cart-items");
-        cartItemsContainer.innerHTML = ""; // Clear previous cart items
-    
-        cartItems.forEach(item => {
-            const cartItemElement = document.createElement("tr");
-            cartItemElement.innerHTML = `
-                <td>${item.product_name}</td>
-                <td>$${item.price}</td>
-                <td>${item.quantity}</td>
-                <td><button onclick="removeFromCart(${item.user_id}, ${item.item_id})">❌</button></td>
-            `;
-            cartItemsContainer.appendChild(cartItemElement);
-        });
-    }
-    
-    function removeFromCart(userId, itemId) {
-        fetch(`http://localhost:5001/carts/${userId}/${itemId}`, {
-            method: "DELETE"
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            loadCart(); // Reload the cart after removing an item
-        })
-        .catch(error => console.error("Error removing item from cart:", error));
-    }
-    
+
     // Checkout Logic: Confirm Purchase & Deduct from Wallet
     function confirmPurchase() {
         let walletAmount = parseFloat(localStorage.getItem("wallet")) || 50.00;

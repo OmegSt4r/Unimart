@@ -66,6 +66,19 @@ router.delete("/:cartId", (req, res) => {
         }
     });
 });
+router.delete("/user/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const sql = "DELETE FROM carts WHERE user_id = ?";
+  
+  db.query(sql, [userId], (err, result) => {
+      if (err) {
+          console.error("Error clearing cart:", err);
+          res.status(500).json({ error: "Database error" });
+      } else {
+          res.json({ message: "Cart cleared" });
+      }
+  });
+});
 router.post("/", (req, res) => {
   console.log("Received cart request:", req.body);  // Log incoming data
 

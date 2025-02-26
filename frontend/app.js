@@ -1,6 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", function() {
     const userId = localStorage.getItem("userId");
+   
     if (userId) {
         fetch(`http://localhost:5001/users/${userId}`)
             .then(response => response.json())
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const walletAmount = document.getElementById("wallet-amount");
                 walletAmount.textContent = `$${user.wallet_balance}`;
 
-                const userProfile = document.querySelector(".user-actions .logo img");
+                const userProfile = document.querySelector(".user-actions .user-profile img");
                 userProfile.src = "images/profile.jpg"; // Update with user's profile picture if available
 
                 const userName = document.createElement("p");
@@ -60,33 +61,43 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    const checkboxes = document.querySelectorAll(".filter-tag");
+    const filterBtn = document.querySelector(".filter-btn");
     const sortSelect = document.getElementById("sortPrice");
+    const minPriceInput = document.getElementById("minPrice");
+    const maxPriceInput = document.getElementById("maxPrice");
     const productsContainer = document.querySelector(".products");
-    const products = Array.from(document.querySelectorAll(".product"));
+    let products = [];
+
+    // Fetch products from the backend
+    fetch("http://localhost:5001/products")
+        .then(response => response.json())
+        .then(data => {
+            products = data;
+            displayProducts(products);
+        })
+        .catch(error => console.error("Error fetching products:", error));
 
     function filterAndSort() {
-        let selectedTags = Array.from(checkboxes)
-            .filter(checkbox => checkbox.checked)
-            .map(checkbox => checkbox.value);
-
-        let sortedProducts = products.filter(product => {
-            let productTags = product.getAttribute("data-tags").split(",");
-            return selectedTags.length === 0 || selectedTags.some(tag => productTags.includes(tag));
-        });
+        let minPrice = parseFloat(minPriceInput.value) || 0;
+        let maxPrice = parseFloat(maxPriceInput.value) || Infinity;
         let sortOrder = sortSelect.value;
+
+        let filteredProducts = products.filter(product => {
+            return product.price >= minPrice && product.price <= maxPrice;
+        });
+
         if (sortOrder === "low") {
-            sortedProducts.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+            filteredProducts.sort((a, b) => a.price - b.price);
         } else if (sortOrder === "high") {
-            sortedProducts.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
-        }
-        if (selectedTags.length === 0 && sortOrder === "") {
-            sortedProducts = products;
+            filteredProducts.sort((a, b) => b.price - a.price);
         }
 
-        productsContainer.innerHTML = "";
-        sortedProducts.forEach(product => productsContainer.appendChild(product));
+        displayProducts(filteredProducts);
     }
+    filterBtn.addEventListener("click", filterAndSort);
+    sortSelect.addEventListener("change", filterAndSort);
+    minPriceInput.addEventListener("input", filterAndSort);
+    maxPriceInput.addEventListener("input", filterAndSort);
 
     checkboxes.forEach(checkbox => checkbox.addEventListener("change", filterAndSort));
     sortSelect.addEventListener("change", filterAndSort);   });

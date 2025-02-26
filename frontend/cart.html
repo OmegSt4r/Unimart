@@ -15,7 +15,7 @@
        
         <div class="user-profile logo">
         <div class="wallet">
-            <p>Wallet:<span id="wallet-amount">$50.00</span></p>
+            <p>Wallet:<span id="wallet-amount"></span></p>
         </div>
             <img src="images/profile.jpg" alt="User Profile Picture">
             <a href="login.html"><button id="logout">Logout</button></a>
@@ -35,11 +35,10 @@
     
     
     
-    <main>
-        <h2>Your Shopping Cart</h2>
-        <div id="cart-items"></div>
-        <button id="checkout">Checkout</button>
-        <!-- Shopping Cart Section
+    <main class = "cart-container">
+
+        
+        <!-- Shopping Cart Section -->
         <div class="cartItems"></div>
         <section class="cart">
             <h2>Cart</h2>
@@ -55,13 +54,13 @@
 
                 <tbody id="cart-items">
 
-                    <!-- Items will be added dynamically
+                    <!-- Items will be added dynamically -->
                 </tbody>
 
             </table>
         </section>
 
-        <!-- Checkout Section 
+        <!-- Checkout Section -->
         <section class="checkout">
             <div class="checkout-steps">
                 <button id="step1" class="active">Subtotal</button>
@@ -78,11 +77,11 @@
                     <p>Address: <input type="text" id="shipping-address" value="Oakland University"></p>
                 </div>
                 <div id="confirm-step" >
-                    <button id="confirm-purchase">Confirm Purchase</button>
+                   <button id="checkout">Checkout</button>
                 </div>
             </div>
         </section>
-    -->
+    
  </main>
 
 <script src="wallet.js"></script>

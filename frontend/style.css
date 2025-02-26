@@ -169,11 +169,11 @@ aside li {
 
 
 main {
-    margin-left: 220px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex: 1 1 auto;
+    margin-left: 220px; /* Adjust based on the width of the aside */
     padding: 20px;
+    overflow: auto; /* Make the main section scrollable */
+    height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
 }
 
 .product {
@@ -209,4 +209,15 @@ main {
     padding: 5px 10px;
     cursor: pointer;
     margin-top: 5px;
+}
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-profile img {
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: 5px;
 }

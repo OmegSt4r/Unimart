@@ -138,5 +138,72 @@ router.post("/reset-password", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// Handle checkout process
+router.post("/:userId/checkout", (req, res) => {
+  const userId = req.params.userId;
+  const { subtotal } = req.body;
+
+  // Fetch user's current wallet balance
+  const fetchWalletSql = "SELECT wallet_balance FROM user_info WHERE user_id = ?";
+  db.query(fetchWalletSql, [userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching wallet balance:", err);
+          res.status(500).json({ error: "Database error" });
+      } else {
+          const currentBalance = results[0].wallet_balance;
+          if (currentBalance < subtotal) {
+              res.status(400).json({ success: false, message: "Insufficient funds" });
+          } else {
+              // Update user's wallet balance
+              const newBalance = currentBalance - subtotal;
+              const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
+              db.query(updateWalletSql, [newBalance, userId], (err, result) => {
+                  if (err) {
+                      console.error("Error updating wallet balance:", err);
+                      res.status(500).json({ error: "Database error" });
+                  } else {
+                      // Clear the user's cart
+                      const clearCartSql = "DELETE FROM carts WHERE user_id = ?";
+                      db.query(clearCartSql, [userId], (err, result) => {
+                          if (err) {
+                              console.error("Error clearing cart:", err);
+                              res.status(500).json({ error: "Database error" });
+                          } else {
+                              res.json({ success: true, newWalletBalance: newBalance });
+                          }
+                      });
+                  }
+              });
+          }
+      }
+  });
+});
+router.post("/:userId/increase-balance", (req, res) => {
+  const userId = req.params.userId;
+  const { amount } = req.body;
+
+  // Fetch user's current wallet balance
+  const fetchWalletSql = "SELECT wallet_balance FROM user_info WHERE user_id = ?";
+  db.query(fetchWalletSql, [userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching wallet balance:", err);
+          res.status(500).json({ error: "Database error" });
+      } else {
+          const currentBalance = results[0].wallet_balance;
+          const newBalance = currentBalance + amount;
+
+          // Update user's wallet balance
+          const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
+          db.query(updateWalletSql, [newBalance, userId], (err, result) => {
+              if (err) {
+                  console.error("Error updating wallet balance:", err);
+                  res.status(500).json({ error: "Database error" });
+              } else {
+                  res.json({ success: true, newWalletBalance: newBalance });
+              }
+          });
+      }
+  });
+});
 
 module.exports = router;

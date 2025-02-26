@@ -23,7 +23,8 @@
            <a href="cart.html"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
             <input type="text" placeholder="Search..." id="searchBar">
             <i class="fas fa-shopping-cart"></i>
-            <button class="logout-btn">Logout</button>
+            <div class="logo"><img src="images/profile.jpg" alt="User Profile Picture"></div>
+            <a href="login.html"><button id="logout">Logout</button></a>
         </div>
     </header>
 
@@ -69,12 +70,14 @@
     <main>
     
     
-        <div class="products">
+        <div class="products" id="data-id">
+            <!-- Products will be added dynamically -->
        
         </div>
    
  </main>
 <script src="app.js"></script>
 <script src="wallet.js"></script>
+<script src="cart.js"></script>
 </body>
 </html>

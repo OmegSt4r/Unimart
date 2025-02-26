@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
             productElement.classList.add("product");
             productElement.setAttribute("data-id", product.product_id);
             productElement.innerHTML = `
-                <img src="images/${product.image}" alt="${product.product_name}">
+                <img src="images/${product.p_image}" alt="${product.product_name}">
                 <p>Description: <b>${product.tag_name}</b> ${product.p_description}</p>
                 <p><b>Item:</b> ${product.product_name} | <b>Price:</b> $${product.price} | <b>Seller:</b> ${product.seller_id} | <b> Inventory:</b> ${product.inventory} </p>
                 <p>★★★★</p>
@@ -92,61 +92,66 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     // Add to Cart (Stores in Local Storage, Prevents Duplicates)
-    function addToCart(id, name, price) {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    
-        // Check if item already exists
-        let existingItem = cart.find(item => item.id === id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cart.push({ id, name, price, quantity: 1 });
+    function addToCart(product_id, product_name, price) {
+        const user_id = localStorage.getItem("userId"); // Retrieve user ID from local storage
+        if (!user_id) {
+            alert("User not logged in!");
+            return;
         }
-    
-        localStorage.setItem("cart", JSON.stringify(cart));
-        alert(`${name} added to cart!`);
+        const quantity = 1; // Default quantity
+        fetch("http://localhost:5001/carts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ user_id, product_id, quantity }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(`${product_name} added to cart!`);
+        })
+        .catch(error => console.error("Error adding item to cart:", error));
     }
     
     // Load Cart Items & Display on Cart Page
     function loadCart() {
-        
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        const cartList = document.getElementById("cart-items");
-        if (!cartList) return; // Prevent errors if not on cart page
+        const user_id = localStorage.getItem("userId"); // Retrieve user ID from local storage
+        if (!user_id) {
+            console.error("User not logged in!");
+            return;
+        }
+        fetch(`http://localhost:5001/carts/${user_id}`)
+            .then(response => response.json())
+            .then(data => displayCartItems(data))
+            .catch(error => console.error("Error fetching cart items:", error));
+    }
     
-        cartList.innerHTML = ""; // Clear previous items
+    function displayCartItems(cartItems) {
+        const cartItemsContainer = document.getElementById("cart-items");
+        cartItemsContainer.innerHTML = ""; // Clear previous cart items
     
-        cart.forEach((item, index) => {
-            const li = document.createElement("tr");
-            li.innerHTML = `
-                <td>${item.name}</td>
+        cartItems.forEach(item => {
+            const cartItemElement = document.createElement("tr");
+            cartItemElement.innerHTML = `
+                <td>${item.product_name}</td>
                 <td>$${item.price}</td>
                 <td>${item.quantity}</td>
-                <td><button onclick="removeFromCart(${index})">❌</button></td>
+                <td><button onclick="removeFromCart(${item.user_id}, ${item.item_id})">❌</button></td>
             `;
-            cartList.appendChild(li);
+            cartItemsContainer.appendChild(cartItemElement);
         });
-    
-        updateSubtotal();
     }
     
-    // Remove Items from Cart
-    function removeFromCart(index) {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        cart.splice(index, 1);
-        localStorage.setItem("cart", JSON.stringify(cart));
-        loadCart();
-    }
-    
-    // Update Subtotal in Cart
-    function updateSubtotal() {
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
-        let total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        
-        const subtotalElement = document.getElementById("subtotal-price");
-        if (subtotalElement) {
-            subtotalElement.textContent = `$${total.toFixed(2)}`;
-        }
+    function removeFromCart(userId, itemId) {
+        fetch(`http://localhost:5001/carts/${userId}/${itemId}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            loadCart(); // Reload the cart after removing an item
+        })
+        .catch(error => console.error("Error removing item from cart:", error));
     }
     
     // Checkout Logic: Confirm Purchase & Deduct from Wallet

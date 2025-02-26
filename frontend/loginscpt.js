@@ -1,32 +1,28 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("loginForm");
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
 
-    loginForm.addEventListener("submit", async (event) => {
-        event.preventDefault(); // Prevent form refresh
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    const userType = document.querySelector('input[name="user-type"]:checked').value;
 
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        const userType = document.getElementById("seller-tab").checked ? "seller" : "buyer";
-
-        const response = await fetch("http://localhost:5001/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password, userType }),
-        });
-
-        const result = await response.json();
-
-        if (response.ok) {
-            // Save user session
-            localStorage.setItem("user", JSON.stringify(result.user));
-
-            alert("Login Successful!");
-            window.location.href = "index.html"; // Redirect to homepage
+    fetch("http://localhost:5001/users/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password, userType }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.token) {
+            localStorage.setItem("userId", data.user.id);
+            localStorage.setItem("token", data.token);
+            alert("Login successful!");
+            // Redirect to homepage or another page
+            window.location.href = 'index.html';
         } else {
-            alert(result.message || "Invalid credentials. Please try again.");
+            alert("Login failed: " + data.error);
         }
-    });
+    })
+    .catch(error => console.error("Error logging in:", error));
 });

@@ -1,7 +1,8 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2");
-require("dotenv").config();
+const bodyParser = require("body-parser");
 const path = require("path");
 
 const app = express();
@@ -9,6 +10,8 @@ const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, "../frontend")));
 
@@ -33,12 +36,13 @@ app.get("/", (req, res) => {
 });
 
 const productRoutes = require("./routes/products"); 
-const cartRoutes = require("./routes/cart");
-//const userRoutes = require("./routes/users");
+const cartRoutes = require("./routes/carts");
+const userRoutes = require("./routes/users");
 
 app.use("/products", productRoutes);
 app.use("/cart", cartRoutes);   
-//app.use("/users", userRoutes);
+app.use("/users", userRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);

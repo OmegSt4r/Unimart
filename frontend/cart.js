@@ -45,24 +45,28 @@ document.addEventListener("DOMContentLoaded", function() {
             cartItemsDiv.innerHTML = "";
             let subtotal = 0;
             cartItems.forEach(item => {
-                const itemDiv = document.createElement("div");
-                itemDiv.className = "cart-item";
-                itemDiv.innerHTML = `
-                    <p>${item.product_name}</p>
-                    <p>Price: $${item.price}</p>
-                    <p>Quantity: <input type="number" value="${item.quantity}" data-cart-id="${item.cart_id}" class="quantity-input"></p>
-                    <button class="remove-item" data-cart-id="${item.cart_id}">Remove</button>
+                const itemRow = document.createElement("tr");
+                itemRow.className = "cart-item";
+                itemRow.innerHTML = `
+                    <td>${item.product_name}</td>
+                    <td>$${item.price}</td>
+                    <td>
+                        <select class="quantity" data-cart-id="${item.cart_id}">
+                            ${[1, 2, 3, 4, 5].map(q => `<option value="${q}" ${q === item.quantity ? "selected" : ""}>${q}</option>`).join("")}
+                        </select>
+                    </td>
+                    <td><button class="remove-item" data-cart-id="${item.cart_id}">🗑️</button></td>
                 `;
-                cartItemsDiv.appendChild(itemDiv);
+                cartItemsDiv.appendChild(itemRow);
                 subtotal += item.price * item.quantity;
             });
             subtotalPriceElement.textContent = `$${subtotal.toFixed(2)}`;
 
             // Add event listeners for quantity changes
-            document.querySelectorAll(".quantity-input").forEach(input => {
+            document.querySelectorAll(".quantity").forEach(input => {
                 input.addEventListener("change", function(event) {
                     const cartId = event.target.getAttribute("data-cart-id");
-                    const quantity = event.target.value;
+                    const quantity = parseInt( event.target.value);
                     fetch(`http://localhost:5001/carts/${cartId}`, {
                         method: "PUT",
                         headers: {
@@ -90,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     .then(data => {
                         alert(data.message);
                         // Remove the item from the DOM
-                        event.target.parentElement.remove();
+                        event.target.closest("tr").remove();
                         updateSubtotal();
                     })
                     .catch(error => console.error("Error removing cart item:", error));
@@ -100,9 +104,9 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => console.error("Error fetching cart items:", error));
     function updateSubtotal() {
             let subtotal = 0;
-            document.querySelectorAll(".cart-item").forEach(itemDiv => {
-                const price = parseFloat(itemDiv.querySelector("p:nth-child(2)").textContent.replace("Price: $", ""));
-                const quantity = parseInt(itemDiv.querySelector(".quantity-input").value);
+            document.querySelectorAll(".cart-item").forEach(itemRow => {
+                const price = parseFloat(itemRow.querySelector("td:nth-child(2)").textContent.replace("$", ""));
+                const quantity = parseInt(itemRow.querySelector(".quantity").value);
                 subtotal += price * quantity;
             });
             subtotalPriceElement.textContent = `$${subtotal.toFixed(2)}`;

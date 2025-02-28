@@ -180,4 +180,14 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Insufficient funds!");
         }
     }    
-        
+    document.getElementById("add-product-button").addEventListener("click", function() {
+        const userId = localStorage.getItem("userId");
+    
+        if (!userId) {
+            alert("Please log in to add a product.");
+            window.location.href = "login.html";
+            return;
+        }
+    
+        window.location.href = `add-product.html?userId=${userId}`;
+    });

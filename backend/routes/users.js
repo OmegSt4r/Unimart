@@ -3,6 +3,8 @@ const router = express.Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const path = require("path");
 
 // Register a new user
 router.post("/register", async (req, res) => {
@@ -162,20 +164,7 @@ router.post("/:userId/checkout", (req, res) => {
                       return res.status(500).json({ error: "Database error" });
                   }
 
-                  // Insert cart items into purchase history
-                  const insertHistorySql = `
-                      INSERT INTO purchase_history (user_id, product_id, price, quantity, date)
-                      VALUES (?, ?, ?, ?, NOW())
-                  `;
-                  cartItems.forEach(item => {
-                      db.query(insertHistorySql, [userId, item.item_id, item.price, item.quantity], (err) => {
-                          if (err) {
-                              console.error("Error inserting into purchase history:", err);
-                              return res.status(500).json({ error: "Database error" });
-                          }
-                      });
-                  });
-
+                 
                   // Update user's wallet balance
                   const newBalance = currentBalance - subtotal;
                   const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
@@ -228,22 +217,86 @@ router.post("/:userId/increase-balance", (req, res) => {
       }
   });
 });
-router.get("/:userId/purchase-history", (req, res) => {
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, '../frontend/images/');
+  },
+  filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
+  const userId = req.params.userId;
+  const { product_name, p_description, price, inventory } = req.body;
+  const p_image = req.file ? req.file.filename : null;
+
+  const sql = `
+      INSERT INTO products (product_name, seller_id, price, inventory, p_description, p_image)
+      VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  db.query(sql, [product_name, userId, price, inventory, p_description, p_image], (err, result) => {
+      if (err) {
+          console.error("Error adding product:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ success: true });
+  });
+});
+// Fetch user's products
+router.get("/:userId/my-products", (req, res) => {
   const userId = req.params.userId;
 
   const sql = `
-      SELECT p.product_name, p.image_url, ph.price, ph.quantity, ph.date
-      FROM purchase_history ph
-      JOIN products p ON ph.product_id = p.product_id
-      WHERE ph.user_id = ?
-      ORDER BY ph.date DESC
+      SELECT * FROM products
+      WHERE seller_id = ?
   `;
   db.query(sql, [userId], (err, results) => {
       if (err) {
-          console.error("Error fetching purchase history:", err);
+          console.error("Error fetching user's products:", err);
           return res.status(500).json({ error: "Database error" });
       }
       res.json(results);
+  });
+});
+
+// Update product
+router.put("/:userId/update-product/:productId", upload.single('p_image'), (req, res) => {
+  const userId = req.params.userId;
+  const productId = req.params.productId;
+  const { product_name, p_description, price, inventory } = req.body;
+  const p_image = req.file ? req.file.filename : null;
+
+  const sql = `
+      UPDATE products
+      SET product_name = ?, p_description = ?, price = ?, inventory = ?, p_image = ?
+      WHERE product_id = ? AND seller_id = ?
+  `;
+  db.query(sql, [product_name, p_description, price, inventory, p_image, productId, userId], (err, result) => {
+      if (err) {
+          console.error("Error updating product:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ success: true });
+  });
+});
+
+// Delete product
+router.delete("/:userId/delete-product/:productId", (req, res) => {
+  const userId = req.params.userId;
+  const productId = req.params.productId;
+
+  const sql = `
+      DELETE FROM products
+      WHERE product_id = ? AND seller_id = ?
+  `;
+  db.query(sql, [productId, userId], (err, result) => {
+      if (err) {
+          console.error("Error deleting product:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json({ success: true });
   });
 });
 

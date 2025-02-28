@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - UniMart</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
+            <h1>UniMart</h1>
+        </div>
+        <div class="user-actions">
+            <div class="wallet">
+                <p>Wallet:<span id="wallet-amount">$50.00</span></p>
+            </div>
+            <a href="cart.html"><img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+            <input type="text" placeholder="Search..." id="searchBar">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="user-profile">
+                <img src="images/profile.jpg" alt="User Profile Picture">
+                <a href="login.html"><button id="logout">Logout</button></a>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <a href="index.html"><button>Home</button></a>
+        <button>Trending</button>
+        <button>Reviews</button>
+        <a href="history.html"><button>Purchase History</button></a> 
+    </nav>
+    <main>
+        <h2>Add New Product</h2>
+        <form id="add-product-form" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="product-name">Product Name</label>
+                <input type="text" id="product-name" name="product_name" required>
+            </div>
+            <div class="form-group">
+                <label for="product-description">Description</label>
+                <textarea id="product-description" name="p_description" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="product-price">Price</label>
+                <input type="number" id="product-price" name="price" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="product-inventory">Inventory</label>
+                <input type="number" id="product-inventory" name="inventory" required>
+            </div>
+            <div class="form-group">
+                <label for="product-image">Product Image</label>
+                <input type="file" id="product-image" name="p_image" accept="image/*" required>
+            </div>
+            <button type="submit">Add Product</button>
+        </form>
+    </main>
+    <script src="app.js"></script>
+    <script src="add-product.js"></script>
+</body>
+</html>

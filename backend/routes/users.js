@@ -154,25 +154,48 @@ router.post("/:userId/checkout", (req, res) => {
           if (currentBalance < subtotal) {
               res.status(400).json({ success: false, message: "Insufficient funds" });
           } else {
-              // Update user's wallet balance
-              const newBalance = currentBalance - subtotal;
-              const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
-              db.query(updateWalletSql, [newBalance, userId], (err, result) => {
+              // Fetch cart items for the user
+              const fetchCartSql = "SELECT * FROM carts WHERE user_id = ?";
+              db.query(fetchCartSql, [userId], (err, cartItems) => {
                   if (err) {
-                      console.error("Error updating wallet balance:", err);
-                      res.status(500).json({ error: "Database error" });
-                  } else {
+                      console.error("Error fetching cart items:", err);
+                      return res.status(500).json({ error: "Database error" });
+                  }
+
+                  // Insert cart items into purchase history
+                  const insertHistorySql = `
+                      INSERT INTO purchase_history (user_id, product_id, price, quantity, date)
+                      VALUES (?, ?, ?, ?, NOW())
+                  `;
+                  cartItems.forEach(item => {
+                      db.query(insertHistorySql, [userId, item.item_id, item.price, item.quantity], (err) => {
+                          if (err) {
+                              console.error("Error inserting into purchase history:", err);
+                              return res.status(500).json({ error: "Database error" });
+                          }
+                      });
+                  });
+
+                  // Update user's wallet balance
+                  const newBalance = currentBalance - subtotal;
+                  const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
+                  db.query(updateWalletSql, [newBalance, userId], (err, result) => {
+                      if (err) {
+                          console.error("Error updating wallet balance:", err);
+                          return res.status(500).json({ error: "Database error" });
+                      }
+
                       // Clear the user's cart
                       const clearCartSql = "DELETE FROM carts WHERE user_id = ?";
                       db.query(clearCartSql, [userId], (err, result) => {
                           if (err) {
                               console.error("Error clearing cart:", err);
-                              res.status(500).json({ error: "Database error" });
-                          } else {
-                              res.json({ success: true, newWalletBalance: newBalance });
+                              return res.status(500).json({ error: "Database error" });
                           }
+
+                          res.json({ success: true, newWalletBalance: newBalance });
                       });
-                  }
+                  });
               });
           }
       }
@@ -203,6 +226,24 @@ router.post("/:userId/increase-balance", (req, res) => {
               }
           });
       }
+  });
+});
+router.get("/:userId/purchase-history", (req, res) => {
+  const userId = req.params.userId;
+
+  const sql = `
+      SELECT p.product_name, p.image_url, ph.price, ph.quantity, ph.date
+      FROM purchase_history ph
+      JOIN products p ON ph.product_id = p.product_id
+      WHERE ph.user_id = ?
+      ORDER BY ph.date DESC
+  `;
+  db.query(sql, [userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching purchase history:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json(results);
   });
 });
 

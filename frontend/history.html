@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchases Unimart</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
+            <h1>UniMart</h1>
+        </div>
+        
+       
+        <div class="user-actions">
+            
+            <div class="wallet">
+            <p>Wallet:<span id="wallet-amount"></span></p>
+            </div>
+           <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+            <input type="text" placeholder="Search..." id="searchBar">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="user-profile"><img src="images/profile.jpg" alt="User Profile Picture"><a href="login.html"><button id="logout">Logout</button></a></div>
+            
+        </div>
+    </header>
+
+    
+    <nav>
+        <a href="index.html"><button >Home</button></a>
+        <button>Trending</button>
+        <button>Reviews</button>
+        <a href="history.html"><button class="active">Purchase History</button></a> 
+    </nav>
+
+
+    <main>
+    
+    
+        <div id="purchase-history-items">
+            <!-- Products will be added dynamically -->
+        </div>
+   
+ </main>
+ <script src="app.js"></script>
+<script src="history.js"></script>
+<script src="wallet.js"></script>
+</body>
+</html>

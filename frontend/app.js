@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 userProfile.src = "images/profile.jpg"; // Update with user's profile picture if available
 
                 const userName = document.createElement("p");
-                userName.textContent = `Welcome, ${user.username}!`;
+                userName.textContent = `Welcome, ${user.username}`;
                 document.querySelector(".user-actions").appendChild(userName);
             })
             .catch(error => console.error("Error fetching user data:", error));

@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", function() {
     const userId = localStorage.getItem("userId");
    
@@ -35,15 +34,20 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "login.html";
         return;
     }
-    const cartItemsDiv = document.getElementById("cart-items");
+    const cartItemsDiv = document.getElementById("cart-items"); 
+    const confirmSubtotalPriceElement = document.getElementById("confirm-subtotal-price");
     const subtotalPriceElement = document.getElementById("subtotal-price");
     const checkoutButton = document.getElementById("checkout");
+   
+    let subtotal = 0;
+    let discount = 0;
     fetch(`http://localhost:5001/carts/${userId}`)
         .then(response => response.json())
         .then(cartItems => {
             
             cartItemsDiv.innerHTML = "";
-            let subtotal = 0;
+            subtotal = 0;
+            
             cartItems.forEach(item => {
                 const itemRow = document.createElement("tr");
                 itemRow.className = "cart-item";
@@ -110,27 +114,71 @@ document.addEventListener("DOMContentLoaded", function() {
                 subtotal += price * quantity;
             });
             subtotalPriceElement.textContent = `$${subtotal.toFixed(2)}`;
+            applyDiscount();
         }
+        function applyDiscount() {
+            const discountType = document.querySelector('input[name="discount"]:checked').value;
+            if (discountType === "premium") {
+                discount = subtotal * 0.10; // 10% discount
+            } else {
+                discount = 0;
+            }
+            const discountedSubtotal = subtotal - discount;
+            subtotalPriceElement.textContent = `$${discountedSubtotal.toFixed(2)}`;
+            confirmSubtotalPriceElement.textContent = `$${discountedSubtotal.toFixed(2)}`;
+        }
+        document.querySelectorAll('input[name="discount"]').forEach(radio => {
+            radio.addEventListener("change", applyDiscount);
+        });
         checkoutButton.addEventListener("click", function() {
-            const subtotal = parseFloat(subtotalPriceElement.textContent.replace("$", ""));
+            const finalSubtotal = parseFloat(subtotalPriceElement.textContent.replace("$", ""));
             fetch(`http://localhost:5001/users/${userId}/checkout`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ subtotal }),
+                body: JSON.stringify({ subtotal: finalSubtotal }),
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert("Checkout successful!");
                     cartItemsDiv.innerHTML = "";
-                    subtotalPriceElement.textContent = "$0.00";
-                    document.getElementById("wallet-amount").textContent = `$${data.newWalletBalance.toFixed(2)}`;
+                subtotalPriceElement.textContent = "$0.00";
+                confirmSubtotalPriceElement.textContent = "$0.00";
+                document.getElementById("wallet-amount").textContent = `$${data.newWalletBalance.toFixed(2)}`;
                 } else {
                     alert("Checkout failed: " + data.message);
                 }
             })
             .catch(error => console.error("Error during checkout:", error));
         });
+       // Handle step navigation
+    document.getElementById("step1").addEventListener("click", function() {
+        setActiveStep("step1", "subtotal-step");
     });
+
+    document.getElementById("step2").addEventListener("click", function() {
+        setActiveStep("step2", "discount-step");
+    });
+
+    document.getElementById("step3").addEventListener("click", function() {
+        setActiveStep("step3", "confirm-step");
+    });
+
+    function setActiveStep(buttonId, stepId) {
+        // Remove active class from all buttons
+        document.querySelectorAll(".checkout-steps button").forEach(button => {
+            button.classList.remove("active");
+        });
+        // Add active class to the clicked button
+        document.getElementById(buttonId).classList.add("active");
+
+        // Hide all steps
+        document.querySelectorAll(".checkout-step").forEach(step => {
+            step.style.display = "none";
+        });
+        // Show the selected step
+        document.getElementById(stepId).style.display = "block";
+    }
+});

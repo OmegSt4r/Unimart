@@ -64,20 +64,21 @@
         <section class="checkout">
             <div class="checkout-steps">
                 <button id="step1" class="active">Subtotal</button>
-                <button id="step2">Shipping</button>
+                <button id="step2">Discounts</button>
                 <button id="step3">Confirm</button>
             </div>
             <div class="checkout-content">
-                <div id="subtotal-step">
+                <div id="subtotal-step" class="checkout-step">
                     <p>Subtotal: <span id="subtotal-price">$0.00</span></p>
                 </div>
-                <div id="shipping-step" >
-                    <label><input type="radio" name="shipping" value="normal" checked> Normal Shipping</label>
-                    <label><input type="radio" name="shipping" value="premium"> Premium Shipping</label>
+                <div id="discount-step" class="checkout-step" style="display: none;">
+                    <label><input type="radio" name="discount" value="none" checked> No Discount</label>
+                    <label><input type="radio" name="discount" value="premium"> Premium Discount</label>
                     <p>Address: <input type="text" id="shipping-address" value="Oakland University"></p>
                 </div>
-                <div id="confirm-step" >
-                   <button id="checkout">Checkout</button>
+                <div id="confirm-step" class="checkout-step" style="display: none;">
+                    <p>Current Subtotal: <span id="confirm-subtotal-price">$0.00</span></p>
+                    <button id="checkout">Checkout</button>
                 </div>
             </div>
         </section>

@@ -34,6 +34,12 @@ document.addEventListener("DOMContentLoaded", function() {
                         <label for="product-inventory-${product.product_id}">Inventory</label>
                         <input type="number" id="product-inventory-${product.product_id}" name="inventory" value="${product.inventory}" required>
                     </div>
+                   <div class="form-group">
+                        <label for="tags-${product.product_id}">Tags:</label>
+                        <select id="tags-${product.product_id}" name="tags[]" multiple required>
+                           
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="product-image-${product.product_id}">Product Image</label>
                         <input type="file" id="product-image-${product.product_id}" name="p_image" accept="image/*">
@@ -42,12 +48,30 @@ document.addEventListener("DOMContentLoaded", function() {
                     <button type="button" class="delete-product" data-product-id="${product.product_id}">Delete</button>
                 `;
                 myProductsContainer.appendChild(productForm);
+                // Fetch existing tags and populate the dropdown
+                fetch("http://localhost:5001/tags")
+                    .then(response => response.json())
+                    .then(tags => {
+                        const tagsSelect = document.getElementById(`tags-${product.product_id}`);
+                        tags.forEach(tag => {
+                            const option = document.createElement("option");
+                            option.value = tag.tag_id;
+                            option.textContent = tag.tag_name;
+                            if (product.tags && product.tags.includes(tag.tag_id)) {
+                                option.selected = true;
+                            }
+                            tagsSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching tags:", error));
 
                 // Add event listener for update button
                 productForm.querySelector(".update-product").addEventListener("click", function(event) {
                     event.preventDefault();
                     const productId = this.getAttribute("data-product-id");
                     const formData = new FormData(productForm);
+                    const selectedTags = Array.from(productForm.querySelectorAll(`#tags-${product.product_id} option:checked`)).map(option => option.value);
+                    formData.append("tags", JSON.stringify(selectedTags));
 
                     fetch(`http://localhost:5001/users/${userId}/update-product/${productId}`, {
                         method: "PUT",

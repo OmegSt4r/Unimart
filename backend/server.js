@@ -39,10 +39,12 @@ app.get("/", (req, res) => {
 const productRoutes = require("./routes/products"); 
 const cartRoutes = require("./routes/carts");
 const userRoutes = require("./routes/users");
+const tagsRoutes = require("./routes/tags");
 
 app.use("/products", productRoutes);
 app.use("/carts", cartRoutes);   
 app.use("/users", userRoutes);
+app.use("/tags", tagsRoutes);
 
 
 app.listen(PORT, () => {

@@ -108,15 +108,30 @@ document.addEventListener("DOMContentLoaded", function() {
         fetchProducts();  // Fetch product data from the backend
         loadCart();       // Load the cart on page load
     });
+    document.addEventListener("DOMContentLoaded", function() {
+        fetchProducts();
     
+        // Add event listeners for category buttons
+        document.querySelectorAll("aside ul button").forEach(button => {
+            button.addEventListener("click", function() {
+                const tag = this.textContent.trim();
+                fetchProducts(tag);
+            });
+        });
+    });
     // Fetch Products from Backend
-    function fetchProducts() {
-        fetch("http://localhost:5001/products") // Fetch from Node.js backend
-            .then(response => response.json())
-            .then(data => displayProducts(data))
-            .catch(error => console.error("Error fetching products:", error));
+    function fetchProducts(tag = "") {
+        let url = "http://localhost:5001/products";
+    if (tag) {
+        url += `?tag=${tag}`;
     }
-    
+    fetch(url) // Fetch from Node.js backend
+        .then(response => response.json())
+        .then(data => displayProducts(data))
+        .catch(error => console.error("Error fetching products:", error));
+}
+
+
     // Display Products Dynamically
     function displayProducts(products) {
         const productContainer = document.querySelector(".products");
@@ -127,13 +142,24 @@ document.addEventListener("DOMContentLoaded", function() {
             productElement.classList.add("product");
             productElement.setAttribute("data-id", product.product_id);
             productElement.innerHTML = `
-                <img src="images/${product.p_image}" alt="${product.product_name}">
-                <p>Description: <b>${product.tag_name}</b> ${product.p_description}</p>
-                <p><b>Item:</b> ${product.product_name} | <b>Price:</b> $${product.price} | <b>Seller:</b> ${product.seller_id} | <b> Inventory:</b> ${product.inventory} </p>
-                <p>★★★★</p>
-                <button onclick="addToCart(${product.product_id}, '${product.product_name}', ${product.price})">Add to Cart</button>
-            `;
+                <img src="${product.p_image}" alt="${product.product_name}" class="product-image">
+               <div class="product-details"> 
+               <p><b>Description:</b>${product.p_description}</p> 
+               <p><b>Item:</b> ${product.product_name}</p>
+               <p><b>Price:</b> $${product.price}|<b> Inventory:</b> ${product.inventory} </p>
+                <b>Seller:</b> ${product.seller_name}<p>★★★★</p>
+                <button class="add-cart" onclick="addToCart(${product.product_id}, '${product.product_name}', ${product.price})">Add to Cart</button>
+            </div>
+           
+         `;
             productContainer.appendChild(productElement);
+            productElement.addEventListener("click", function() {
+                const image = productElement.querySelector(".product-image");
+                const details = productElement.querySelector(".product-details");
+                productElement.classList.toggle("expanded");
+                
+            });
+            
         });
     }
     

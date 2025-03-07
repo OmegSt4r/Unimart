@@ -5,6 +5,9 @@ html, body {
     padding:0;
     background: linear-gradient(to bottom, #777, #E0CDA9);
    background-attachment: fixed;
+   width:100%;
+   overflow-x:hidden;
+   overflow-y:hidden;
 }
 
 /* Header */
@@ -57,14 +60,26 @@ header {
 /* Navigation */
 nav {
     display: flex;
-    padding: 10px;
+    width: 100%;  /* Makes nav stretch across the entire page */
+    
+    flex-wrap: wrap;
+    justify-content: space-between; /* Adjusts spacing */
+
+}
+
+nav a {
+    flex: 1; /* Ensures each link takes equal space */
+    text-decoration: none; /* Removes underline */
+    
 }
 
 nav button {
-    flex: 1;
+    width: 100%; /* Makes button fill the <a> */
     padding: 10px;
     border: none;
     cursor: pointer;
+    text-align: center;
+    display: block; /* Ensures button behaves properly inside <a> */
 }
 
 nav button.active {
@@ -79,7 +94,7 @@ nav button:hover {
 aside {
     width: 200px;
     position: fixed;
-    top: 155px;
+   
     left: 0;
     background: white;
     padding: 10px;
@@ -170,8 +185,8 @@ aside li {
 
 main {
     flex: 1 1 auto;
-    margin-left: 220px; /* Adjust based on the width of the aside */
-    padding: 20px;
+    margin-left: 250px; /* Adjust based on the width of the aside */
+    padding: 10px;
     overflow: auto; /* Make the main section scrollable */
     height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
 }
@@ -180,9 +195,19 @@ main {
     background: white;
     padding: 10px;
     border-radius: 5px;
-    width: 200px;
+    width:200px;
     text-align: center;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    cursor: pointer; /* Change cursor to pointer to indicate clickability */
+    overflow: hidden; /* Hide overflow for smooth transition */
+    transition: max-height 0.3s ease-out; /* Smooth transition for expanding/collapsing */
+    max-height: 200px; /* Initial height to show only the image and description */
+    display:flex;
+    flex-direction: column;
+}
+.product:hover {
+    transform: translateY(-10px); /* Move the product up slightly */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
 }
 
 .cart-icon {
@@ -192,8 +217,12 @@ main {
     width: 50px;}
 
 .product img {
-    width: 100%;
-    height: auto;
+    max-width: 100%;
+    margin:auto;
+    object-fit: cover; /* Ensure the image covers the container without being cut off */
+    max-height: 100%; /* Adjust as needed */
+    border-radius: 5px; /* Match the border radius of the product container */
+    display:block;
 }
 .products{
     display: flex;
@@ -220,4 +249,27 @@ main {
     height: 50px;
     border-radius: 50%;
     margin-bottom: 5px;
+}
+
+.product.expanded {
+    max-height: 500px; /* Expanded height to show all details */
+   
+}
+
+.product-details {
+    display: none; /* Hide product details by default */
+   
+}
+
+.product.expanded .product-details {
+    display: block; /* Show product details when expanded */
+}
+
+.add-box{
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }

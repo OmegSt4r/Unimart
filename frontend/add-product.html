@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product - UniMart</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="add-product.css">
 </head>
 <body>
     <header>
@@ -26,12 +26,15 @@
         </div>
     </header>
     <nav>
-        <a href="index.html"><button>Home</button></a>
-        <button>Trending</button>
-        <button>Reviews</button>
-        <a href="history.html"><button>Purchase History</button></a> 
-    </nav>
-    <main>
+        
+        <a href="index.html"> <button class="active">Home</button></a>
+         <a href="trending.html"><button>Trending</button></a>
+         <a href= "reviews.html"><button>Reviews</button></a>
+         <a href="history.html"><button>Purchase History</button></a>
+         <a href="my-products.html"><button>My Products</button></a> 
+     
+     </nav>
+    <main class = "add-box">
         <h2>Add New Product</h2>
         <form id="add-product-form" enctype="multipart/form-data">
             <div class="form-group">
@@ -42,6 +45,13 @@
                 <label for="product-description">Description</label>
                 <textarea id="product-description" name="p_description" rows="3" required></textarea>
             </div>
+        <div class="form-group">
+            <label for="tags">Tags:</label>
+            <select id="tags" name="tags[]" multiple required>
+                <!-- Options will be populated dynamically -->
+            </select>
+    </div>
+
             <div class="form-group">
                 <label for="product-price">Price</label>
                 <input type="number" id="product-price" name="price" step="0.01" required>

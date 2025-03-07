@@ -299,5 +299,19 @@ router.delete("/:userId/delete-product/:productId", (req, res) => {
       res.json({ success: true });
   });
 });
+router.get("/products", (req, res) => {
+  const sql = `
+      SELECT p.*, s.company_name AS seller_name 
+      FROM products p
+      JOIN sellers s ON p.seller_id = s.seller_id
+  `;
+  db.query(sql, (err, results) => {
+      if (err) {
+          console.error("Error fetching products:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json(results);
+  });
+});
 
 module.exports = router;

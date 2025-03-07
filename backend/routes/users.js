@@ -34,7 +34,19 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+router.post("/:userId/register-seller", (req, res) => {
+  const userId = req.params.userId;
+  const { company_name } = req.body;
 
+  const sql = "INSERT INTO sellers (company_name, owner_id) VALUES (?, ?)";
+  db.query(sql, [company_name, userId], (err, result) => {
+    if (err) {
+      console.error("Error registering seller:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ message: "Seller registration successful" });
+  });
+});
 // User login
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
@@ -232,18 +244,39 @@ router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
   const { product_name, p_description, price, inventory } = req.body;
   const p_image = req.file ? req.file.filename : null;
 
-  const sql = `
+  // Check if the user is a seller
+  const checkSellerSQL = "SELECT * FROM sellers WHERE owner_id = ?";
+  db.query(checkSellerSQL, [userId], (err, results) => {
+    if (err) {
+      console.error("Error checking seller existence:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (results.length > 0) {
+      // User is a seller
+      const sellerId = results[0].seller_id;
+      insertProduct(sellerId);  // Call insertProduct with the sellerId
+    } else {
+      // User is not a seller
+      return res.status(403).json({ message: "Only sellers can add products. Please upgrade your account." });
+    }
+  });
+
+  function insertProduct(sellerId) {
+    const sql = `
       INSERT INTO products (product_name, seller_id, price, inventory, p_description, p_image)
       VALUES (?, ?, ?, ?, ?, ?)
-  `;
-  db.query(sql, [product_name, userId, price, inventory, p_description, p_image], (err, result) => {
+    `;
+    db.query(sql, [product_name, sellerId, price, inventory, p_description, p_image], (err) => {
       if (err) {
-          console.error("Error adding product:", err);
-          return res.status(500).json({ error: "Database error" });
+        console.error("Error adding product:", err);
+        return res.status(500).json({ error: "Database error" });
       }
       res.json({ success: true });
-  });
+    });
+  }
 });
+
 // Fetch user's products
 router.get("/:userId/my-products", (req, res) => {
   const userId = req.params.userId;
@@ -311,6 +344,58 @@ router.get("/products", (req, res) => {
           return res.status(500).json({ error: "Database error" });
       }
       res.json(results);
+  });
+});
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
+
+  const sql = "SELECT seller_id FROM sellers WHERE owner_id = ?";
+  db.query(sql, [userId], (err, result) => {
+      if (err) {
+          console.error("Error fetching user:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      if (result.length === 0) {
+          return res.status(404).json({ error: "User not found" });
+      }
+      res.json(result[0]); // { seller_id: value }
+  });
+});
+router.post('/:userId/upgrade', (req, res) => {
+  let userId = req.params.userId;  // Get the user ID from the URL parameter
+  console.log('Received userId:', userId); // Log the userId to check its value
+  const { company_name } = req.body; // Get the company name from the request body
+
+  // Check if company name is provided
+  if (!company_name) {
+      return res.status(400).json({ message: "Company name is required" });
+  }
+  userId = parseInt(userId, 10);
+  if (isNaN(userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+}
+  // Check if the user is already a seller
+  db.query('SELECT * FROM sellers WHERE owner_id = ?', [userId], (err, results) => {
+      if (err) {
+          console.error("Error checking if user is already a seller:", err);
+          return res.status(500).json({ message: "Database error" });
+      }
+
+      if (results.length > 0) {
+          return res.status(400).json({ message: "You are already a seller." });
+      }
+
+      // Insert the user as a seller
+      const insertSellerSQL = 'INSERT INTO sellers (company_name, owner_id) VALUES (?, ?)';
+      db.query(insertSellerSQL, [company_name, userId], (err, result) => {
+          if (err) {
+              console.error("Error upgrading user to seller:", err);
+              return res.status(500).json({ message: "Error upgrading user to seller" });
+          }
+
+          // Send success response
+          res.status(200).json({ message: "Successfully upgraded to seller!" });
+      });
   });
 });
 

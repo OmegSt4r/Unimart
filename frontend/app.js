@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function() {
             productElement.classList.add("product");
             productElement.setAttribute("data-id", product.product_id);
             productElement.innerHTML = `
-                <img src="${product.p_image}" alt="${product.product_name}" class="product-image">
+                <img src="images/${product.p_image}" alt="${product.product_name}" class="product-image">
                <div class="product-details"> 
                <p><b>Description:</b>${product.p_description}</p> 
                <p><b>Item:</b> ${product.product_name}</p>

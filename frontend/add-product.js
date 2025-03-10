@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc
 document.addEventListener("DOMContentLoaded", function() {
     checkSellerStatus();
     fetchExistingTags();

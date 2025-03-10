@@ -40,13 +40,19 @@ const productRoutes = require("./routes/products");
 const cartRoutes = require("./routes/carts");
 const userRoutes = require("./routes/users");
 const tagsRoutes = require("./routes/tags");
+<<<<<<< HEAD
 const reviewRoutes = require("./routes/reviews");
+=======
+>>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc
 
 app.use("/products", productRoutes);
 app.use("/carts", cartRoutes);   
 app.use("/users", userRoutes);
 app.use("/tags", tagsRoutes);
+<<<<<<< HEAD
 app.use("/reviews", reviewRoutes);
+=======
+>>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc
 
 
 app.listen(PORT, () => {

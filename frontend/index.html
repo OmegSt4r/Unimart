@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMart Homepage</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="images/Senior Capstone Project Report.png">    
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
+            <h1>UniMart</h1>
+        </div>
+        
+       
+        <div class="user-actions">
+           
+            <div class="wallet">
+            <p>Wallet:<span id="wallet-amount"></span></p>
+            </div>
+            <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+            <input type="text" placeholder="Search..." id="searchBar">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="user-profile"><a href="profile.html"><img src="images/profile.jpg" alt="User Profile Picture"></a><a href="login.html"><button id="logout">Logout</button></a></div>
+            
+        </div> 
+    </header>
+
+    
+    <nav>
+        
+       <a href="index.html"> <button class="active">Home</button></a>
+        <a href="trending.html"><button>Trending</button></a>
+        <a href= "my-reviews.html"><button>Reviews</button></a>
+        <a href="history.html"><button>Purchase History</button></a>
+        <a href="my-products.html"><button>My Products</button></a> 
+    
+    </nav>
+
+    
+    <aside>
+        
+        <h3>Categories</h3>
+        <div class="filter-tags">
+        <ul>
+            <button><li>Supplies</li></button>
+            <button><li>Electronics</li></button>
+            <button><li>Furniture</li></button>
+            <button><li>Food</li></button>
+            <button><li>Clothing</li></button>
+                
+        </ul>
+ </div>
+        
+        <div class="filter-container">
+            <button class="filter-btn">Filters ▼</button>
+            <div class="filter-dropdown">
+                <div class="filter">
+                    <label for="sortPrice">Sort by:</label>
+                    <select id="sortPrice">
+                        <option value="">Select</option>
+                        <option value="low">Low to High</option>
+                        <option value="high">High to Low</option>
+                    </select>
+                    <label for="minPrice">Min Price:</label>
+                    <input type="number" id="minPrice" placeholder="Min Price">
+                    <label for="maxPrice">Max Price:</label>
+                    <input type="number" id="maxPrice" placeholder="Max Price">
+                    <button class="filter-btn">Filter</button>
+                </div>
+            </div>
+        </div>
+        <button id="add-product-button">+ Add Product</button>
+    </aside>
+    
+
+    <main>
+          
+        <div class="products" id="data-id">
+            <!-- Products will be added dynamically -->
+        </div>
+   
+    </main>
+
+<script src="app.js"></script>
+<script src="wallet.js"></script>
+</body>
+</html>

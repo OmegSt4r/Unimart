@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Reviews - UniMart</title>
+    <link rel="stylesheet" href="add-product.css">
+    <link rel="icon" href="images/Senior Capstone Project Report.png">
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
+            <h1>UniMart</h1>
+        </div>
+        <div class="user-actions">
+            <div class="wallet">
+                <p>Wallet:<span id="wallet-amount">$50.00</span></p>
+            </div>
+            <a href="cart.html"><img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+            <input type="text" placeholder="Search..." id="searchBar">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="user-profile">
+                <img src="images/profile.jpg" alt="User Profile Picture">
+                <a href="login.html"><button id="logout">Logout</button></a>
+            </div>
+        </div>
+    </header>
+    <nav>
+        
+        <a href="index.html"> <button>Home</button></a>
+         <a href="trending.html"><button>Trending</button></a>
+         <a href= "my-reviews.html"><button class="active">Reviews</button></a>
+         <a href="history.html"><button>Purchase History</button></a>
+         <a href="my-products.html"><button>My Products</button></a> 
+     
+     </nav>
+    <main class = "add-box">
+        <h2>Add New Review</h2>
+        <form id="add-review-form" enctype="multipart/form-data">
+            <input type="text" id="buyer-name" placeholder="Buyer Name" required>
+            <input type="text" id="seller-name" placeholder="Seller Name" required>
+            <textarea id="review-text" placeholder="Write your review..." required></textarea>
+                <select id="rating">
+                    <option value="5">★★★★★</option>
+                    <option value="4">★★★★</option>
+                    <option value="3">★★★</option>
+                    <option value="2">★★</option>
+                    <option value="1">★</option>
+                </select>
+            <button type="submit">Submit Review</button>             
+
+        </form>
+        
+        <div id="reviews-container">
+            
+        </div>
+
+    </main>
+    <script src="app.js"></script>
+    <script src="add-reviews.js"></script>
+</body>
+</html>

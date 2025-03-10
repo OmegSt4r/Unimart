@@ -1,0 +1,153 @@
+html, body {
+    font-family: Arial, sans-serif;
+    height:100%;
+    margin:0;
+    padding:0;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+   background-attachment: fixed;
+   width:100%;
+   overflow-x:hidden;
+   overflow-y:hidden;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: black;
+    color: white;
+    padding: 10px 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.wallet {
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.logout-btn:hover {
+    background: darkblue;
+}
+
+.cart-icon {
+    
+    padding:10px;
+     cursor: pointer;
+     width: 50px;}
+ 
+ 
+ .user-profile {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+ 
+ .user-profile img {
+     height: 50px;
+     border-radius: 50%;
+     margin-bottom: 5px;
+ }
+
+/* Navigation */
+nav {
+    display: flex;
+    width: 100%;  /* Makes nav stretch across the entire page */
+    
+    flex-wrap: wrap;
+    justify-content: space-between; /* Adjusts spacing */
+
+}
+
+nav a {
+    flex: 1; /* Ensures each link takes equal space */
+    text-decoration: none; /* Removes underline */
+    
+}
+
+nav button {    
+    width: 100%; /* Makes button fill the <a> */
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: block; /* Ensures button behaves properly inside <a> */
+}
+
+nav button.active {
+    background: blue;
+    color: white;
+}
+nav button:hover {
+    background: darkblue;
+    color:white;
+}
+/* Sidebar */
+aside {
+    width: 200px;
+    position: fixed;
+   
+    left: 0;
+    background: white;
+    padding: 10px;
+    overflow:visible;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Category List */
+aside ul {
+    display:flex;
+    list-style: none;
+    padding: 0px;
+    flex-direction: column;
+    margin: 0;
+}
+ul button {
+    background:white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+ul button:hover {
+    background: rgb(0, 0, 180);
+    color:white;
+}
+ul button.active {
+    background: blue;
+    color: white;
+}
+aside li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+

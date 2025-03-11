@@ -100,13 +100,11 @@ document.addEventListener("DOMContentLoaded", function() {
     maxPriceInput.addEventListener("input", filterAndSort);
 
     checkboxes.forEach(checkbox => checkbox.addEventListener("change", filterAndSort));
-<<<<<<< HEAD
+
     sortSelect.addEventListener("change", filterAndSort);   
 });
-=======
     sortSelect.addEventListener("change", filterAndSort);   });
->>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc
-    
+ 
 
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -221,7 +219,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     
         window.location.href = `add-product.html?userId=${userId}`;
-<<<<<<< HEAD
+
     });
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -280,6 +278,4 @@ document.addEventListener("DOMContentLoaded", function() {
     })
     
     
-=======
     });
->>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc

@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
     "name": "unimart-backend",
     "version": "1.0.0",
     "description": "Backend for Unimart",
@@ -19,7 +18,7 @@
     }
    }
    
-=======
+
  "name": "unimart-backend",
  "version": "1.0.0",
  "description": "Backend for Unimart",
@@ -38,4 +37,3 @@
   "mysql2": "^2.3.3"
  }
 }
->>>>>>> 036d01f43c514c84bc99fc5e7fd94ee3db7c85dc

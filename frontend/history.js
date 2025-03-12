@@ -32,3 +32,9 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .catch(error => console.error("Error fetching purchase history:", error));
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const profilePic = localStorage.getItem("profilePic");
+    if (profilePic) {
+        updateProfilePictures(profilePic);
+    }
+});

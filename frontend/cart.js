@@ -182,3 +182,9 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById(stepId).style.display = "block";
     }
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const profilePic = localStorage.getItem("profilePic");
+    if (profilePic) {
+        updateProfilePictures(profilePic);
+    }
+});

@@ -40,11 +40,13 @@ const productRoutes = require("./routes/products");
 const cartRoutes = require("./routes/carts");
 const userRoutes = require("./routes/users");
 const tagsRoutes = require("./routes/tags");
+const reviewRoutes = require("./routes/reviews")
 
 app.use("/products", productRoutes);
 app.use("/carts", cartRoutes);   
 app.use("/users", userRoutes);
 app.use("/tags", tagsRoutes);
+app.use("/reviews", reviewRoutes);
 
 
 app.listen(PORT, () => {

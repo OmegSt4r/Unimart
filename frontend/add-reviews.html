@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review</title>
+    <link rel="stylesheet" href="add-reviews.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Submit a Review</h2>
+        <form id="review-form">
+            <select id="review-type">
+                <option value="seller">Seller</option>
+                <option value="user">User</option>
+            </select>
+            <input type="text" id="review-subject" placeholder="Subject" />
+            <input type="number" id="rating" placeholder="Rating" />
+            <textarea id="review-text" placeholder="Write your review"></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+        <p id="status-message"></p>
+    </div>
+    <script src="add-reviews.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const userId = localStorage.getItem("userId");
+    console.log("Logged-in User ID:", userId);
 
     if (!userId) {
         alert("Please log in to view your products.");
@@ -64,7 +65,12 @@ document.addEventListener("DOMContentLoaded", function() {
                         });
                     })
                     .catch(error => console.error("Error fetching tags:", error));
-
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const profilePic = localStorage.getItem("profilePic");
+                        if (profilePic) {
+                            updateProfilePictures(profilePic);
+                        }
+                    });
                 // Add event listener for update button
                 productForm.querySelector(".update-product").addEventListener("click", function(event) {
                     event.preventDefault();

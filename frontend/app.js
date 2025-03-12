@@ -217,3 +217,25 @@ document.addEventListener("DOMContentLoaded", function() {
     
         window.location.href = `add-product.html?userId=${userId}`;
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        const profilePic = localStorage.getItem("profilePic");
+        if (profilePic) {
+            updateProfilePictures(profilePic);
+        }
+    });
+    function logout() {
+        // Clear localStorage
+        localStorage.removeItem("userId");
+        localStorage.removeItem("profilePic"); // If you store profile pictures
+        localStorage.removeItem("authToken"); // If using JWT tokens
+        
+        // Redirect to login page
+        window.location.href = "login.html";
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const logoutButton = document.getElementById("logout-button");
+        
+        if (logoutButton) {
+            logoutButton.addEventListener("click", logout);
+        }
+    });

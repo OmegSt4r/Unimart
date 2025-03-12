@@ -232,13 +232,16 @@ router.post("/:userId/increase-balance", (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      cb(null, '../frontend/images/');
+    cb(null, "../frontend/images/"); // Saves files in backend/uploads/
   },
   filename: function (req, file, cb) {
-      cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
   }
 });
+
 const upload = multer({ storage: storage });
+
+
 router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
   const userId = req.params.userId;
   const { product_name, p_description, price, inventory } = req.body;
@@ -280,7 +283,7 @@ router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
 // Fetch user's products
 router.get("/:userId/my-products", (req, res) => {
   const userId = req.params.userId;
-
+ 
   const sql = `
       SELECT * FROM products
       WHERE seller_id = ?
@@ -290,6 +293,7 @@ router.get("/:userId/my-products", (req, res) => {
           console.error("Error fetching user's products:", err);
           return res.status(500).json({ error: "Database error" });
       }
+    
       res.json(results);
   });
 });
@@ -398,5 +402,6 @@ router.post('/:userId/upgrade', (req, res) => {
       });
   });
 });
+
 
 module.exports = router;

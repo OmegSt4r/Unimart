@@ -78,3 +78,9 @@ function submitProductForm(formData, userId) {
         console.error("Error adding product:", error);
         alert("An error occurred while adding the product.");
 });}
+document.addEventListener("DOMContentLoaded", function () {
+    const profilePic = localStorage.getItem("profilePic");
+    if (profilePic) {
+        updateProfilePictures(profilePic);
+    }
+});

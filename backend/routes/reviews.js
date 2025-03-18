@@ -71,7 +71,6 @@ router.post("/sellers", (req, res) => {
     });
 });
 
-
 // Add a user review
 router.post("/users", (req, res) => {
     const { comment, rating, comment_source, comment_subject } = req.body;

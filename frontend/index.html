@@ -18,11 +18,6 @@
         
        
         <div class="user-actions">
-           
-            <div class="wallet">
-            <p>Wallet:<span id="wallet-amount"></span></p>
-            </div>
-           <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
             <input type="text" placeholder="Search..." id="searchBar">
             <i class="fas fa-shopping-cart"></i>
             <div class="user-profile"><a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a><a href="login.html"><button id="logout-button">Logout</button></a></div>
@@ -37,49 +32,9 @@
         <a href= "my-reviews.html"><button>Reviews</button></a>
         <a href="history.html"><button>Purchase History</button></a>
         <a href="my-products.html"><button>My Products</button></a> 
-    
     </nav>
 
-    
-    <aside>
-        
-        <h3>Categories</h3>
-        <div class="filter-tags">
-        <ul>
-            <button><li>Supplies</li></button>
-            <button><li>Electronics</li></button>
-            <button><li>Furniture</li></button>
-            <button><li>Food</li></button>
-            <button><li>Clothing</li></button>
-                
-        </ul>
- </div>
-        
-        <div class="filter-container">
-            <button class="filter-btn">Filters ▼</button>
-            <div class="filter-dropdown">
-                <div class="filter">
-                    <label for="sortPrice">Sort by:</label>
-                    <select id="sortPrice">
-                        <option value="">Select</option>
-                        <option value="low">Low to High</option>
-                        <option value="high">High to Low</option>
-                    </select>
-                    <label for="minPrice">Min Price:</label>
-                    <input type="number" id="minPrice" placeholder="Min Price">
-                    <label for="maxPrice">Max Price:</label>
-                    <input type="number" id="maxPrice" placeholder="Max Price">
-                    <button class="filter-btn">Filter</button>
-                </div>
-            </div>
-        </div>
-        <button id="add-product-button">+ Add Product</button>
-    </aside>
-    
-
     <main>
-    
-    
         <div class="products" id="data-id">
             <!-- Products will be added dynamically -->
         </div>

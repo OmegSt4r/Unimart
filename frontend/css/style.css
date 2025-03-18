@@ -8,6 +8,7 @@ html, body {
    width:100%;
    overflow-x:hidden;
    overflow-y:hidden;
+   
 }
 
 /* Header */
@@ -210,6 +211,9 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
 }
 
+
+
+
 .cart-icon {
     
    padding:10px;
@@ -273,3 +277,141 @@ main {
     text-align: center;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
+
+/* Existing styles... */
+
+/* Mobile styles for iPhone X and similar devices */
+@media (max-width: 500px) {
+    /* Header */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: black;
+        color: white;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo img {
+        width: 40px;
+        margin-right: 10px;
+    }
+
+    .user-actions {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-actions input {
+        padding: 5px;
+        margin-right: 10px;
+        width: 200px;
+    }
+
+    .menu-toggle {
+        display: block;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    /* Hide default nav links */
+    nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: black;
+        position: absolute;
+        top: 50px; /* Below header */
+        left: 0;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 1000;
+    }
+
+    nav.show {
+        display: flex;
+    }
+
+    nav a {
+        width: 100%;
+    }
+
+    nav button {
+        width: 100%;
+        background: black;
+        color: white;
+        padding: 12px;
+        border: none;
+        font-size: 16px;
+    }
+
+    nav button:hover {
+        background: darkblue;
+    }
+
+    /* Adjust main content */
+    main {
+        margin-top: 60px; /* Adjust based on the height of the header */
+        padding: 10px;
+    }
+
+    .products {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product {
+        width: 90%;
+        max-width: 300px;
+        margin-bottom: 20px;
+    }
+
+    /* Mobile footer */
+    .mobile-footer {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+        padding: 10px 0;
+    }
+
+    .mobile-footer a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mobile-footer img {
+        height: 40px;
+        width: 40px;
+    }
+}
+
+/* Default: Hide Hamburger Icon on Desktop */
+.menu-toggle {
+    display: none;
+}
+
+/* Default: Hide Mobile Footer on Desktop */
+.mobile-footer {
+    display: none;
+}
+
+

@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     const reviewForm = document.getElementById("review-form");
     const statusMessage = document.getElementById("status-message");
+    const userId = localStorage.getItem("userId");
+    console.log("Logged-in User ID:", userId);
 
     reviewForm.addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -10,8 +12,22 @@ document.addEventListener("DOMContentLoaded", function () {
         const rating = document.getElementById("rating").value;
         const reviewText = document.getElementById("review-text").value.trim();
 
+        // Validate fields
         if (!reviewSubject || !reviewText) {
             statusMessage.textContent = "Please fill out all fields.";
+            statusMessage.style.color = "red";
+            return;
+        }
+
+        if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
+            statusMessage.textContent = "Please provide a valid rating between 1 and 5.";
+            statusMessage.style.color = "red";
+            return;
+        }
+
+       
+        if (!userId) {
+            statusMessage.textContent = "You must be logged in to submit a review.";
             statusMessage.style.color = "red";
             return;
         }
@@ -20,11 +36,11 @@ document.addEventListener("DOMContentLoaded", function () {
             review_subject: reviewSubject,
             rating: parseInt(rating, 10),
             comment: reviewText,
-            review_source: loggedInUserId // or some logic to get the user's ID
+            review_source: userId,
         };
 
         const endpoint = reviewType === "seller" ? "/reviews/sellers" : "/reviews/users";
-        
+
         try {
             const response = await fetch(`http://localhost:5001${endpoint}`, {
                 method: "POST",
@@ -32,7 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify(reviewData),
             });
 
-            if (!response.ok) throw new Error("Failed to submit review");
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error response from server:", errorData);
+                
+            }
 
             statusMessage.textContent = "Review submitted successfully!";
             statusMessage.style.color = "green";

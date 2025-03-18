@@ -402,6 +402,38 @@ router.post('/:userId/upgrade', (req, res) => {
       });
   });
 });
+router.get("/:userId/my-reviews", (req, res) => {
+  const userId = req.params.userId;
+  const { page = 1, limit = 10 } = req.query;
+  const offset = (page - 1) * limit;
+  
+  const sql = `
+      SELECT sr.review_id, sr.comment, sr.rating, 
+             u.username AS reviewer, 
+             s.company_name AS seller
+      FROM seller_reviews sr
+      JOIN users u ON sr.review_source = u.user_id
+      JOIN sellers s ON sr.review_subject = s.seller_id
+      WHERE sr.review_source = ?
+      UNION
+      SELECT ur.review_id, ur.comment, ur.rating, 
+             reviewer.username AS reviewer, 
+             subject.username AS reviewed_user
+      FROM user_reviews ur
+      JOIN users reviewer ON ur.comment_source = reviewer.user_id
+      JOIN users subject ON ur.comment_subject = subject.user_id
+      WHERE ur.comment_source = ?
+      LIMIT ? OFFSET ?
+  `;
+  
+  db.query(sql, [userId, userId, parseInt(limit), parseInt(offset)], (err, results) => {
+      if (err) {
+          console.error("Error fetching user reviews:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.json(results);
+  });
+});
 
 
 module.exports = router;

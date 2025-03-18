@@ -4,23 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Review</title>
-    <link rel="stylesheet" href="add-reviews.css">
+    <link rel="stylesheet" href="css/add-reviews.css">
 </head>
 <body>
     <div class="container">
         <h2>Submit a Review</h2>
         <form id="review-form">
-            <select id="review-type">
+            <label for="review-type">Review Type:</label>
+            <select id="review-type" required>
                 <option value="seller">Seller</option>
                 <option value="user">User</option>
             </select>
-            <input type="text" id="review-subject" placeholder="Subject" />
-            <input type="number" id="rating" placeholder="Rating" />
-            <textarea id="review-text" placeholder="Write your review"></textarea>
+        
+            <label for="review-subject">Review Subject (Name):</label>
+            <input type="text" id="review-subject" placeholder="Enter seller or user name" required />
+        
+            <label for="rating">Rating:</label>
+            <input type="number" id="rating" placeholder="Rate from 1 to 5" min="1" max="5" required />
+        
+            <label for="review-text">Review:</label>
+            <textarea id="review-text" placeholder="Write your review here" required></textarea>
+        
             <button type="submit">Submit Review</button>
         </form>
         <p id="status-message"></p>
     </div>
-    <script src="add-reviews.js"></script>
+    <script src="js/add-reviews.js"></script>
 </body>
 </html>

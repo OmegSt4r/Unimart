@@ -6,8 +6,7 @@ html, body {
     background: linear-gradient(to bottom, #777, #E0CDA9);
    background-attachment: fixed;
    width:100%;
-   overflow-x:hidden;
-   overflow-y:hidden;
+  
 }
 
 /* Header */
@@ -157,5 +156,27 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    overflow:auto;
 }
 
+.reviews-list {
+    margin-top: 20px;
+    
+}
+
+.review {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.review h3 {
+    margin: 0 0 5px;
+}
+
+.review p {
+    margin: 5px 0;
+    
+}

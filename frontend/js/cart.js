@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 subtotal += item.price * item.quantity;
             });
             subtotalPriceElement.textContent = `$${subtotal.toFixed(2)}`;
-
+            updateSubtotal();
             // Add event listeners for quantity changes
             document.querySelectorAll(".quantity").forEach(input => {
                 input.addEventListener("change", function(event) {
@@ -97,15 +97,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     .then(response => response.json())
                     .then(data => {
                         alert(data.message);
+                        
                         // Remove the item from the DOM
                         event.target.closest("tr").remove();
                         updateSubtotal();
-                    })
+                       
+                    }) 
                     .catch(error => console.error("Error removing cart item:", error));
                 });
             });
         })
         .catch(error => console.error("Error fetching cart items:", error));
+        
     function updateSubtotal() {
             let subtotal = 0;
             document.querySelectorAll(".cart-item").forEach(itemRow => {
@@ -130,8 +133,10 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelectorAll('input[name="discount"]').forEach(radio => {
             radio.addEventListener("change", applyDiscount);
         });
+        
         checkoutButton.addEventListener("click", function() {
             const finalSubtotal = parseFloat(subtotalPriceElement.textContent.replace("$", ""));
+            
             fetch(`http://localhost:5001/users/${userId}/checkout`, {
                 method: "POST",
                 headers: {
@@ -139,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 },
                 body: JSON.stringify({ subtotal: finalSubtotal }),
             })
+            
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -147,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 subtotalPriceElement.textContent = "$0.00";
                 confirmSubtotalPriceElement.textContent = "$0.00";
                 document.getElementById("wallet-amount").textContent = `$${data.newWalletBalance.toFixed(2)}`;
+                window.location.href = "history.html";
                 } else {
                     alert("Checkout failed: " + data.message);
                 }

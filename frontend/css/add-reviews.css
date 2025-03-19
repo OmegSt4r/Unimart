@@ -227,7 +227,23 @@ main {
     flex-direction: column;
     align-items: center;
 }
+.autocomplete-suggestions {
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+}
 
+.suggestion {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.suggestion:hover {
+    background-color: #f0f0f0;
+}
 .user-profile img {
     height: 50px;
     border-radius: 50%;

@@ -27,14 +27,26 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
     }
 });
+ // Dropdown category functionality
+ const categoryDropdown = document.getElementById("category-dropdown");
+ const categoryMenu = document.getElementById("category-menu");
+ const searchBar = document.getElementById("searchBar");
+
+ categoryMenu.addEventListener("click", function (event) {
+     if (event.target.tagName === "LI") {
+         const selectedCategory = event.target.textContent.trim();
+         searchBar.value = `${selectedCategory} - `;
+         fetchProducts(selectedCategory); // Fetch products based on the selected category
+     }
+ });
 
 // Search Bar Functionality
-document.getElementById("searchBar").addEventListener("keyup", function(event) {
-    let query = event.target.value.toLowerCase();
-    let products = document.querySelectorAll(".product");
+searchBar.addEventListener("keyup", function(event) {
+    const query = event.target.value.toLowerCase();
+    const products = document.querySelectorAll(".product");
 
     products.forEach(product => {
-        let description = product.textContent.toLowerCase();
+        const description = product.textContent.toLowerCase();
         if (description.includes(query)) {
             product.style.display = "block";
         } else {
@@ -42,7 +54,7 @@ document.getElementById("searchBar").addEventListener("keyup", function(event) {
         }
     });
 });
-
+fetchProducts();
 document.addEventListener("DOMContentLoaded", function() {
     const userId = localStorage.getItem("userId");
     if (userId) {
@@ -65,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const sortSelect = document.getElementById("sortPrice");
     const minPriceInput = document.getElementById("minPrice");
     const maxPriceInput = document.getElementById("maxPrice");
-    const productsContainer = document.querySelector(".products");
+   
     let products = [];
 
     // Fetch products from the backend
@@ -119,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     });
+    
     // Fetch Products from Backend
     function fetchProducts(tag = "") {
         let url = "http://localhost:5001/products";

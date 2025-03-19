@@ -18,16 +18,27 @@
             <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
             <h1>UniMart</h1>
         </div>
-        
-       <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <div class="search-container">
+            <div class="dropdown">
+                <button class="dropdown-toggle" id="category-dropdown">Categories ▼</button>
+                <ul class="dropdown-menu" id="category-menu">
+                    <li>Supplies</li>
+                    <li>Electronics</li>
+                    <li>Furniture</li>
+                    <li>Food</li>
+                    <li>Clothing</li>
+                </ul>
+            </div>
+            <input type="text" placeholder="Search..." id="searchBar">
+            <button id="search-button"><i class="fas fa-search">Search</i></button>
+        </div>
+       
     <div class="user-actions">
             
             <div class="wallet">
             <p>Wallet:<span id="wallet-amount"></span></p>
             </div>
             <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
-            <input type="text" placeholder="Search..." id="searchBar">
-            <i class="fas fa-shopping-cart"></i>
         <div class="user-profile">
             <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
             <a href="login.html"><button id="logout-button">Logout</button></a>
@@ -50,19 +61,6 @@
 
     
     <aside>
-        
-        <h3>Categories</h3>
-        <div class="filter-tags">
-         <ul>
-            <button><li>Supplies</li></button>
-            <button><li>Electronics</li></button>
-            <button><li>Furniture</li></button>
-            <button><li>Food</li></button>
-            <button><li>Clothing</li></button>
-                
-            </ul>
-        </div>
-        
         <div class="filter-container">
             <button class="filter-btn">Filters ▼</button>
             <div class="filter-dropdown">

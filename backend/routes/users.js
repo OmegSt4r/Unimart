@@ -159,48 +159,108 @@ router.post("/:userId/checkout", (req, res) => {
 
   // Fetch user's current wallet balance
   const fetchWalletSql = "SELECT wallet_balance FROM user_info WHERE user_id = ?";
-  db.query(fetchWalletSql, [userId], (err, results) => {
-      if (err) {
-          console.error("Error fetching wallet balance:", err);
-          res.status(500).json({ error: "Database error" });
-      } else {
-          const currentBalance = results[0].wallet_balance;
-          if (currentBalance < subtotal) {
-              res.status(400).json({ success: false, message: "Insufficient funds" });
-          } else {
-              // Fetch cart items for the user
-              const fetchCartSql = "SELECT * FROM carts WHERE user_id = ?";
-              db.query(fetchCartSql, [userId], (err, cartItems) => {
-                  if (err) {
-                      console.error("Error fetching cart items:", err);
-                      return res.status(500).json({ error: "Database error" });
-                  }
+    db.query(fetchWalletSql, [userId], (err, results) => {
+        if (err) {
+            console.error("Error fetching wallet balance:", err);
+            return res.status(500).json({ error: "Database error" });
+        }
 
-                 
-                  // Update user's wallet balance
-                  const newBalance = currentBalance - subtotal;
-                  const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
-                  db.query(updateWalletSql, [newBalance, userId], (err, result) => {
-                      if (err) {
-                          console.error("Error updating wallet balance:", err);
-                          return res.status(500).json({ error: "Database error" });
-                      }
+        const currentBalance = results[0]?.wallet_balance;
+        if (currentBalance < subtotal) {
+            return res.status(400).json({ success: false, message: "Insufficient funds" });
+        }
 
-                      // Clear the user's cart
-                      const clearCartSql = "DELETE FROM carts WHERE user_id = ?";
-                      db.query(clearCartSql, [userId], (err, result) => {
-                          if (err) {
-                              console.error("Error clearing cart:", err);
-                              return res.status(500).json({ error: "Database error" });
-                          }
+        // Fetch cart items for the user
+        const fetchCartSql = `
+    SELECT c.item_id, c.quantity, p.price
+    FROM carts c
+    JOIN products p ON c.item_id = p.product_id
+    WHERE c.user_id = ?
+`;
+        db.query(fetchCartSql, [userId], (err, cartItems) => {
+            if (err) {
+                console.error("Error fetching cart items:", err);
+                return res.status(500).json({ error: "Database error" });
+            }
 
-                          res.json({ success: true, newWalletBalance: newBalance });
-                      });
-                  });
-              });
+            if (cartItems.length === 0) {
+                return res.status(400).json({ success: false, message: "Cart is empty" });
+            }
+            if (cartItems.some(item => isNaN(item.price) || isNaN(item.quantity))) {
+              console.error("Invalid cart data:", cartItems);
+              return res.status(400).json({ error: "Invalid cart data. Please check your cart items." });
           }
-      }
-  });
+          const insertPurchaseSql = `
+          INSERT INTO purchases (buyer_id, cart_contents, cart_price)
+          VALUES (?, ?, ?)
+      `;
+      const cartContents = cartItems.map(item => `${item.item_id}:${item.quantity}`).join(","); // Example: "1:2,3:1"
+      db.query(insertPurchaseSql, [userId, cartContents, subtotal], (err, purchaseResult) => {
+          if (err) {
+              console.error("Error inserting into purchases:", err);
+              return res.status(500).json({ error: "Database error" });
+          }
+            // Generate a unique purchase ID (e.g., timestamp)
+            const purchaseId = purchaseResult.insertId;
+
+            // Insert cart items into the history_itmes table
+            const insertHistorySql = `
+                INSERT INTO history_itmes (user_id, item_id, quantity, price, purchase_id)
+                VALUES ?
+            `;
+            const historyValues = cartItems.map(item => {
+              const price = parseFloat(item.price);
+              const quantity = parseInt(item.quantity, 10);
+          
+              if (isNaN(price) || isNaN(quantity)) {
+                  console.error("Invalid price or quantity for item:", item);
+                  throw new Error("Invalid price or quantity");
+              }
+          
+              return [
+               
+                  userId,
+                  item.item_id,
+                  quantity,
+                  price * quantity,
+                  purchaseId
+              ];
+          });
+
+            db.query(insertHistorySql, [historyValues], (err) => {
+                if (err) {
+                    console.error("Error inserting into history_itmes:", err);
+                    return res.status(500).json({ error: "Database error" });
+                }
+
+                // Update user's wallet balance
+                const newBalance = currentBalance - subtotal;
+                const updateWalletSql = "UPDATE user_info SET wallet_balance = ? WHERE user_id = ?";
+                db.query(updateWalletSql, [newBalance, userId], (err) => {
+                    if (err) {
+                        console.error("Error updating wallet balance:", err);
+                        return res.status(500).json({ error: "Database error" });
+                    }
+
+                    // Clear the user's cart
+                    const clearCartSql = "DELETE FROM carts WHERE user_id = ?";
+                    db.query(clearCartSql, [userId], (err) => {
+                        if (err) {
+                            console.error("Error clearing cart:", err);
+                            return res.status(500).json({ error: "Database error" });
+                        }
+
+                        res.json({
+                            success: true,
+                            message: "Checkout completed successfully!",
+                            newWalletBalance: newBalance
+                        });
+                    });
+                });
+            });
+        });
+    });
+});
 });
 router.post("/:userId/increase-balance", (req, res) => {
   const userId = req.params.userId;
@@ -402,38 +462,125 @@ router.post('/:userId/upgrade', (req, res) => {
       });
   });
 });
-router.get("/:userId/my-reviews", (req, res) => {
-  const userId = req.params.userId;
-  const { page = 1, limit = 10 } = req.query;
-  const offset = (page - 1) * limit;
-  
-  const sql = `
+router.get("/:userId/reviews", async (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+  if (isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+  }
+
+  const sellerReviewsQuery = `
       SELECT sr.review_id, sr.comment, sr.rating, 
              u.username AS reviewer, 
              s.company_name AS seller
       FROM seller_reviews sr
       JOIN users u ON sr.review_source = u.user_id
       JOIN sellers s ON sr.review_subject = s.seller_id
-      WHERE sr.review_source = ?
-      UNION
+      WHERE sr.review_subject = ?
+  `;
+
+  const userReviewsQuery = `
       SELECT ur.review_id, ur.comment, ur.rating, 
              reviewer.username AS reviewer, 
              subject.username AS reviewed_user
       FROM user_reviews ur
       JOIN users reviewer ON ur.comment_source = reviewer.user_id
       JOIN users subject ON ur.comment_subject = subject.user_id
-      WHERE ur.comment_source = ?
-      LIMIT ? OFFSET ?
+      WHERE ur.comment_subject = ?
   `;
-  
-  db.query(sql, [userId, userId, parseInt(limit), parseInt(offset)], (err, results) => {
+
+  try {
+      const [sellerReviews] = await db.promise().query(sellerReviewsQuery, [userId]);
+      const [userReviews] = await db.promise().query(userReviewsQuery, [userId]);
+
+      res.json({ sellerReviews, userReviews });
+  } catch (err) {
+      console.error("Error fetching reviews:", err);
+      res.status(500).json({ error: "Failed to fetch reviews" });
+  }
+});
+router.post("/:userId/seller-reviews", (req, res) => {
+  const { comment, rating, review_source } = req.body;
+  const review_subject = parseInt(req.params.userId);
+
+  if (!comment || !rating || !review_source || !review_subject) {
+      return res.status(400).json({ error: "All fields are required." });
+  }
+
+  const sql = `
+      INSERT INTO seller_reviews (comment, rating, review_source, review_subject) 
+      VALUES (?, ?, ?, ?)
+  `;
+  db.query(sql, [comment, rating, review_source, review_subject], (err, result) => {
       if (err) {
-          console.error("Error fetching user reviews:", err);
+          console.error("Error adding seller review:", err);
           return res.status(500).json({ error: "Database error" });
       }
-      res.json(results);
+      res.status(201).json({ message: "Seller review added successfully", id: result.insertId });
   });
 });
 
+// Add a user review for a specific user
+router.post("/:userId/user-reviews", (req, res) => {
+  const { comment, rating, comment_source } = req.body;
+  const comment_subject = parseInt(req.params.userId, 10);
+
+  if (!comment || !rating || !comment_subject || !comment_source ) {
+    console.error("Missing required fields:", { comment, rating, comment_subject, comment_source  });
+      return res.status(400).json({ error: "All fields are required." });
+  }
+
+  const sql = `
+      INSERT INTO user_reviews (comment, rating, comment_subject, comment_source) 
+      VALUES (?, ?, ?, ?)
+  `;
+  db.query(sql, [comment, rating,  comment_subject, comment_source], (err, result) => {
+      if (err) {
+          console.error("Error adding user review:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+      res.status(201).json({ message: "User review added successfully", id: result.insertId });
+  });
+});
+router.get("/search", async (req, res) => {
+  const { query, type } = req.query; // `query` is the search term, `type` is "seller" or "user"
+  let sql;
+
+  if (type === "seller") {
+      sql = `SELECT seller_id AS id, company_name AS name FROM sellers WHERE company_name LIKE ?`;
+  } else if (type === "user") {
+      sql = `SELECT user_id AS id, username AS name FROM users WHERE username LIKE ?`;
+  } else {
+      return res.status(400).json({ error: "Invalid type" });
+  }
+
+  try {
+      const [results] = await db.promise().query(sql, [`%${query}%`]);
+      res.json(results);
+  } catch (err) {
+      console.error("Error fetching search results:", err);
+      res.status(500).json({ error: "Database error" });
+  }
+});
+router.get("/:userId/history", (req, res) => {
+  const userId = req.params.userId;
+
+  const sql = `
+      SELECT hi.history_items_id, hi.quantity, hi.price, 
+             p.product_name, p.p_description, p.p_image
+      FROM history_itmes hi
+      JOIN products p ON hi.item_id = p.product_id
+      WHERE hi.user_id = ?
+      ORDER BY hi.history_items_id DESC
+  `;
+
+  db.query(sql, [userId], (err, results) => {
+      if (err) {
+          console.error("Error fetching purchase history:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+
+      res.json(results);
+  });
+});
 
 module.exports = router;

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purchases Unimart</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/history.css">
     <link rel="icon" href="images/Senior Capstone Project Report.png">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     
@@ -29,26 +29,19 @@
             
         </div>
     </header>
-
-    
-    <nav>
-        
-         
-        <a href="index.html"> <button>Home</button></a>
-         <a href="trending.html"><button>Trending</button></a>
-         <a href= "my-reviews.html"><button>Reviews</button></a>
-         <a href="history.html"><button  class="active">Purchase History</button></a>
-         <a href="my-products.html"><button>My Products</button></a> 
-     
-     
-     </nav>
+        <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+            <a href="index.html"> <button >Home</button></a>
+            <a href="trending.html"><button>Trending</button></a>
+            <a href="my-reviews.html"><button>Reviews</button></a>
+            <a href="history.html"><button class="active">History</button></a>
+            <a href="my-products.html"><button>My Products</button></a> 
+        </nav>
     <main>
+        <h1>Purchase History</h1>
+    <div id="purchase-history-container">
+        <p>Loading your purchase history...</p>
+    </div>
     
-    
-        <div id="purchase-history-items">
-            <!-- Products will be added dynamically -->
-        </div>
-   
  </main>
  <script src="js/app.js"></script>
 <script src="js/history.js"></script>

@@ -1,5 +1,9 @@
-CREATE DATABASE  IF NOT EXISTS `unimart` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `unimart`;
+-- MySQL dump 10.13  Distrib 8.0.41, for Win64 (x86_64)
+--
+-- Host: localhost    Database: unimart
+-- ------------------------------------------------------
+-- Server version	8.0.41
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -42,6 +46,39 @@ INSERT INTO `carts` VALUES (1,1,2,1),(5,4,15,1);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `history_itmes`
+--
+
+DROP TABLE IF EXISTS `history_itmes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `history_itmes` (
+  `history_items_id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `item_id` int NOT NULL,
+  `quantity` int NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `purchase_id` int NOT NULL,
+  PRIMARY KEY (`history_items_id`),
+  KEY `item_id_idx` (`item_id`),
+  KEY `user_id_idx` (`user_id`),
+  KEY `purchase_id_idx` (`purchase_id`),
+  CONSTRAINT `item_id` FOREIGN KEY (`item_id`) REFERENCES `products` (`product_id`),
+  CONSTRAINT `purchase_id` FOREIGN KEY (`purchase_id`) REFERENCES `purchases` (`purchase_id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history_itmes`
+--
+
+LOCK TABLES `history_itmes` WRITE;
+/*!40000 ALTER TABLE `history_itmes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history_itmes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `products`
 --
 
@@ -55,12 +92,12 @@ CREATE TABLE `products` (
   `price` decimal(10,2) NOT NULL,
   `inventory` int NOT NULL,
   `p_description` varchar(255) NOT NULL,
-  `p_image` varchar(255),
+  `p_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
   UNIQUE KEY `product_id_UNIQUE` (`product_id`),
   KEY `product_to_seller_idx` (`seller_id`),
   CONSTRAINT `product_to_seller` FOREIGN KEY (`seller_id`) REFERENCES `sellers` (`seller_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +106,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants',NULL),(2,'Backpack',3,20.00,1,'16-inch sport backpack',NULL),(3,'Notebook',4,4.99,5,'wide ruled notebook',NULL),(4,'Pencils',3,4.00,2,'24-pack #2 pencils',NULL),(5,'Laptop',2,84.36,1,'Macbook',NULL),(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock',NULL),(7,'Surge Protector',2,4.99,50,'8-socket surge protector',NULL),(8,'iPhone Charger',3,2.00,100,'Lightning to USB charging cord',NULL),(9,'OU Sweatpants',4,20.00,30,'OU men\'s sweatpants',NULL),(10,'OU Sweatpants',4,20.00,35,'OU women\'s sweatpants',NULL),(11,'UofM Sweatpants',4,20.00,25,'UofM men\'s sweatpants',NULL),(12,'UofM Sweatpants',4,20.00,25,'UofM women\'s sweatpants',NULL),(13,'MSU Sweatpants',4,20.00,25,'MSU men\'s sweatpants',NULL),(14,'OU Hoodie',4,25.00,30,'OU men\'s hoodie',NULL),(15,'OU Hoodie',4,25.00,34,'OU women\'s hoodie',NULL),(16,'UofM Hoodie',4,25.00,25,'UofM men\'s hoodie',NULL),(17,'UofM Hoodie',4,25.00,25,'UofM women\'s hoodie',NULL),(18,'MSU Hoodie',4,25.00,25,'MSU men\'s hoodie',NULL),(19,'MSU Hoodie',4,25.00,25,'MSU women\'s hoodie',NULL),(20,'Graphing Calculator',1,30.00,15,'TI-83',NULL),(21,'Non-Graphing Calculator',1,25.00,15,'TI-30Xa',NULL),(22,'LED strip lights',3,5.00,3,'30-ft LED strip lights with controller',NULL),(23,'Dragon Ball Anime Tapestry',3,30.00,1,'Character design wall tapestry',NULL),(24,'Ramen 12-pack',2,3.00,10,'Maruchan Beef Ramen 12-pack',NULL),(25,'Ramen 12-pack',2,3.00,10,'Maruchan Shrimp Ramen 12-pack',NULL),(26,'Ramen 12-pack',2,3.00,10,'Maruchan Chicken Ramen 12-pack',NULL),(27,'Ramen 12-pack',2,3.00,10,'Maruchan Pork Ramen 12-pack',NULL),(28,'Winter Coat',1,10.00,1,'Cold-Weather Jacket',NULL),(29,'Water Bottle Case',2,7.00,30,'Ice Mountain 16.9oz Water Bottle 48-pack',NULL),(30,'Phone Case',1,20.00,5,'Clear iPhone 15 Case',NULL);
+INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants',NULL),(2,'Backpack',3,20.00,1,'16-inch sport backpack',NULL),(3,'Notebook',4,4.99,5,'wide ruled notebook',NULL),(4,'Pencils',3,4.00,2,'24-pack #2 pencils',NULL),(5,'Laptop',2,84.36,1,'Macbook',NULL),(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock',NULL),(7,'Surge Protector',2,4.99,50,'8-socket surge protector',NULL),(8,'iPhone Charger',3,2.00,100,'Lightning to USB charging cord',NULL),(9,'OU Sweatpants',4,20.00,30,'OU men\'s sweatpants',NULL),(10,'OU Sweatpants',4,20.00,35,'OU women\'s sweatpants',NULL),(11,'UofM Sweatpants',4,20.00,25,'UofM men\'s sweatpants',NULL),(12,'UofM Sweatpants',4,20.00,25,'UofM women\'s sweatpants',NULL),(13,'MSU Sweatpants',4,20.00,25,'MSU men\'s sweatpants',NULL),(14,'OU Hoodie',4,25.00,30,'OU men\'s hoodie',NULL),(15,'OU Hoodie',4,25.00,34,'OU women\'s hoodie',NULL),(16,'UofM Hoodie',4,25.00,25,'UofM men\'s hoodie',NULL),(17,'UofM Hoodie',4,25.00,25,'UofM women\'s hoodie',NULL),(18,'MSU Hoodie',4,25.00,25,'MSU men\'s hoodie',NULL),(19,'MSU Hoodie',4,25.00,25,'MSU women\'s hoodie',NULL),(20,'Graphing Calculator',1,30.00,15,'TI-83',NULL),(21,'Non-Graphing Calculator',1,25.00,15,'TI-30Xa',NULL),(22,'LED strip lights',3,5.00,3,'30-ft LED strip lights with controller',NULL),(23,'Dragon Ball Anime Tapestry',3,30.00,1,'Character design wall tapestry',NULL),(24,'Ramen 12-pack',2,3.00,10,'Maruchan Beef Ramen 12-pack',NULL),(25,'Ramen 12-pack',2,3.00,10,'Maruchan Shrimp Ramen 12-pack',NULL),(26,'Ramen 12-pack',2,3.00,10,'Maruchan Chicken Ramen 12-pack',NULL),(27,'Ramen 12-pack',2,3.00,10,'Maruchan Pork Ramen 12-pack',NULL),(28,'Winter Coat',1,10.00,1,'Cold-Weather Jacket',NULL),(29,'Water Bottle Case',2,7.00,30,'Ice Mountain 16.9oz Water Bottle 48-pack',NULL),(30,'Phone Case',1,20.00,5,'Clear iPhone 15 Case',NULL),(31,'Pen ',5,4.00,34,'black pen','1741654494748.jpg');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +182,7 @@ CREATE TABLE `sellers` (
   PRIMARY KEY (`seller_id`),
   KEY `seller_to_user_idx` (`owner_id`),
   CONSTRAINT `seller_to_user` FOREIGN KEY (`owner_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +191,7 @@ CREATE TABLE `sellers` (
 
 LOCK TABLES `sellers` WRITE;
 /*!40000 ALTER TABLE `sellers` DISABLE KEYS */;
-INSERT INTO `sellers` VALUES (1,'guy_who_sells',2),(2,'the_original',1),(3,'Abby',3),(4,'Ken',5);
+INSERT INTO `sellers` VALUES (1,'guy_who_sells',2),(2,'the_original',1),(3,'Abby',3),(4,'boratheseller',11),(5,'Ken',5);
 /*!40000 ALTER TABLE `sellers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +236,7 @@ CREATE TABLE `tags_list` (
   KEY `tag_list_to_item_idx` (`linked_item`),
   CONSTRAINT `tag_list_to_item` FOREIGN KEY (`linked_item`) REFERENCES `products` (`product_id`),
   CONSTRAINT `tag_list_to_tag` FOREIGN KEY (`linked_tag`) REFERENCES `tags` (`tag_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +246,6 @@ CREATE TABLE `tags_list` (
 LOCK TABLES `tags_list` WRITE;
 /*!40000 ALTER TABLE `tags_list` DISABLE KEYS */;
 INSERT INTO `tags_list` VALUES (1,1,2),(2,3,2),(3,2,3),(4,3,3),(5,2,4),(6,3,4),(7,2,1),(8,7,1),(9,1,5),(10,5,5),(11,1,6),(12,5,6),(13,2,7),(14,5,7),(15,5,8),(16,2,8),(17,2,9),(18,7,9),(19,2,10),(20,7,10),(21,2,11),(22,7,11),(23,2,12),(24,7,12),(25,2,13),(26,7,13),(27,2,14),(28,7,14),(29,2,15),(30,7,15),(31,2,16),(32,7,16),(33,2,17),(34,7,17),(35,2,18),(36,7,18),(37,2,19),(38,7,19),(39,6,24),(40,6,25),(41,6,26),(42,6,27);
-
 /*!40000 ALTER TABLE `tags_list` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,7 +266,7 @@ CREATE TABLE `user_info` (
   PRIMARY KEY (`info_id`),
   KEY `info_to_user_idx` (`user_id`),
   CONSTRAINT `info_to_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +275,7 @@ CREATE TABLE `user_info` (
 
 LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES (1,1,NULL,'OGpassword','original@academy.edu',50.00),(2,5,NULL,'kenspassword','ken@place.edu',50.00),(3,3,NULL,'abbyknowsbest','abby@place.edu',50.00),(4,4,NULL,'meganissmart','megan@university.com',50.00),(5,2,NULL,'sellingsogood','buymystuff@school.edu',50.00),(6,6,NULL,'newestpassword','newguy@email.edu',45.01);
+INSERT INTO `user_info` VALUES (1,1,NULL,'OGpassword','original@academy.edu',50.00),(2,5,NULL,'kenspassword','ken@place.edu',50.00),(3,3,NULL,'abbyknowsbest','abby@place.edu',50.00),(4,4,NULL,'meganissmart','megan@university.com',50.00),(5,2,NULL,'sellingsogood','buymystuff@school.edu',50.00),(6,6,NULL,'newestpassword','newguy@email.edu',45.01),(7,11,NULL,'$2b$10$95in/0T5SPlnOe/lopUdNeO6sOa20FdDtSOeXLLvveztKfma9VA4S','borakutlu@oakland.edu',0.00);
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,7 +322,7 @@ CREATE TABLE `users` (
   `username` varchar(45) NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -295,7 +331,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (3,'Abby'),(5,'Ken'),(4,'Megan'),(6,'newusername'),(1,'originalguy'),(8,'paulannoyance'),(2,'sellerdude'),(9,'skinnypete'),(10,'twoarmslouise');
+INSERT INTO `users` VALUES (3,'Abby'),(11,'Bora'),(5,'Ken'),(4,'Megan'),(6,'newusername'),(1,'originalguy'),(8,'paulannoyance'),(2,'sellerdude'),(9,'skinnypete'),(10,'twoarmslouise');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -308,4 +344,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-20 23:22:21
+-- Dump completed on 2025-03-18 19:48:32

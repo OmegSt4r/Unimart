@@ -13,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 const db = mysql.createConnection({
@@ -40,13 +39,15 @@ const productRoutes = require("./routes/products");
 const cartRoutes = require("./routes/carts");
 const userRoutes = require("./routes/users");
 const tagsRoutes = require("./routes/tags");
-const reviewRoutes = require("./routes/reviews")
+const reviewRoutes = require("./routes/reviews");
+const purchasesRoutes = require("./routes/purchases");
 
 app.use("/products", productRoutes);
 app.use("/carts", cartRoutes);   
 app.use("/users", userRoutes);
 app.use("/tags", tagsRoutes);
 app.use("/reviews", reviewRoutes);
+app.use("/purchases",purchasesRoutes);
 
 
 app.listen(PORT, () => {

@@ -20,7 +20,7 @@
         </div>
         <div class="search-container">
             <div class="dropdown">
-                <button class="dropdown-toggle" id="category-dropdown">Categories ▼</button>
+                <button class="dropdown-toggle" id="category-dropdown">▼</button>
                 <ul class="dropdown-menu" id="category-menu">
                     <li>Supplies</li>
                     <li>Electronics</li>
@@ -29,8 +29,8 @@
                     <li>Clothing</li>
                 </ul>
             </div>
-            <input type="text" placeholder="Search..." id="searchBar">
-            <button id="search-button"><i class="fas fa-search">Search</i></button>
+            <input  type="text" placeholder="Search..." id="searchBar">
+            
         </div>
        
     <div class="user-actions">
@@ -39,7 +39,7 @@
             <p>Wallet:<span id="wallet-amount"></span></p>
             </div>
             <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
-        <div class="user-profile">
+        <div class="user-profile m-hidden">
             <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
             <a href="login.html"><button id="logout-button">Logout</button></a>
         </div>
@@ -48,7 +48,7 @@
     
 </header>
 
-<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
     <a href="index.html"> <button class="active">Home</button></a>
     <a href="trending.html"><button>Trending</button></a>
     <a href="my-reviews.html"><button>Reviews</button></a>
@@ -75,7 +75,6 @@
                     <input type="number" id="minPrice" placeholder="Min Price">
                     <label for="maxPrice">Max Price:</label>
                     <input type="number" id="maxPrice" placeholder="Max Price">
-                    <button class="filter-btn">Filter</button>
                 </div>
             </div>
         </div>
@@ -91,6 +90,29 @@
         </div>
    
  </main>
+ <div class="mobile-navbar">
+    <a href="index.html">
+        <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo" class="logo">
+    </a>
+    <a href="profile.html">
+        <img src="images/profile.jpg" class="profile-pic" alt="Profile Picture">
+    </a>
+    <a id="cart-link" href="cart.html">
+        <img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon">
+    </a>
+    <button class="hamburger-menu" id="hamburger-menu">
+        <img src="images/Menu-Icon-PNG.png" alt="Menu" />
+    </button>
+</div>
+<div class="hamburger-menu-content" id="hamburger-menu-content">
+    <ul>
+        <li><a href="add-product.html"><button id="add-product-button">+ Add Product</button></a></li>
+        <li><a href="trending.html">Trending</a></li>
+        <li><a href="my-reviews.html">Reviews</a></li>
+        <li><a href="history.html">History</a></li>
+        <li><a href="my-products.html">My Products</a></li>
+    </ul>
+</div>
 <script src="js/app.js"></script>
 <script src="js/wallet.js"></script>
 <script>src="js/profile.js"</script>

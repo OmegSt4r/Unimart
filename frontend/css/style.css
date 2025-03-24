@@ -3,11 +3,11 @@ html, body {
     height:100%;
     margin:0;
     padding:0;
-    background: linear-gradient(to bottom, #777, #E0CDA9);
+    background: linear-gradient(to top, #B39A60 0%, #000000 100%);
    background-attachment: fixed;
    width:100%;
    overflow-x:hidden;
-   overflow-y:hidden;
+   
    
 }
 
@@ -16,7 +16,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: black;
+    background: radial-gradient(circle, #333333 0%, #000000 100%);
     color: white;
     padding: 10px 20px;
 }
@@ -32,7 +32,7 @@ header {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    margin-left: 10px;
+    
     margin-right: 10px;
 }
 
@@ -54,12 +54,12 @@ header {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: white;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
     color: black;
     border: 1px solid #ddd;
     border-radius: 5px;
     list-style: 12;
-    padding: 10px;
+    padding: 20px;
     margin: 0;
     z-index: 1000;
 }
@@ -117,7 +117,7 @@ header {
 nav {
     display: flex;
     width: 100%;  /* Makes nav stretch across the entire page */
-    
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
     flex-wrap: wrap;
     justify-content: space-between; /* Adjusts spacing */
 
@@ -135,15 +135,18 @@ nav button {
     border: none;
     cursor: pointer;
     text-align: center;
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
+    color: white;
     display: block; /* Ensures button behaves properly inside <a> */
 }
 
 nav button.active {
-    background: blue;
+    background: linear-gradient(to top, #B39A60, #333333);
     color: white;
 }
 nav button:hover {
-    background: darkblue;
+    background: #8C7A50;
+    background: linear-gradient(to top, #B39A60, #333333);
     color:white;
 }
 /* Sidebar */
@@ -332,141 +335,178 @@ main {
     text-align: center;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
 }
-
-/* Existing styles... */
-
-/* Mobile styles for iPhone X and similar devices */
-@media (max-width: 500px) {
-    /* Header */
+/* Hide hamburger menu and mobile navbar on desktop */
+.hamburger-menu-content {
+    display: none;
+}
+.mobile-navbar {
+    display: none;
+}
+/* Media query for iPhone X and similar devices */
+/* General Mobile Styles */
+/* General Mobile Styles */
+/* Media query for mobile devices */
+@media only screen and (max-width: 768px) {
     header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: black;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
+      padding:20px; /* Reduce padding for smaller screens */
+        flex-direction: row; /* Stack elements vertically */
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
+        margin:0;
     }
 
-    .logo {
-        display: flex;
-        align-items: center;
+    
+
+    .search-container {
+        flex-direction: row; /* Stack search bar elements vertically */
+        /* Make elements take full width */
+        /* Add spacing between elements */
     }
 
-    .logo img {
-        width: 40px;
-        margin-right: 10px;
+    .search-container input[type="text"] {
+        width: 100%; /* Make the input field take full width */
     }
+
+   
 
     .user-actions {
+        display: none; /* Hide user actions in the header on mobile */
+    }
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-y: hidden;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    /* Hide the Unimart title */
+    aside {
+        display: none; /* Hide the aside on mobile */
+    }
+
+    
+    /* Show hamburger menu and mobile navbar */
+    .hamburger-menu,
+    .mobile-navbar {
         display: flex;
-        align-items: center;
     }
-
-    .user-actions input {
-        padding: 5px;
-        margin-right: 10px;
-        width: 200px;
-    }
-
-    .menu-toggle {
-        display: block;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 28px;
-        cursor: pointer;
-    }
-
-    /* Hide default nav links */
-    nav {
+    h1 {
         display: none;
-        flex-direction: column;
-        width: 100%;
-        background: black;
-        position: absolute;
-        top: 50px; /* Below header */
-        left: 0;
-        text-align: center;
-        padding: 10px 0;
-        z-index: 1000;
     }
 
-    nav.show {
+    /* Header adjustments */
+    
+    /* Keep categories and search bar in the header */
+    .categories {
+        flex: 1;
         display: flex;
-    }
-
-    nav a {
-        width: 100%;
-    }
-
-    nav button {
-        width: 100%;
-        background: black;
-        color: white;
-        padding: 12px;
-        border: none;
-        font-size: 16px;
-    }
-
-    nav button:hover {
-        background: darkblue;
-    }
-
-    /* Adjust main content */
-    main {
-        margin-top: 60px; /* Adjust based on the height of the header */
-        padding: 10px;
-    }
-
-    .products {
-        display: flex;
-        flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
     }
 
-    .product {
-        width: 90%;
-        max-width: 300px;
-        margin-bottom: 20px;
+    .search-bar {
+        flex: 2;
+        margin-left: 10px;
     }
 
-    /* Mobile footer */
-    .mobile-footer {
-        display: flex;
+    /* Move profile picture and cart to the bottom navbar */
+    .user-actions {
+        display: none; /* Hide user actions in the header */
+    }
+
+    .mobile-navbar {
         justify-content: space-around;
         align-items: center;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #fff;
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
         border-top: 1px solid #ddd;
         padding: 10px 0;
+        z-index: 1000;
     }
 
-    .mobile-footer a {
+    .mobile-navbar a {
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-decoration: none;
+        color:white;
     }
 
-    .mobile-footer img {
-        height: 40px;
-        width: 40px;
+    .mobile-navbar img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .mobile-navbar span {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .hamburger-menu {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu img {
+        height: 30px;
+        width: 30px;
+    }
+
+    /* Hamburger menu content */
+    .hamburger-menu-content {
+        display: none;
+        position: fixed;
+        bottom: 60px; /* Above the mobile navbar */
+        right: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        padding: 10px;
+    }
+
+    .hamburger-menu-content ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hamburger-menu-content li {
+        margin: 10px 0;
+    }
+
+    .hamburger-menu-content a,
+    .hamburger-menu-content button {
+        text-decoration: none;
+        color: black;
+        font-size: 14px;
+        padding: 5px 10px;
+        display: block;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu-content a:hover,
+    .hamburger-menu-content button:hover {
+        background: #f1f1f1;
+        border-radius: 5px;
+    }
+
+   
+nav{display:none;}
+    /* Adjust main content to avoid overlapping with the navbar */
+    main {
+         /* Account for the fixed header */
+        margin-bottom: 60px; /* Account for the fixed mobile-navbar */
+        margin-left: 0; /* Remove the left margin when aside is hidden */
+        padding: 10px; /* Adjust padding for mobile */
+        width: 100%; /* Ensure main takes up the full width */
+        box-sizing: border-box;
+       
     }
 }
-
-/* Default: Hide Hamburger Icon on Desktop */
-.menu-toggle {
-    display: none;
-}
-
-/* Default: Hide Mobile Footer on Desktop */
-.mobile-footer {
-    display: none;
-}
-
-

@@ -230,6 +230,7 @@ main {
     padding: 20px;
     overflow: auto; /* Make the main section scrollable */
     height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
+    box-sizing: border-box; /* Ensure padding is included in the width/height */
 }
 
 .product {
@@ -276,4 +277,154 @@ main {
     height: 50px;
     border-radius: 50%;
     margin-bottom: 5px;
+}
+@media only screen and (max-width: 768px) {
+    /* Hide the Unimart title */
+   
+    
+    /* Show hamburger menu and mobile navbar */
+    .hamburger-menu,
+    .mobile-navbar {
+        display: flex;
+    }
+    h1 {
+        display: none;
+    }
+
+    /* Header adjustments */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: black;
+        color: white;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Keep categories and search bar in the header */
+    .categories {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .search-bar {
+        flex: 2;
+        margin-left: 10px;
+    }
+
+    /* Move profile picture and cart to the bottom navbar */
+    .user-actions {
+        display: none; /* Hide user actions in the header */
+    }
+
+    .mobile-navbar {
+       
+        justify-content: space-around;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: black;
+        border-top: 1px solid #ddd;
+        padding: 10px 0;
+        z-index: 1000;
+    }
+
+    .mobile-navbar a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color:white;
+    }
+
+    .mobile-navbar img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .mobile-navbar span {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .hamburger-menu {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu img {
+        height: 30px;
+        width: 30px;
+    }
+
+    /* Hamburger menu content */
+    .hamburger-menu-content {
+        display: none;
+        position: fixed;
+        bottom: 60px; /* Above the mobile navbar */
+        right: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        padding: 10px;
+    }
+
+    .hamburger-menu-content ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hamburger-menu-content li {
+        margin: 10px 0;
+    }
+
+    .hamburger-menu-content a,
+    .hamburger-menu-content button {
+        text-decoration: none;
+        color: black;
+        font-size: 14px;
+        padding: 5px 10px;
+        display: block;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu-content a:hover,
+    .hamburger-menu-content button:hover {
+        background: #f1f1f1;
+        border-radius: 5px;
+    }
+
+
+    /* Adjust main content to avoid overlapping with the navbar */
+    main {
+        margin-left: 0; /* Remove the left margin when aside is hidden */
+        padding: 10px; /* Adjust padding for mobile */
+        width: 100%; /* Ensure main takes up the full width */
+        height: auto; /* Let the height adjust based on content */
+        overflow: visible; /* Allow content to expand naturally */
+        box-sizing: border-box; /* Ensure padding is included in the width/height */
+    }
+
+    nav{display:none;}
+    
+}
+.hamburger-menu-content {
+    display: none;
+}
+.mobile-navbar {
+    display: none;
 }

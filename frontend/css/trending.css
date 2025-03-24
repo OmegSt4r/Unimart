@@ -149,4 +149,7 @@ aside li {
     padding: 8px;
     cursor: pointer;
 }
-
+.hamburger-menu,
+.mobile-navbar {
+    display: none;
+}

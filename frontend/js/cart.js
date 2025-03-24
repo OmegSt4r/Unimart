@@ -1,7 +1,18 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const userId = localStorage.getItem("userId");
+document.addEventListener("DOMContentLoaded", function () {
+    // Retrieve userId from localStorage or fallback to URL parameters
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+        const urlParams = new URLSearchParams(window.location.search);
+        userId = urlParams.get("userId");
+    }
+
+    // Redirect to login page if userId is not found
+    if (!userId) {
+        alert("Please log in to view your cart.");
+        window.location.href = "login.html";
+        return;
+    }
    
-    if (userId) {
         fetch(`http://localhost:5001/users/${userId}`)
             .then(response => response.json())
             .then(user => {
@@ -17,23 +28,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 document.querySelector(".user-actions").appendChild(userName);
             })
             .catch(error => console.error("Error fetching user data:", error));
-    } else {
-        // Handle case where user is not logged in
-        const contentDiv = document.getElementById("content");
-        contentDiv.innerHTML = `
-            <h1>Welcome to UniMart!</h1>
-            <p>Please <a href="login.html">log in</a> to access your account.</p>
-        `;
-    }
-});
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get("userId");
-    if (!userId) {
-        alert("Please log in to view your cart.");
-        window.location.href = "login.html";
-        return;
-    }
+        
+
     const cartItemsDiv = document.getElementById("cart-items"); 
     const confirmSubtotalPriceElement = document.getElementById("confirm-subtotal-price");
     const subtotalPriceElement = document.getElementById("subtotal-price");
@@ -159,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             })
             .catch(error => console.error("Error during checkout:", error));
-        });
+        });});
        // Handle step navigation
     document.getElementById("step1").addEventListener("click", function() {
         setActiveStep("step1", "subtotal-step");
@@ -188,10 +184,25 @@ document.addEventListener("DOMContentLoaded", function() {
         // Show the selected step
         document.getElementById(stepId).style.display = "block";
     }
-});
 document.addEventListener("DOMContentLoaded", function () {
     const profilePic = localStorage.getItem("profilePic");
     if (profilePic) {
         updateProfilePictures(profilePic);
     }
+});
+document.addEventListener("DOMContentLoaded", function () {
+    const hamburgerMenu = document.getElementById("hamburger-menu");
+    const hamburgerMenuContent = document.getElementById("hamburger-menu-content");
+
+    hamburgerMenu.addEventListener("click", function () {
+        const isVisible = hamburgerMenuContent.style.display === "block";
+        hamburgerMenuContent.style.display = isVisible ? "none" : "block";
+    });
+
+    // Close the menu when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!hamburgerMenu.contains(event.target) && !hamburgerMenuContent.contains(event.target)) {
+            hamburgerMenuContent.style.display = "none";
+        }
+    });
 });

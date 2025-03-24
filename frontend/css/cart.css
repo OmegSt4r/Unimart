@@ -63,7 +63,17 @@ nav button:hover {
     padding: 20px;
     
 }
-
+main {
+    
+    margin: auto;
+     /* Add padding for spacing */
+    width: 100%; /* Ensure it takes up the full width */
+    max-width: 1200px; /* Limit the maximum width for larger screens */
+    box-sizing: border-box; /* Include padding and borders in the width */
+    background: white; /* Ensure a clean background */
+    border-radius: 5px; /* Add rounded corners */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
 
 .cart {
     flex: 1;
@@ -85,17 +95,24 @@ nav button:hover {
 
 
 table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 100%; /* Make the table take up the full width */
+    border-collapse: collapse; /* Remove gaps between table cells */
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
 }
-
 
 th, td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
+    padding: 10px; /* Add padding for spacing */
+    text-align: left; /* Align text to the left */
+    word-wrap: break-word; /* Break long words to prevent overflow */
 }
 
+table th, table td {
+    font-size: 14px; /* Adjust font size for smaller screens */
+}
+img {
+    max-width: 100%; /* Ensure images do not overflow */
+    height: auto; /* Maintain aspect ratio */
+}
 
 .checkout-steps button {
     display: block;
@@ -121,4 +138,185 @@ th, td {
     background: green;
     padding: 5px 10px;
     border-radius: 5px;
+}
+.hamburger-menu-content {
+    display: none;
+}
+.mobile-navbar {
+    display: none;
+}
+@media only screen and (max-width: 768px) {
+    
+
+    .cart-container {
+        flex-direction: column; /* Stack items vertically */
+        padding: 10px; /* Adjust padding */
+    }
+
+    .cart-item {
+        flex-direction: column; /* Stack content vertically */
+        align-items: flex-start; /* Align items to the left */
+        padding: 10px; /* Add padding for spacing */
+    }
+
+    .cart-item img {
+        width: 100%; /* Make images responsive */
+        max-width: 100px; /* Limit the maximum width */
+        height: auto; /* Maintain aspect ratio */
+        margin-bottom: 10px; /* Add spacing below the image */
+    }
+
+    .cart-summary {
+        /* Remove fixed positioning */
+        margin-top: 20px; /* Add spacing above the summary */
+        padding: 10px; /* Adjust padding */
+        width: 100%; /* Ensure it takes up the full width */
+    }
+
+    .checkout-button {
+        width: 100%; /* Make the button full width */
+        padding: 10px; /* Add padding for better touch targets */
+    }
+
+
+    /* Hide the Unimart title */
+    aside {
+        display: none; /* Hide the aside on mobile */
+    }
+
+    
+    /* Show hamburger menu and mobile navbar */
+    .hamburger-menu,
+    .mobile-navbar {
+        display: flex;
+    }
+    h1 {
+        display: none;
+    }
+
+    /* Header adjustments */
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: black;
+        color: white;
+        padding: 10px;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    /* Keep categories and search bar in the header */
+    .categories {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .search-bar {
+        flex: 2;
+        margin-left: 10px;
+    }
+nav{display:none;}
+    /* Move profile picture and cart to the bottom navbar */
+    .user-actions {
+        display: none; /* Hide user actions in the header */
+    }
+
+    .mobile-navbar {
+       
+        justify-content: space-around;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: black;
+        border-top: 1px solid #ddd;
+        padding: 10px 0;
+        z-index: 1000;
+    }
+
+    .mobile-navbar a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color:white;
+    }
+
+    .mobile-navbar img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .mobile-navbar span {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .hamburger-menu {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu img {
+        height: 30px;
+        width: 30px;
+    }
+
+    /* Hamburger menu content */
+    .hamburger-menu-content {
+        display: none;
+        position: fixed;
+        bottom: 60px; /* Above the mobile navbar */
+        right: 10px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        padding: 10px;
+    }
+
+    .hamburger-menu-content ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .hamburger-menu-content li {
+        margin: 10px 0;
+    }
+
+    .hamburger-menu-content a,
+    .hamburger-menu-content button {
+        text-decoration: none;
+        color: black;
+        font-size: 14px;
+        padding: 5px 10px;
+        display: block;
+        text-align: left;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .hamburger-menu-content a:hover,
+    .hamburger-menu-content button:hover {
+        background: #f1f1f1;
+        border-radius: 5px;
+    }
+
+
+    /* Adjust main content to avoid overlapping with the navbar */
+    main {
+        padding: 10px; /* Reduce padding for smaller screens */
+        margin: 0; /* Remove any unnecessary margins */
+        width: 100%; /* Ensure it takes up the full width */
+    }
+
 }

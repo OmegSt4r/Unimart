@@ -566,7 +566,7 @@ router.get("/:userId/history", (req, res) => {
 
   const sql = `
       SELECT hi.history_items_id, hi.quantity, hi.price, 
-             p.product_name, p.p_description, p.p_image
+             p.product_name, p.p_description, p.p_image, p.seller_id
       FROM history_itmes hi
       JOIN products p ON hi.item_id = p.product_id
       WHERE hi.user_id = ?

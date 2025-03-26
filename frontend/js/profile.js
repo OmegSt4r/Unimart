@@ -148,7 +148,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const hamburgerMenu = document.getElementById("hamburger-menu");
+    const hamburgerMenuContent = document.getElementById("hamburger-menu-content");
 
+    hamburgerMenu.addEventListener("click", function () {
+        const isVisible = hamburgerMenuContent.style.display === "block";
+        hamburgerMenuContent.style.display = isVisible ? "none" : "block";
+    });
+
+    // Close the menu when clicking outside
+    document.addEventListener("click", function (event) {
+        if (!hamburgerMenu.contains(event.target) && !hamburgerMenuContent.contains(event.target)) {
+            hamburgerMenuContent.style.display = "none";
+        }
+    });
+});
 
 
 

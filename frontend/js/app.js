@@ -268,4 +268,74 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        const slideshowContainer = document.getElementById("slideshow-container");
+        const prevSlideButton = document.getElementById("prev-slide");
+        const nextSlideButton = document.getElementById("next-slide");
     
+        // Example data for trending products
+        const trendingProducts = [
+            {
+                image: "images/backpack.jpg",
+                name: "Backpack",
+                price: "$20.00",
+            },
+            {
+                image: "images/led_strip_lights.jpg",
+                name: "LED Strip Lights",
+                price: "$5.00",
+            },
+            {
+                image: "images/ramen_chicken.jpg",
+                name: "Ramen 12-Pack",
+                price: "$3.00",
+            },
+            {
+                image: "images/ou_hoodie_men.jpg",
+                name: "Oakland University Hoodie",
+                price: "$25.00",
+            },
+        ];
+    
+        // Populate the slideshow with products
+        trendingProducts.forEach((product) => {
+            const slide = document.createElement("div");
+            slide.classList.add("slide");
+            slide.innerHTML = `
+                <img src="${product.image}" alt="${product.name}">
+                <div class="product-info">
+                    <h3>${product.name}</h3>
+                    <p>${product.price}</p>
+                </div>
+            `;
+            slideshowContainer.appendChild(slide);
+        });
+    
+        // Slideshow functionality
+        let currentSlide = 0;
+    
+        function showSlide(index) {
+            const slides = document.querySelectorAll(".slide");
+            if (index >= slides.length) {
+                currentSlide = 0; // Loop back to the first slide
+            } else if (index < 0) {
+                currentSlide = slides.length - 1; // Loop back to the last slide
+            } else {
+                currentSlide = index;
+            }
+            const offset = -currentSlide * 100; // Calculate the offset for the slide
+            slides.forEach((slide) => {
+                slide.style.transform = `translateX(${offset}%)`;
+            });
+        }
+    
+        // Event listeners for navigation buttons
+        prevSlideButton.addEventListener("click", () => showSlide(currentSlide - 1));
+        nextSlideButton.addEventListener("click", () => showSlide(currentSlide + 1));
+    
+        // Auto-slide every 5 seconds
+        setInterval(() => showSlide(currentSlide + 1), 5000);
+    
+        // Show the first slide initially
+        showSlide(currentSlide);
+    });

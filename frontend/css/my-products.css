@@ -56,15 +56,7 @@ html, body {
    background-attachment: fixed;
 }
 
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: black;
-    color: white;
-    padding: 10px 20px;
-}
+
 
 .logo {
     display: flex;
@@ -103,11 +95,19 @@ header {
     background: darkblue;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: radial-gradient(circle, #333333 0%, #000000 100%);
+    color: white;
+    padding: 10px 20px;
+}
 /* Navigation */
 nav {
     display: flex;
     width: 100%;  /* Makes nav stretch across the entire page */
-    padding: 10px;
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
     flex-wrap: wrap;
     justify-content: space-between; /* Adjusts spacing */
 
@@ -116,6 +116,7 @@ nav {
 nav a {
     flex: 1; /* Ensures each link takes equal space */
     text-decoration: none; /* Removes underline */
+    
 }
 
 nav button {
@@ -124,16 +125,106 @@ nav button {
     border: none;
     cursor: pointer;
     text-align: center;
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
+    color: white;
     display: block; /* Ensures button behaves properly inside <a> */
 }
 
 nav button.active {
-    background: blue;
+    background: linear-gradient(to top, #B39A60, #333333);
     color: white;
 }
 nav button:hover {
-    background: darkblue;
+   
+    background: linear-gradient(to top, #1A1A1A, #333333);
     color:white;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+#searchBar {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+   border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    margin-right: 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: none;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius:5px ;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    list-style: 12;
+    padding: 20px;
+    margin: 0;
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+
+.wallet {
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.logout-btn:hover {
+    background: darkblue;
 }
 /* Sidebar */
 aside {
@@ -292,6 +383,70 @@ main {
 /* General Mobile Styles */
 /* Media query for mobile devices */
 @media only screen and (max-width: 768px) {
+    header {
+      padding:20px; /* Reduce padding for smaller screens */
+        flex-direction: row; /* Stack elements vertically */
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
+        margin:0;
+    }
+
+    .slideshow-container {
+        height: 200px;
+    }
+
+    .slideshow-controls button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+       gap:5px;
+       justify-content: center;
+      }
+    .search-container {
+        flex-direction: row; /* Stack search bar elements vertically */
+        /* Make elements take full width */
+        /* Add spacing between elements */
+    }
+
+    .search-container input[type="text"] {
+        width: 100%; /* Make the input field take full width */
+    }
+
+   
+
+    .user-actions {
+        display: none; /* Hide user actions in the header on mobile */
+    }
+    html, body {
+       font-family: Arial, sans-serif;  
+       margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-y: hidden;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: #FFD814;
+        color: black;
+        text-align: center;
+        border-radius: 6px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .section {
+        background: white;
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
     /* Hide the Unimart title */
     aside {
         display: none; /* Hide the aside on mobile */
@@ -308,19 +463,7 @@ main {
     }
 
     /* Header adjustments */
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: black;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-    }
-
+    
     /* Keep categories and search bar in the header */
     .categories {
         flex: 1;
@@ -340,13 +483,12 @@ main {
     }
 
     .mobile-navbar {
-       
         justify-content: space-around;
         align-items: center;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: black;
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
         border-top: 1px solid #ddd;
         padding: 10px 0;
         z-index: 1000;
@@ -424,12 +566,16 @@ main {
         border-radius: 5px;
     }
 
+   
 nav{display:none;}
     /* Adjust main content to avoid overlapping with the navbar */
     main {
+         /* Account for the fixed header */
+        margin-bottom: 60px; /* Account for the fixed mobile-navbar */
         margin-left: 0; /* Remove the left margin when aside is hidden */
         padding: 10px; /* Adjust padding for mobile */
         width: 100%; /* Ensure main takes up the full width */
         box-sizing: border-box;
+       
     }
 }

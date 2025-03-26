@@ -15,8 +15,8 @@
 <body>
     <header>
         <div class="logo">
-            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
-            <h1>UniMart</h1>
+            <a href="index.html"><img src="images/Senior Capstone Project Report.png" alt="UniMart Logo"></a>
+            
         </div>
         <div class="search-container">
             <div class="dropdown">
@@ -49,8 +49,6 @@
 </header>
 
 <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
-    <a href="index.html"> <button class="active">Home</button></a>
-    <a href="trending.html"><button>Trending</button></a>
     <a href="my-reviews.html"><button>Reviews</button></a>
     <a href="history.html"><button>History</button></a>
     <a href="my-products.html"><button>My Products</button></a> 
@@ -84,8 +82,17 @@
 
     <main>
     
-    
-        <div class="products" id="data-id">
+        <section class="trending-products">
+            <h2>Trending Products</h2>
+            <div class="slideshow-container" id="slideshow-container">
+                <!-- Slides will be dynamically added here -->
+            </div>
+            <div class="slideshow-controls">
+                <button class="prev" id="prev-slide">❮</button>
+                <button class="next" id="next-slide">❯</button>
+            </div>
+        </section>
+        <div class="products product-grid" id="data-id">
             <!-- Products will be added dynamically -->
         </div>
    
@@ -107,7 +114,7 @@
 <div class="hamburger-menu-content" id="hamburger-menu-content">
     <ul>
         <li><a href="add-product.html"><button id="add-product-button">+ Add Product</button></a></li>
-        <li><a href="trending.html">Trending</a></li>
+        
         <li><a href="my-reviews.html">Reviews</a></li>
         <li><a href="history.html">History</a></li>
         <li><a href="my-products.html">My Products</a></li>

@@ -134,4 +134,28 @@ router.get("/", (req, res) => {
             }
         });
     });
+    router.get("/products/trending", (req, res) => {
+        const sql = `
+            SELECT 
+                p.product_id, 
+                p.name, 
+                p.price, 
+                p.image, 
+                SUM(oi.quantity) AS total_purchases
+            FROM products p
+            JOIN order_items oi ON p.product_id = oi.product_id
+            GROUP BY p.product_id
+            ORDER BY total_purchases DESC
+            LIMIT 10
+        `;
+    
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error("Error fetching trending products:", err);
+                res.status(500).json({ error: "Database error" });
+            } else {
+                res.json(results);
+            }
+        });
+    });
     module.exports = router;

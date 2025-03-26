@@ -3,6 +3,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusMessage = document.getElementById("status-message");
     const userId = localStorage.getItem("userId");
     console.log("Logged-in User ID:", userId);
+    const urlParams = new URLSearchParams(window.location.search);
+    const sellerId = urlParams.get("sellerId");
+
+    // Pre-fill the Review Subject field with the sellerId
+    if (sellerId) {
+        document.getElementById("review-subject").value = sellerId;
+    }
 
     reviewForm.addEventListener("submit", async function (event) {
         event.preventDefault();

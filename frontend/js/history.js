@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         <p><strong>Quantity:</strong> ${item.quantity}</p>
                         <p><strong>Price:</strong> $${parseFloat(item.price).toFixed(2)}</p>
                         
-                        <a href= "add-reviews.html"><button>+ Add Review</button></a>
+                        <button class="add-review-button" onclick="redirectToAddReview(${item.seller_id})">+ Add Review</button>
                     </div>
                 </div>
             `;
@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         purchaseHistoryContainer.innerHTML = "<p>Failed to load your purchase history. Please try again later.</p>";
     }
 });
+function redirectToAddReview(sellerId) {
+    window.location.href = `add-reviews.html?sellerId=${sellerId}`;
+}
 document.addEventListener("DOMContentLoaded", function () {
     const hamburgerMenu = document.getElementById("hamburger-menu");
     const hamburgerMenuContent = document.getElementById("hamburger-menu-content");

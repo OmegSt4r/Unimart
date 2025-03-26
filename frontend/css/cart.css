@@ -6,17 +6,6 @@ html, body {
     background: linear-gradient(to bottom, #777, #E0CDA9);
    background-attachment: fixed;;
 }
-
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: black;
-    color: white;
-    padding: 10px 20px;
-}
-
 .logo {
     display: flex;
     align-items: center;
@@ -26,10 +15,22 @@ header {
     width: 50px;
     margin-right: 10px;
 }
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: radial-gradient(circle, #333333 0%, #000000 100%);
+    color: white;
+    padding: 10px 20px;
+}
+
+
+/* Navigation */
 nav {
     display: flex;
     width: 100%;  /* Makes nav stretch across the entire page */
-    
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
     flex-wrap: wrap;
     justify-content: space-between; /* Adjusts spacing */
 
@@ -47,15 +48,18 @@ nav button {
     border: none;
     cursor: pointer;
     text-align: center;
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
+    color: white;
     display: block; /* Ensures button behaves properly inside <a> */
 }
 
 nav button.active {
-    background: blue;
+    background: linear-gradient(to top, #B39A60, #333333);
     color: white;
 }
 nav button:hover {
-    background: darkblue;
+   
+    background: linear-gradient(to top, #1A1A1A, #333333);
     color:white;
 }
 .cart-container {
@@ -76,11 +80,12 @@ main {
 }
 
 .cart {
-    flex: 1;
-    background: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Prevent content from overflowing */
+    box-sizing: border-box; 
 }
 
 
@@ -94,20 +99,31 @@ main {
 }
 
 
-table {
+.cart table {
     width: 100%; /* Make the table take up the full width */
     border-collapse: collapse; /* Remove gaps between table cells */
     overflow-x: auto; /* Allow horizontal scrolling if needed */
 }
 
-th, td {
-    padding: 10px; /* Add padding for spacing */
-    text-align: left; /* Align text to the left */
-    word-wrap: break-word; /* Break long words to prevent overflow */
+.cart th, .cart td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    word-wrap: break-word; /* Break long words */
+    overflow-wrap: break-word; /* Ensure text wraps within the cell */
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+    max-width: 200px; /* Limit the width of table cells */
 }
-
-table th, table td {
-    font-size: 14px; /* Adjust font size for smaller screens */
+ 
+table th {
+    
+        font-weight: bold;
+        background-color: #f9f9f9;
+  
+}
+table td {
+    vertical-align: top;
 }
 img {
     max-width: 100%; /* Ensure images do not overflow */
@@ -145,12 +161,126 @@ img {
 .mobile-navbar {
     display: none;
 }
+.user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0 20px;
+}
+
+#searchBar {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+   border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    margin-right: 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: none;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius:5px ;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    list-style: 12;
+    padding: 20px;
+    margin: 0;
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
+
+.wallet {
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.logout-btn:hover {
+    background: darkblue;
+}
+.logot img {
+    width:80px;
+    height:80px;
+    margin-right: 10px;
+}
 @media only screen and (max-width: 768px) {
     
+    .cart {
+        font-size: 14px; 
+        align-self:center;
+        margin-top:50px;/* Reduce font size for smaller screens */
+    }
 
+    .cart th, .cart td {
+        padding: 8px;
+    }
     .cart-container {
+        display: flex;
         flex-direction: column; /* Stack items vertically */
-        padding: 10px; /* Adjust padding */
+        padding: 20px;
+         /* Center the container */
+        width: 100%; /* Ensure it takes up the full width */
+        max-width: 1200px; /* Limit the maximum width */
+        box-sizing: border-box; /* Include padding and borders in the width */
+        background: white;
+        border-radius: 5px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Prevent content from overflowing */
     }
 
     .cart-item {
@@ -158,16 +288,24 @@ img {
         align-items: flex-start; /* Align items to the left */
         padding: 10px; /* Add padding for spacing */
     }
-
+    .checkout {
+        flex: 1;
+        align-self: center;
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    }
     .cart-item img {
         width: 100%; /* Make images responsive */
         max-width: 100px; /* Limit the maximum width */
         height: auto; /* Maintain aspect ratio */
         margin-bottom: 10px; /* Add spacing below the image */
     }
-
+    
     .cart-summary {
         /* Remove fixed positioning */
+       margin-left: 0;
         margin-top: 20px; /* Add spacing above the summary */
         padding: 10px; /* Adjust padding */
         width: 100%; /* Ensure it takes up the full width */
@@ -193,20 +331,19 @@ img {
     h1 {
         display: none;
     }
-
+    .user-actions {
+        display: none; /* Hide user actions in the header on mobile */
+    }
+    .logot {
+        display: none; /* Hide the logo on mobile */
+    }
     /* Header adjustments */
     header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: black;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-    }
+        padding:20px; /* Reduce padding for smaller screens */
+          flex-direction: row; /* Stack elements vertically */
+          background: radial-gradient(circle, #333333 0%, #000000 100%);
+          margin:0;
+      }
 
     /* Keep categories and search bar in the header */
     .categories {
@@ -220,7 +357,7 @@ img {
         flex: 2;
         margin-left: 10px;
     }
-nav{display:none;}
+
     /* Move profile picture and cart to the bottom navbar */
     .user-actions {
         display: none; /* Hide user actions in the header */
@@ -310,7 +447,7 @@ nav{display:none;}
         background: #f1f1f1;
         border-radius: 5px;
     }
-
+    nav{display:none;}
 
     /* Adjust main content to avoid overlapping with the navbar */
     main {

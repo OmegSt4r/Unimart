@@ -13,34 +13,46 @@
 
 <body>
     <header>
-        <div class="logo">
-            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
-            <h1>UniMart</h1>
+        <div>
+            <a href="index.html"><img src="images/Senior Capstone Project Report.png" alt="UniMart Logo" class="logot" ></a>
+            
         </div>
-
-        <div class="user-actions">
-           
+        <div class="search-container">
+            <div class="dropdown">
+                <button class="dropdown-toggle" id="category-dropdown">▼</button>
+                <ul class="dropdown-menu" id="category-menu">
+                    <li>Supplies</li>
+                    <li>Electronics</li>
+                    <li>Furniture</li>
+                    <li>Food</li>
+                    <li>Clothing</li>
+                </ul>
+            </div>
+            <input  type="text" placeholder="Search..." id="searchBar">
+            
+        </div>
+       
+    <div class="user-actions logo">
+            
             <div class="wallet">
             <p>Wallet:<span id="wallet-amount"></span></p>
-
             </div>
-                <a id="cart-link" href="cart.html"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
-                <input type="text" placeholder="Search..." id="searchBar">
-                <i class="fas fa-shopping-cart"></i>
-            <div class="user-profile"><a href="profile.html"><img src="images/profile.jpg" alt="User Profile Picture"></a><a href="login.html"><button id="logout">Logout</button></a></div>
+            <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+        <div class="user-profile m-hidden">
+            <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
+            <a href="login.html"><button id="logout-button">Logout</button></a>
+        </div>
             
-        </div> 
-    </header>
+    </div>
     
-    <nav>
-        
-        <a href="index.html"> <button>Home</button></a>
-         <a href="trending.html"><button>Trending</button></a>
-         <a href= "my-reviews.html"><button class="active">Reviews</button></a>
-         <a href="history.html"><button>Purchase History</button></a>
-         <a href="my-products.html"><button>My Products</button></a> 
-     
-     </nav>
+</header>
+
+    
+<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
+    <a href="my-reviews.html"><button>Reviews</button></a>
+    <a href="history.html"><button>History</button></a>
+    <a href="my-products.html"><button>My Products</button></a> 
+</nav>
 
      
 
@@ -55,7 +67,7 @@
                 <h3>Your Customer Rating:</h3>
                 <div id="customer-rating" class="stars">Loading...</div>
             </div>
-            <a href= "add-reviews.html"><button>+ Add Review</button></a>
+            
         </div>
     
         <section id="seller-reviews-list">
@@ -84,8 +96,8 @@
 </div>
 <div class="hamburger-menu-content" id="hamburger-menu-content">
     <ul>
-        <li><button class="add-product-btn">Add Product</button></li>
-        <li><a href="trending.html">Trending</a></li>
+        <li><a href="add-product.html"><button id="add-product-button">+ Add Product</button></a></li>
+        
         <li><a href="my-reviews.html">Reviews</a></li>
         <li><a href="history.html">History</a></li>
         <li><a href="my-products.html">My Products</a></li>

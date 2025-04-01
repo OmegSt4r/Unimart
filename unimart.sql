@@ -90,7 +90,7 @@ CREATE TABLE `products` (
   `product_name` varchar(45) NOT NULL,
   `seller_id` int NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `inventory` int NOT NULL,
+  `inventory` int NOT NULL DEFAULT 0,
   `p_description` varchar(255) NOT NULL,
   `p_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`product_id`),
@@ -334,8 +334,51 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (3,'Abby'),(11,'Bora'),(5,'Ken'),(4,'Megan'),(6,'newusername'),(1,'originalguy'),(8,'paulannoyance'),(2,'sellerdude'),(9,'skinnypete'),(10,'twoarmslouise');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+--
+-- Table structure for table `messages`
+--
+
+DROP TABLE IF EXISTS `messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message TEXT NOT NULL,
+    is_read TINYINT(1) DEFAULT 0,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id),
+    FOREIGN KEY (receiver_id) REFERENCES users(user_id)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Dumping data for table `messages`
+--
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL, -- The user who receives the notification
+    message TEXT NOT NULL, -- The notification message
+    is_read TINYINT(1) DEFAULT 0 , -- Whether the notification has been read
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- When the notification was created
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notifications`
+--
+
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
@@ -343,11 +386,7 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-CREATE TABLE order_items (
-    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    product_id INT,
-    quantity INT,
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
-);
+
+
+
 -- Dump completed on 2025-03-18 19:48:32

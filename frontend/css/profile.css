@@ -22,10 +22,6 @@ html, body {
     border: none;
     cursor: pointer;
   }
-  .notification-item.unread {
-    font-weight: bold;
-    background-color: #f8f9fa;
-}
 /* Header */
 header {
     display: flex;
@@ -34,11 +30,6 @@ header {
     background: radial-gradient(circle, #333333 0%, #000000 100%);
     color: white;
     padding: 10px 20px;
-}
-.inbox-icon{
-    padding:10px;
-    cursor: pointer;
-    width: 50px;
 }
 .search-container {
     display: flex;
@@ -185,85 +176,67 @@ aside {
     flex-direction: column;
 }
 
-/* Category List */
-aside ul {
-    display:flex;
-    list-style: none;
-    padding: 0px;
-    flex-direction: column;
+/* General Page Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
-}
-ul button {
-    background:white;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-ul button:hover {
-    background: rgb(0, 0, 180);
-    color:white;
-}
-ul button.active {
-    background: blue;
-    color: white;
-}
-aside li {
-    padding: 8px;
-    cursor: pointer;
+    padding: 0;
 }
 
-/* Filter Button */
-.filter-container {
-    position: relative;
-    margin-top: auto;
-    text-align: left;
-}
-
-.filter-btn {
-    
-    padding: 10px;
-    background: linear-gradient(to top, #B39A60, #333333);
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    border-radius:5px;
-}
-.filter-btn:hover {
-    background: linear-gradient(to top, #B39A90, #333333);
-}
-
-.filter-dropdown {
-    display: none;
-    position: absolute;
-    bottom:auto;
-    left: 0;
-    width: 100%;
+/* Profile Container */
+#profile-container {
+    max-width: 400px;
+    margin: 30px auto;
     background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* Profile Header */
+.profile-header {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+/* Form Styling */
+.profile-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+}
+
+.profile-form input {
+    width: 100%;
+    padding: 10px;
     border: 1px solid #ccc;
-    padding: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    
+    border-radius: 5px;
+    margin-top: 5px;
 }
 
-
-.filter-container.active .filter-dropdown {
-    display: block;
-}
-
-
-.filter-dropdown label {
-    display: block;
-    padding: 5px;
+/* Save Button */
+.profile-form button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
     cursor: pointer;
+    transition: 0.3s;
 }
-.filter-dropdown input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: blue;
-    cursor:pointer;
+
+.profile-form button:hover {
+    background-color: #0056b3;
 }
+
 
 
 main {
@@ -274,63 +247,20 @@ main {
     height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
 }
 
-.product {
-    background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 10px;
-}
-.product:hover {
-    transform: translateY(-10px); /* Move the product up slightly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow effect */
-}
 
 
 
-.badge{
-    color:black;
-    padding:5px;
-    border-radius:5px;
-    font-size:12px;
-    font-weight:bold;
-}
+
+
+
 .cart-icon {
     
    padding:10px;
     cursor: pointer;
     width: 50px;}
 
-.product img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-.products{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px;
-    
-}
 
-.add-cart {
-    background: #FFD814; /* Amazon's yellow button */
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-}
-.add-cart:hover {
-    background: #F7CA00;
-}
+
 .user-profile {
     display: flex;
     flex-direction: column;
@@ -343,22 +273,7 @@ main {
     margin-bottom: 5px;
 }
 
-.product.expanded {
-    max-height: 500px; /* Expanded height to show all details */
-   
-}
 
-.product-details {
-    display: none; /* Hide product details by default */
-   
-}
-
-.product.expanded .product-details {
-
-    font-size: 16px;
-    margin-bottom: 5px;
-    display: block; /* Show product details when expanded */
-}
 
 .add-box{
     background: white;
@@ -379,94 +294,14 @@ main {
     background: #F7CA00;
   }
   
-  .trending-products {
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 1200px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+    .section {
+        background: white;
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
 
-.trending-products h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* Slideshow Container */
-.slideshow-container {
-    display: flex;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    height: 300px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.slideshow-container .slide {
-    min-width: 100%;
-    transition: transform 0.5s ease-in-out;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.slide img {
-    
-    
-    border-radius: 8px;
-}
-
-.slide .product-info {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* Slideshow Controls */
-.slideshow-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.slideshow-controls button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.slideshow-controls button:hover {
-    background-color: #0056b3;
-}
-.notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 50%;
-    padding: 5px 8px;
-    display: none; /* Hidden by default */
-}
-
-/* Media query for mobile devices */
 @media only screen and (max-width: 768px) {
     header {
       padding:20px; /* Reduce padding for smaller screens */

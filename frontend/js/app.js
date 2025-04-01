@@ -146,7 +146,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // Display Products Dynamically
-    function displayProducts(products) {
+    function displayProducts(products) { 
+        
         const productContainer = document.querySelector(".products");
         productContainer.innerHTML = ""; // Clear previous products
     
@@ -161,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function() {
                <p><b>Item:</b> ${product.product_name}</p>
                <p><b>Price:</b> $${product.price}|<b> Inventory:</b> ${product.inventory} </p>
                 <b>Seller:</b> ${product.seller_name}<p>★★★★</p>
+                <a href="chat.html?receiverId=${product.seller_id}"><button class="chat-seller">Chat Seller</button></a>
                 <button class="add-cart" onclick="addToCart(${product.product_id}, '${product.product_name}', ${product.price})">Add to Cart</button>
             </div>
            
@@ -339,3 +341,190 @@ document.addEventListener("DOMContentLoaded", function() {
         // Show the first slide initially
         showSlide(currentSlide);
     });
+    function fetchMessages(senderId, receiverId) {
+        fetch(`http://localhost:5001/users/${senderId}/chat/messages?userId2=${receiverId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(messages => {
+                console.log("Fetched messages:", messages); // Debugging
+    
+                const chatContainer = document.getElementById("chat-container");
+                if (!chatContainer) {
+                    console.error("Chat container not found in the DOM.");
+                    return;
+                }
+    
+                chatContainer.innerHTML = ""; // Clear previous messages
+    
+                if (!messages || messages.length === 0) {
+                    chatContainer.innerHTML = "<p>No messages yet.</p>";
+                    return;
+                }
+    
+                messages.forEach(message => {
+                    const messageDiv = document.createElement("div");
+                    const isSent = parseInt(message.sender_id) === parseInt(senderId);
+                    
+                    messageDiv.classList.add(isSent ? "sent-message" : "received-message");
+                    messageDiv.textContent = message.message || "No content";
+    
+                    chatContainer.appendChild(messageDiv);
+                });
+    
+                // Scroll to the latest message
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Error fetching messages:", error);
+            });
+    }
+    function sendMessage(senderId, receiverId, message) {
+        fetch(`http://localhost:5001/users/${senderId}/chat/messages`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                senderId: parseInt(senderId),  // Ensure correct format
+                receiverId: parseInt(receiverId),
+                message: message.trim()
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to send message. Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Message sent successfully:", data);
+            fetchMessages(senderId, receiverId); // Refresh chat after sending
+        })
+        .catch(error => {
+            console.error("Error sending message:", error);
+        });
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = localStorage.getItem("userId"); // Retrieve user ID
+        const notificationsContainer = document.getElementById("notifications-list");
+        const notificationBadge = document.getElementById("notification-count");
+    
+        if (!userId) {
+            console.error("❌ User ID not found in localStorage.");
+            return;
+        }
+    
+        // ✅ Fetch notifications
+        function fetchNotifications() {
+            const userId = localStorage.getItem("userId");
+    if (!userId) {
+        console.error("User ID is missing.");
+        return;
+    }
+            fetch(`http://localhost:5001/users/${userId}/notifications`)
+                .then(response => response.json())
+                .then(notifications => {
+                    console.log("📩 Fetched notifications:", notifications);
+                    notificationsContainer.innerHTML = ""; // Clear old notifications
+    
+                    if (notifications.length === 0) {
+                        notificationsContainer.innerHTML = "<p>0</p>";
+                        return;
+                    }
+    
+                    notifications.forEach(notification => {
+                        const notificationDiv = document.createElement("div");
+                        notificationDiv.classList.add("notification-item");
+                        notificationDiv.dataset.notificationId = notification.notification_id;
+    
+                        if (!notification.is_read) {
+                            notificationDiv.classList.add("unread");
+                        } 
+    
+                        notificationDiv.innerHTML = `
+                            <p>${notification.message}</p>
+                            <time>${new Date(notification.created_at).toLocaleString()}</time>
+                        `;
+    
+                        notificationsContainer.appendChild(notificationDiv);
+                    });
+                })
+                .catch(error => console.error("❌ Error fetching notifications:", error));
+        }
+        function updateNotificationBadge() {
+            const userId = localStorage.getItem("userId");
+            if (!userId) return;
+        
+            fetch(`http://localhost:5001/users/${userId}/notifications/count`)
+                .then(response => response.json())
+                .then(data => {
+                    if (notificationBadge) {
+                        notificationBadge.textContent = data.unread_count > 0 ? data.unread_count : "";
+                        notificationBadge.style.display = data.unread_count > 0 ? "inline-block" : "none";
+                    }
+                })
+                .catch(error => console.error("❌ Error fetching notification count:", error));
+        }
+        // ✅ Fetch unread notification count
+        function fetchUnreadCount() {
+            fetch(`http://localhost:5001/users/${userId}/notifications/count`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("🔔 Notification count:", data.unread_count);
+                    if (notificationBadge) {
+                        if (data.unread_count > 0) {
+                            notificationBadge.textContent = data.unread_count;
+                            notificationBadge.style.display = "inline-block";
+                        } else {
+                            notificationBadge.style.display = "none";
+                        }
+                    }
+                })
+                .catch(error => console.error("❌ Error fetching notification count:", error));
+        }
+    
+        // ✅ Mark a notification as read
+        notificationsContainer.addEventListener("click", function (event) {
+            const notificationItem = event.target.closest(".notification-item");
+    
+            if (notificationItem && notificationItem.classList.contains("unread")) {
+                const notificationId = notificationItem.dataset.notificationId;
+    
+                if (!userId || !notificationId) {
+                    console.error("❌ Missing userId or notificationId.");
+                    return;
+                }
+    
+                console.log(`📩 Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
+    
+                fetch(`http://localhost:5001/users/${userId}/notifications/mark-read/${notificationId}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                })
+                .then(response => {
+                    console.log("🔍 Full Response:", response);
+                    if (!response.ok) {
+                        throw new Error(`Server returned ${response.status} ${response.statusText}`);
+                    }
+                    return response.text(); // Read raw response first
+                })
+                .then(text => {
+                    console.log("📜 Server Response Text:", text);
+                    return JSON.parse(text); // Try parsing JSON
+                })
+                .then(data => {
+                    console.log("✅ Parsed JSON Response:", data);
+                })
+                .catch(error => console.error("❌ Error marking notification as read:", error));
+            }
+        });
+        // ✅ Load notifications and unread count on page load
+        fetchNotifications();
+        fetchUnreadCount();
+        updateNotificationBadge();
+    });
+    

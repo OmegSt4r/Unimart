@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    
+}
+
+header {
+    background: radial-gradient(circle, #333333 0%, #000000 100%);
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Inbox Container */
+#inbox-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Conversation Items */
+.conversation {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.conversation:hover {
+    background: #f0f8ff;
+}
+
+.conversation h3 {
+    margin: 0;
+    color: #007bff;
+}
+
+.conversation p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.conversation time {
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+}
+.notification-item.unread {
+    font-weight: bold;
+    background-color: red;
+}

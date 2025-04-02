@@ -106,7 +106,31 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants',NULL),(2,'Backpack',3,20.00,1,'16-inch sport backpack',NULL),(3,'Notebook',4,4.99,5,'wide ruled notebook',NULL),(4,'Pencils',3,4.00,2,'24-pack #2 pencils',NULL),(5,'Laptop',2,84.36,1,'Macbook',NULL),(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock',NULL),(7,'Surge Protector',2,4.99,50,'8-socket surge protector',NULL),(8,'iPhone Charger',3,2.00,100,'Lightning to USB charging cord',NULL),(9,'OU Sweatpants',4,20.00,30,'OU men\'s sweatpants',NULL),(10,'OU Sweatpants',4,20.00,35,'OU women\'s sweatpants',NULL),(11,'UofM Sweatpants',4,20.00,25,'UofM men\'s sweatpants',NULL),(12,'UofM Sweatpants',4,20.00,25,'UofM women\'s sweatpants',NULL),(13,'MSU Sweatpants',4,20.00,25,'MSU men\'s sweatpants',NULL),(14,'OU Hoodie',4,25.00,30,'OU men\'s hoodie',NULL),(15,'OU Hoodie',4,25.00,34,'OU women\'s hoodie',NULL),(16,'UofM Hoodie',4,25.00,25,'UofM men\'s hoodie',NULL),(17,'UofM Hoodie',4,25.00,25,'UofM women\'s hoodie',NULL),(18,'MSU Hoodie',4,25.00,25,'MSU men\'s hoodie',NULL),(19,'MSU Hoodie',4,25.00,25,'MSU women\'s hoodie',NULL),(20,'Graphing Calculator',1,30.00,15,'TI-83',NULL),(21,'Non-Graphing Calculator',1,25.00,15,'TI-30Xa',NULL),(22,'LED strip lights',3,5.00,3,'30-ft LED strip lights with controller',NULL),(23,'Dragon Ball Anime Tapestry',3,30.00,1,'Character design wall tapestry',NULL),(24,'Ramen 12-pack',2,3.00,10,'Maruchan Beef Ramen 12-pack',NULL),(25,'Ramen 12-pack',2,3.00,10,'Maruchan Shrimp Ramen 12-pack',NULL),(26,'Ramen 12-pack',2,3.00,10,'Maruchan Chicken Ramen 12-pack',NULL),(27,'Ramen 12-pack',2,3.00,10,'Maruchan Pork Ramen 12-pack',NULL),(28,'Winter Coat',1,10.00,1,'Cold-Weather Jacket',NULL),(29,'Water Bottle Case',2,7.00,30,'Ice Mountain 16.9oz Water Bottle 48-pack',NULL),(30,'Phone Case',1,20.00,5,'Clear iPhone 15 Case',NULL),(31,'Pen ',5,4.00,34,'black pen','1741654494748.jpg');
+INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants','msu_sweatpants.jpg'),(2,'Backpack',3,20.00,1,'16-inch sport backpack','backpack.jpg'),(3,'Notebook',4,4.99,5,'wide ruled notebook','notebook.jpg'),(4,'Pencils',3,4.00,2,'24-pack #2 pencils','pencils.jpg'),(5,'Laptop',2,84.36,1,'Macbook','laptop.jpg'),(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock','clock_radio.jpg'),(7, 'Surge Protector', 2, 4.99, 50, '8-socket surge protector', 'surge_protector.jpg'),
+(8, 'iPhone Charger', 3, 2.00, 100, 'Lightning to USB charging cord', 'iphone_charger.jpg'),
+(9, 'OU Sweatpants', 4, 20.00, 30, 'OU men\'s sweatpants', 'ou_sweatpants_men.jpg'),
+(10, 'OU Sweatpants', 4, 20.00, 35, 'OU women\'s sweatpants', 'ou_sweatpants_women.jpg'),
+(11, 'UofM Sweatpants', 4, 20.00, 25, 'UofM men\'s sweatpants', 'uofm_sweatpants_men.jpg'),
+(12, 'UofM Sweatpants', 4, 20.00, 25, 'UofM women\'s sweatpants', 'uofm_sweatpants_women.jpg'),
+(13, 'MSU Sweatpants', 4, 20.00, 25, 'MSU men\'s sweatpants', 'msu_sweatpants_men.jpg'),
+(14, 'OU Hoodie', 4, 25.00, 30, 'OU men\'s hoodie', 'ou_hoodie_men.jpg'),
+(15, 'OU Hoodie', 4, 25.00, 34, 'OU women\'s hoodie', 'ou_hoodie_women.jpg'),
+(16, 'UofM Hoodie', 4, 25.00, 25, 'UofM men\'s hoodie', 'uofm_hoodie_men.jpg'),
+(17, 'UofM Hoodie', 4, 25.00, 25, 'UofM women\'s hoodie', 'uofm_hoodie_women.jpg'),
+(18, 'MSU Hoodie', 4, 25.00, 25, 'MSU men\'s hoodie', 'msu_hoodie_men.jpg'),
+(19, 'MSU Hoodie', 4, 25.00, 25, 'MSU women\'s hoodie', 'msu_hoodie_women.jpg'),
+(20, 'Graphing Calculator', 1, 30.00, 15, 'TI-83', 'graphing_calculator.jpg'),
+(21, 'Non-Graphing Calculator', 1, 25.00, 15, 'TI-30Xa', 'non_graphing_calculator.jpg'),
+(22, 'LED strip lights', 3, 5.00, 3, '30-ft LED strip lights with controller', 'led_strip_lights.jpg'),
+(23, 'Dragon Ball Anime Tapestry', 3, 30.00, 1, 'Character design wall tapestry', 'dragon_ball_tapestry.jpg'),
+(24, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Beef Ramen 12-pack', 'ramen_beef.jpg'),
+(25, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Shrimp Ramen 12-pack', 'ramen_shrimp.jpg'),
+(26, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Chicken Ramen 12-pack', 'ramen_chicken.jpg'),
+(27, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Pork Ramen 12-pack', 'ramen_pork.jpg'),
+(28, 'Winter Coat', 1, 10.00, 1, 'Cold-Weather Jacket', 'winter_coat.jpg'),
+(29, 'Water Bottle Case', 2, 7.00, 30, 'Ice Mountain 16.9oz Water Bottle 48-pack', 'water_bottle_case.jpg'),
+(30, 'Phone Case', 1, 20.00, 5, 'Clear iPhone 15 Case', 'phone_case.jpg'),
+(31, 'Pen', 5, 4.00, 34, 'black pen', 'pen.jpg');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 

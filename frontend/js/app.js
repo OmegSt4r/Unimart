@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.querySelector(".prev").addEventListener("click", () => showSlide(currentSlide - 1));
         document.querySelector(".next").addEventListener("click", () => showSlide(currentSlide + 1));
     
-        setInterval(() => showSlide(currentSlide + 1), 100000); // Auto-slide every 5 sec
+        setInterval(() => showSlide(currentSlide + 1), 10000); // Auto-slide every 5 sec
     });
     function fetchMessages(senderId, receiverId) {
         fetch(`http://localhost:5001/users/${senderId}/chat/messages?userId2=${receiverId}`)

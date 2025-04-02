@@ -271,75 +271,19 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
     document.addEventListener("DOMContentLoaded", function () {
-        const slideshowContainer = document.getElementById("slideshow-container");
-        const prevSlideButton = document.getElementById("prev-slide");
-        const nextSlideButton = document.getElementById("next-slide");
-    
-        // Example data for trending products
-        const trendingProducts = [
-            {
-                image: "images/backpack.jpg",
-                name: "Backpack",
-                price: "$20.00",
-            },
-            {
-                image: "images/led_strip_lights.jpg",
-                name: "LED Strip Lights",
-                price: "$5.00",
-            },
-            {
-                image: "images/ramen_chicken.jpg",
-                name: "Ramen 12-Pack",
-                price: "$3.00",
-            },
-            {
-                image: "images/ou_hoodie_men.jpg",
-                name: "Oakland University Hoodie",
-                price: "$25.00",
-            },
-        ];
-    
-        // Populate the slideshow with products
-        trendingProducts.forEach((product) => {
-            const slide = document.createElement("div");
-            slide.classList.add("slide");
-            slide.innerHTML = `
-                <img src="${product.image}" alt="${product.name}">
-                <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p>${product.price}</p>
-                </div>
-            `;
-            slideshowContainer.appendChild(slide);
-        });
-    
-        // Slideshow functionality
+        let slides = document.querySelectorAll(".trending-slide");
         let currentSlide = 0;
-    
+        
         function showSlide(index) {
-            const slides = document.querySelectorAll(".slide");
-            if (index >= slides.length) {
-                currentSlide = 0; // Loop back to the first slide
-            } else if (index < 0) {
-                currentSlide = slides.length - 1; // Loop back to the last slide
-            } else {
-                currentSlide = index;
-            }
-            const offset = -currentSlide * 100; // Calculate the offset for the slide
-            slides.forEach((slide) => {
-                slide.style.transform = `translateX(${offset}%)`;
-            });
+            slides[currentSlide].classList.remove("active");
+            currentSlide = (index + slides.length) % slides.length;
+            slides[currentSlide].classList.add("active");
         }
     
-        // Event listeners for navigation buttons
-        prevSlideButton.addEventListener("click", () => showSlide(currentSlide - 1));
-        nextSlideButton.addEventListener("click", () => showSlide(currentSlide + 1));
+        document.querySelector(".prev").addEventListener("click", () => showSlide(currentSlide - 1));
+        document.querySelector(".next").addEventListener("click", () => showSlide(currentSlide + 1));
     
-        // Auto-slide every 5 seconds
-        setInterval(() => showSlide(currentSlide + 1), 5000);
-    
-        // Show the first slide initially
-        showSlide(currentSlide);
+        setInterval(() => showSlide(currentSlide + 1), 100000); // Auto-slide every 5 sec
     });
     function fetchMessages(senderId, receiverId) {
         fetch(`http://localhost:5001/users/${senderId}/chat/messages?userId2=${receiverId}`)
@@ -424,17 +368,34 @@ document.addEventListener("DOMContentLoaded", function() {
     if (!userId) {
         console.error("User ID is missing.");
         return;
-    }
+    } function showTemporaryNotification(message) {
+            const notificationElement = document.getElementById("temporary-notification");
+        
+            if (!notificationElement) {
+                console.error("Notification container not found in the DOM.");
+                return;
+            }
+        
+            // Set the message and make the notification visible
+            notificationElement.textContent = message;
+            notificationElement.style.display = "block";
+        
+            // Hide the notification after 2 seconds
+            setTimeout(() => {
+                notificationElement.style.display = "none";
+            }, 2000); // 2000ms = 2 seconds
+        }
             fetch(`http://localhost:5001/users/${userId}/notifications`)
                 .then(response => response.json())
                 .then(notifications => {
                     console.log("📩 Fetched notifications:", notifications);
                     notificationsContainer.innerHTML = ""; // Clear old notifications
     
-                    if (notifications.length === 0) {
-                        notificationsContainer.innerHTML = "<p>0</p>";
-                        return;
-                    }
+                    if (notifications.length > 0) {
+                        const latestNotification = notifications[0]; // Assuming the latest notification is the first one
+                        if (!latestNotification.is_read) {
+                            showTemporaryNotification(latestNotification.message);
+                        }}
     
                     notifications.forEach(notification => {
                         const notificationDiv = document.createElement("div");
@@ -455,6 +416,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(error => console.error("❌ Error fetching notifications:", error));
         }
+       
         function updateNotificationBadge() {
             const userId = localStorage.getItem("userId");
             if (!userId) return;
@@ -526,5 +488,6 @@ document.addEventListener("DOMContentLoaded", function() {
         fetchNotifications();
         fetchUnreadCount();
         updateNotificationBadge();
+
     });
     

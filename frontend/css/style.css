@@ -268,10 +268,12 @@ aside li {
 
 main {
     flex: 1 1 auto;
-    margin-left: 250px; /* Adjust based on the width of the aside */
+  margin:auto;
     padding: 10px;
     overflow: auto; /* Make the main section scrollable */
     height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
+    justify-content: center;
+    
 }
 
 .product {
@@ -291,7 +293,27 @@ main {
 }
 
 
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    animation: fadeInOut 2s ease-in-out;
+}
 
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
 .badge{
     color:black;
     padding:5px;
@@ -316,7 +338,7 @@ main {
     flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
-    
+    justify-content: center;
 }
 
 .add-cart {
@@ -379,79 +401,95 @@ main {
     background: #F7CA00;
   }
   
-  .trending-products {
-    margin: 20px auto;
-    padding: 20px;
-    max-width: 1200px;
-    text-align: center;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.trending-products h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-/* Slideshow Container */
-.slideshow-container {
-    display: flex;
-    overflow: hidden;
+  .trending-slideshow {
     position: relative;
     width: 100%;
-    max-width: 100%;
-    height: 300px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  
+
 }
 
-.slideshow-container .slide {
-    min-width: 100%;
-    transition: transform 0.5s ease-in-out;
-    display: flex;
-    align-items: center;
+/* Slide container */
+.trending-slide {
+    display: none;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 20px;
     justify-content: center;
-    position: relative;
+    align-items: center;
+    transition: 1s ease-in-out; /* Fade effect */
 }
 
-.slide img {
-    
-    
-    border-radius: 8px;
-}
-
-.slide .product-info {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-/* Slideshow Controls */
-.slideshow-controls {
+/* Active slide */
+.trending-slide.active {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    justify-content: center; /* Centers products in the slide */
+    align-items: center;
+    
 }
 
-.slideshow-controls button {
-    background-color: #007bff;
+/* Product container */
+.trending-container {
+    display: flex;
+    justify-content:center; /* Ensures spacing between products */
+    gap: 20px; /* Space between products */
+    width: 100%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* Individual product */
+.trending {
+    flex: 1; /* Ensures equal size for all products */
+    text-align: center;
+   background:linear-gradient( lightblue, #E0CDA9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+}
+
+/* Product images */
+.trending img {
+   
+    max-width: 300px; /* Prevents it from getting too big */
+    
+    border-radius: 10px;
+    height: 200px;  
+    object-fit:cover;
+}
+
+/* Product caption */
+.trending-caption {
+    margin-top: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Navigation buttons */
+.trending-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
     color: white;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
+    padding: 10px;
     cursor: pointer;
+    z-index: 10;
 }
 
-.slideshow-controls button:hover {
-    background-color: #0056b3;
+.trending-btn.prev {
+    left: 10px; /* Position the "previous" button */
+}
+
+.trending-btn.next {
+    right: 10px; /* Position the "next" button */
 }
 .notification-badge {
     position: absolute;

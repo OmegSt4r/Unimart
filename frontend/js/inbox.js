@@ -95,24 +95,46 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Render each conversation properly
-            conversations.forEach(convo => {
+            conversations.forEach(conversation => {
+            
+
                 const conversationDiv = document.createElement("div");
                 conversationDiv.classList.add("conversation");
-
-                const otherUserName = convo.other_user_name || "Unknown User";
-                const lastMessage = convo.message || "No message available";
-                const timestamp = convo.timestamp 
-                    ? new Date(convo.timestamp).toLocaleString() 
-                    : "Unknown time";
+                conversationDiv.setAttribute("data-user-id", conversation.other_user_id); // Add a unique identifier
 
                 conversationDiv.innerHTML = `
-                    <h3>${otherUserName}</h3>
-                    <p>${lastMessage}</p>
-                    <time>${timestamp}</time>
+                    <h3>${conversation.other_user_name || "Unknown User"}</h3>
+                    <p>${conversation.message || "No message available"}</p>
+                    <time>${conversation.timestamp ? new Date(conversation.timestamp).toLocaleString() : "Unknown time"}</time>
                 `;
 
                 conversationDiv.addEventListener("click", () => {
-                    window.location.href = `chat.html?receiverId=${convo.other_user_id}`;
+                    // Mark the notification as read
+                    if (conversation.notification_id) {
+                        fetch(`http://localhost:5001/users/${userId}/notifications/mark-read/${conversation.notification_id}`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" }
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`Failed to mark notification as read. Status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log("Notification marked as read:", data);
+                                // Redirect to the chat page
+                                window.location.href = `chat.html?receiverId=${conversation.other_user_id}`;
+                            })
+                            .catch(error => {
+                                console.error("Error marking notification as read:", error);
+                                // Redirect to the chat page even if marking fails
+                                window.location.href = `chat.html?receiverId=${conversation.other_user_id}`;
+                            });
+                    } else {
+                        // Redirect to the chat page if no notification ID is associated
+                        window.location.href = `chat.html?receiverId=${conversation.other_user_id}`;
+                    }
                 });
 
                 inboxContainer.appendChild(conversationDiv);
@@ -124,48 +146,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 document.addEventListener("DOMContentLoaded", function () {
-    const userId = localStorage.getItem("userId"); // Get userId before using it
-    const inboxContainer = document.getElementById("inbox-container"); // Inbox container
-    const notificationsContainer = document.getElementById("notifications-list"); // List of notifications
-    const notificationBadge = document.getElementById("notification-count"); // Badge element
+    const userId = localStorage.getItem("userId"); // Retrieve user ID
+    const notificationsContainer = document.getElementById("notifications-list");
+    const notificationBadge = document.getElementById("notification-count");
 
     if (!userId) {
-        console.error("❌ User ID is missing.");
+        console.error("❌ User ID not found in localStorage.");
         return;
     }
 
-    // ✅ Fetch notifications and display them
+    // ✅ Fetch notifications
     function fetchNotifications() {
         fetch(`http://localhost:5001/users/${userId}/notifications`)
             .then(response => response.json())
             .then(notifications => {
                 console.log("📩 Fetched notifications:", notifications);
-                notificationsContainer.innerHTML = ""; // Clear existing notifications
-
-                if (notifications.length === 0) {
+                notificationsContainer.innerHTML = ""; // Clear old notifications
+    
+                const unreadNotifications = notifications.filter(notification => !notification.is_read);
+    
+                if (unreadNotifications.length === 0) {
                     notificationsContainer.innerHTML = "<p>No new notifications.</p>";
-                } else {
-                    notifications.forEach(notification => {
-                        const notificationDiv = document.createElement("div");
-                        notificationDiv.classList.add("notification-item");
-                        notificationDiv.dataset.notificationId = notification.notification_id;
-
-                        if (!notification.is_read) {
-                            notificationDiv.classList.add("unread");
-                        }
-
-                        notificationDiv.innerHTML = `
-                            <p>${notification.message}</p>
-                            <time>${new Date(notification.created_at).toLocaleString()}</time>
-                        `;
-
-                        notificationsContainer.appendChild(notificationDiv);
-                    });
+                    return;
                 }
+    
+                unreadNotifications.forEach(notification => {
+                    const notificationDiv = document.createElement("div");
+                    notificationDiv.classList.add("notification-item");
+                    notificationDiv.dataset.notificationId = notification.notification_id;
+    
+                    notificationDiv.innerHTML = `
+                        <p>${notification.message}</p>
+                        <time>${new Date(notification.created_at).toLocaleString()}</time>
+                    `;
+    
+                    notificationsContainer.appendChild(notificationDiv);
+                });
             })
             .catch(error => console.error("❌ Error fetching notifications:", error));
     }
-
+    function updateNotificationBadge() {
+        const userId = localStorage.getItem("userId");
+        if (!userId) return;
+    
+        fetch(`http://localhost:5001/users/${userId}/notifications/count`)
+            .then(response => response.json())
+            .then(data => {
+                if (notificationBadge) {
+                    notificationBadge.textContent = data.unread_count > 0 ? data.unread_count : "";
+                    notificationBadge.style.display = data.unread_count > 0 ? "inline-block" : "none";
+                }
+            })
+            .catch(error => console.error("❌ Error fetching notification count:", error));
+    }
     // ✅ Fetch unread notification count
     function fetchUnreadCount() {
         fetch(`http://localhost:5001/users/${userId}/notifications/count`)
@@ -179,8 +212,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         notificationBadge.style.display = "none";
                     }
-                } else {
-                    console.error("❌ Notification badge element not found.");
                 }
             })
             .catch(error => console.error("❌ Error fetching notification count:", error));
@@ -200,24 +231,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
             console.log(`📩 Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
 
-            fetch(`http://localhost:5001/${userId}/notifications/mark-read/${notificationId}`, {
+            fetch(`http://localhost:5001/users/${userId}/notifications/mark-read/${convo.notification_id}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" }
             })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("✅ Response from server:", data);
-                    if (data.affectedRows > 0) {
-                        notificationItem.classList.remove("unread");
-                        notificationItem.classList.add("read");
-                        fetchUnreadCount(); // 🔄 Refresh unread count
-                    }
-                })
-                .catch(error => console.error("❌ Error marking notification as read:", error));
-        }
-    });
-
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to mark notification as read. Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Notification marked as read:", data);
+                updateNotificationBadge(); // Update the notification badge
+                window.location.href = `chat.html?receiverId=${convo.other_user_id}`;
+            })
+            .catch(error => {
+                console.error("Error marking notification as read:", error);
+                window.location.href = `chat.html?receiverId=${convo.other_user_id}`;
+            });
+    }
     // ✅ Load notifications and unread count on page load
     fetchNotifications();
     fetchUnreadCount();
+    updateNotificationBadge();
+});
 });

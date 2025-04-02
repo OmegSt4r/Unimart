@@ -20,38 +20,7 @@
         </div>
     </div>
     <script src="js/app.js"></script>
-    <script>
-        // Example usage of the chat functions
-        document.addEventListener("DOMContentLoaded", function () {
-            
-            const senderId = localStorage.getItem("userId"); // Logged-in user ID
-            const receiverId = new URLSearchParams(window.location.search).get("receiverId"); // Receiver's user ID
-
-            if (!senderId || !receiverId) {
-                alert("Invalid chat session. Please ensure both sender and receiver IDs are set.");
-                return;
-            }
-
-            // Fetch and display chat messages
-            fetchMessages(senderId, receiverId);
-
-            // Send a message when the button is clicked
-            const sendMessageButton = document.getElementById("send-message-button");
-            const chatMessageInput = document.getElementById("chat-message-input");
-
-            sendMessageButton.addEventListener("click", function () {
-                const message = chatMessageInput.value.trim();
-                if (message) {
-                    sendMessage(senderId, receiverId, message);
-                    chatMessageInput.value = ""; // Clear the input field
-                }
-            });
-
-            // Optionally, poll for new messages every 2 seconds
-            setInterval(() => fetchMessages(senderId, receiverId), 2000);
-        
-        });
-
-    </script>
+    
+    <script src="js/chat.js"></script>
 </body>
 </html>

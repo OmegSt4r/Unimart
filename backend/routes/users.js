@@ -589,7 +589,7 @@ router.post("/:userId/chat/messages", (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
   }
 
-  // Start inserting the message into the inbox
+  // Insert the message into the messages table
   db.query(
       "INSERT INTO messages (sender_id, receiver_id, message, is_read) VALUES (?, ?, ?, 0)",
       [senderId, receiverId, message],
@@ -599,7 +599,7 @@ router.post("/:userId/chat/messages", (req, res) => {
               return res.status(500).json({ error: "Database error while inserting message" });
           }
 
-          // After the message is inserted, insert the notification
+          // Create a notification for the receiver
           db.query(
               "INSERT INTO notifications (user_id, message, is_read) VALUES (?, ?, 0)",
               [receiverId, `You have a new message from user ${senderId}`],
@@ -609,7 +609,6 @@ router.post("/:userId/chat/messages", (req, res) => {
                       return res.status(500).json({ error: "Database error while creating notification" });
                   }
 
-                  // Only send the response once after both actions are successful
                   res.json({ message: "Message sent and notification created" });
               }
           );
@@ -642,7 +641,7 @@ router.get("/:userId/chat/messages", (req, res) => {
 });
 router.get("/:userId/inbox", (req, res) => {
   const userId = req.params.userId;
-  console.log(`Fetching inbox for userId: ${userId}`);
+
   const sql = `
       SELECT 
           m.message_id,
@@ -654,41 +653,49 @@ router.get("/:userId/inbox", (req, res) => {
               WHEN m.sender_id = ? THEN m.receiver_id
               ELSE m.sender_id
           END AS other_user_id,
-          u.username AS other_user_name
+          u.username AS other_user_name,
+          n.notification_id -- Include notification ID
       FROM messages m
       JOIN users u ON u.user_id = CASE 
           WHEN m.sender_id = ? THEN m.receiver_id
           ELSE m.sender_id
       END
+      LEFT JOIN notifications n ON n.user_id = ? 
+          AND n.message LIKE CONCAT('%', m.sender_id, '%') 
+          AND n.is_read = 0 -- Only include unread notifications
       WHERE (m.sender_id = ? OR m.receiver_id = ?)
-      AND m.timestamp = (
-          SELECT MAX(timestamp)
+      AND m.message_id = (
+          SELECT MAX(message_id)
           FROM messages
           WHERE (sender_id = m.sender_id AND receiver_id = m.receiver_id)
              OR (sender_id = m.receiver_id AND receiver_id = m.sender_id)
       )
       ORDER BY m.timestamp DESC
   `;
-  db.query(sql, [userId, userId, userId, userId], (err, results) => {
+
+  db.query(sql, [userId, userId, userId, userId, userId], (err, results) => {
       if (err) {
           console.error("Error fetching inbox messages:", err);
           return res.status(500).json({ error: "Database error" });
       }
       res.json(results);
-  });
-});
+  });});
 
 // ✅ Fetch all notifications for a user
 router.get("/:userId/notifications", (req, res) => {
   const { userId } = req.params;
 
-  db.query( "SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 1",  [userId], (err, results) => {
-      if (err) {
-          console.error("❌ Error fetching notifications:", err);
-          return res.status(500).json({ error: "Database error" });
-      }
-      res.json(results);
-  });
+   db.query(
+        "SELECT * FROM notifications WHERE user_id = ? AND is_read = 0 ORDER BY created_at DESC LIMIT 1",
+        [userId],
+        (err, results) => {
+            if (err) {
+                console.error("❌ Error fetching notifications:", err);
+                return res.status(500).json({ error: "Database error" });
+            }
+            res.json(results);
+        }
+    );
 });
 
 // ✅ Fetch unread notification count
@@ -706,14 +713,26 @@ router.get("/:userId/notifications/count", (req, res) => {
 
 // ✅ Mark a notification as read
 router.post("/:userId/notifications/mark-read/:notificationId", (req, res) => {
-  const { userId, notificationId } = req.params;
+  const userId = req.params.userId;
+  const notificationId = req.params.notificationId;
 
-  db.query("UPDATE notifications SET is_read = 1 WHERE user_id = ? AND notification_id = ?", [userId, notificationId], (err, results) => {
+  const sql = `
+      UPDATE notifications
+      SET is_read = 1
+      WHERE user_id = ? AND notification_id = ?
+  `;
+
+  db.query(sql, [userId, notificationId], (err, result) => {
       if (err) {
-          console.error("❌ Error marking notification as read:", err);
+          console.error("Error marking notification as read:", err);
           return res.status(500).json({ error: "Database error" });
       }
-      res.json({ message: "✅ Notification marked as read", affectedRows: results.affectedRows });
+
+      if (result.affectedRows === 0) {
+          return res.status(404).json({ error: "Notification not found or already read" });
+      }
+
+      res.json({ success: true, message: "Notification marked as read" });
   });
 });
 

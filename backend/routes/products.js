@@ -158,4 +158,29 @@ router.get("/", (req, res) => {
             }
         });
     });
+    router.get("/:productId/reviews", (req, res) => {
+        const { productId } = req.params;
+
+        const sql = `
+            SELECT ur.comment, ur.rating, u.username AS reviewer
+            FROM user_reviews ur
+            JOIN users u ON ur.comment_source = u.user_id
+            WHERE ur.product_id = ?
+            UNION ALL
+            SELECT sr.comment, sr.rating, u.username AS reviewer
+            FROM seller_reviews sr
+            JOIN users u ON sr.review_source = u.user_id
+            WHERE sr.product_id = ?
+            ORDER BY rating DESC
+        `;
+    
+        db.query(sql, [productId, productId], (err, results) => {
+            if (err) {
+                console.error("Error fetching reviews:", err);
+                return res.status(500).json({ error: "Database error" });
+            }
+    
+            res.json(results);
+        });
+    });
     module.exports = router;

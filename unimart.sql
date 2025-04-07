@@ -170,13 +170,16 @@ DROP TABLE IF EXISTS `seller_reviews`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `seller_reviews` (
   `review_id` int NOT NULL AUTO_INCREMENT,
-  `comment` varchar(100) DEFAULT NULL,
-  `rating` int NOT NULL,
+  `comment` TEXT,
+  `product_id` INT NOT NULL,
+  `rating` int NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `review_source` int NOT NULL,
   `review_subject` int NOT NULL,
   PRIMARY KEY (`review_id`),
   KEY `seller_review_to_source_idx` (`review_source`),
   KEY `seller_review_to_subject_idx` (`review_subject`),
+  CONSTRAINT `seller_review_to_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
   CONSTRAINT `seller_review_to_source` FOREIGN KEY (`review_source`) REFERENCES `users` (`user_id`),
   CONSTRAINT `seller_review_to_subject` FOREIGN KEY (`review_subject`) REFERENCES `sellers` (`seller_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -188,7 +191,7 @@ CREATE TABLE `seller_reviews` (
 
 LOCK TABLES `seller_reviews` WRITE;
 /*!40000 ALTER TABLE `seller_reviews` DISABLE KEYS */;
-INSERT INTO `seller_reviews` VALUES (1,'Some of the pages were torn in the textbook but otherwise good.',3,5,2),(2,'Kind and easy to work with and product was in great condition.',5,4,2);
+INSERT INTO `seller_reviews` VALUES (1,'Some of the pages were torn in the notebooks but otherwise good.',3,3,'2025-03-18 12:00:00',5,2),(2,'Kind and easy to work with and product was in great condition.',10,5,'2025-03-18 12:00:00',4,2);
 /*!40000 ALTER TABLE `seller_reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,13 +315,16 @@ DROP TABLE IF EXISTS `user_reviews`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_reviews` (
   `review_id` int NOT NULL AUTO_INCREMENT,
-  `comment` varchar(100) DEFAULT NULL,
+  `product_id` INT NOT NULL,
+  `comment` TEXT,
   `rating` int NOT NULL,
   `comment_subject` int NOT NULL,
   `comment_source` int NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`review_id`),
   KEY `comment_to_source_idx` (`comment_source`),
   KEY `comment_to_subject_idx` (`comment_subject`),
+  CONSTRAINT `comment_to_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`),
   CONSTRAINT `comment_to_source` FOREIGN KEY (`comment_source`) REFERENCES `users` (`user_id`),
   CONSTRAINT `comment_to_subject` FOREIGN KEY (`comment_subject`) REFERENCES `users` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -330,7 +336,7 @@ CREATE TABLE `user_reviews` (
 
 LOCK TABLES `user_reviews` WRITE;
 /*!40000 ALTER TABLE `user_reviews` DISABLE KEYS */;
-INSERT INTO `user_reviews` VALUES (1,'Thank you for your purchase of the Backpack',5,1,3);
+INSERT INTO `user_reviews` VALUES (1,2,'Thank you for your purchase of the Backpack',5,1,3,'2025-03-18 12:00:00');
 /*!40000 ALTER TABLE `user_reviews` ENABLE KEYS */;
 UNLOCK TABLES;
 

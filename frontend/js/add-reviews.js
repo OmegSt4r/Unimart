@@ -3,28 +3,42 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusMessage = document.getElementById("status-message");
     const userId = localStorage.getItem("userId");
     console.log("Logged-in User ID:", userId);
+
+    // Get sellerId and productId from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const sellerId = urlParams.get("sellerId");
+    const productId = urlParams.get("productId");
 
-    // Pre-fill the Review Subject field with the sellerId
-    if (sellerId) {
-        document.getElementById("review-subject").value = sellerId;
+    // Debugging: Log the retrieved parameters
+    console.log("Seller ID:", sellerId);
+    console.log("Product ID:", productId);
+
+    // Pre-fill the Review Subject field with the sellerId or productId
+    const reviewSubjectField = document.getElementById("review-subject");
+    const productIdField = document.getElementById("product-id"); // Hidden field for productId
+
+    if (sellerId && productId) {
+        reviewSubjectField.value = `Seller ID: ${sellerId}, Product ID: ${productId}`;
+        productIdField.value = productId; // Populate the hidden field
+    } else if (sellerId) {
+        reviewSubjectField.value = `Seller ID: ${sellerId}`;
+    } else if (productId) {
+        reviewSubjectField.value = `Product ID: ${productId}`;
+        productIdField.value = productId; // Populate the hidden field
+    } else {
+        reviewSubjectField.value = "Unknown";
     }
 
+    // Handle form submission
     reviewForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
-        const reviewType = document.getElementById("review-type").value; // "seller" or "user"
-        const reviewSubject = document.getElementById("review-subject").value.trim(); // ID of the user/seller being reviewed
+        const reviewType = document.getElementById("review-type").value; // "seller" or "product"
         const rating = document.getElementById("rating").value;
         const reviewText = document.getElementById("review-text").value.trim();
+        const productId = document.getElementById("product-id").value; // Get productId from hidden field
 
         // Validate fields
-        if (!reviewSubject || isNaN(parseInt(reviewSubject, 10))) {
-            statusMessage.textContent = "Invalid review subject.";
-            statusMessage.style.color = "red";
-            return;
-        }
         if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
             statusMessage.textContent = "Please provide a valid rating between 1 and 5.";
             statusMessage.style.color = "red";
@@ -37,24 +51,25 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+        // Prepare review data
         const reviewData = {
             comment: reviewText,
             rating: parseInt(rating, 10),
-             // The logged-in user leaving the review
-           // The user or seller being reviewed
+            review_source: parseInt(userId, 10), // The logged-in user leaving the review
+            product_id: parseInt(productId, 10), // Product ID from hidden field
         };
+
         if (reviewType === "seller") {
-            reviewData.review_subject = parseInt(reviewSubject, 10); 
-            reviewData.review_source= parseInt(userId, 10)// For seller reviews
+            reviewData.review_subject = parseInt(sellerId, 10); // Seller ID
         } else {
-            reviewData.comment_subject = parseInt(reviewSubject, 10); 
-            reviewData.comment_source=parseInt(userId, 10);// For user reviews
+            reviewData.review_subject = parseInt(productId, 10); // Product ID
         }
+
         // Determine the endpoint based on the review type
         const endpoint =
             reviewType === "seller"
-                ? `/users/${reviewSubject}/seller-reviews`
-                : `/users/${reviewSubject}/user-reviews`;
+                ? `/users/${sellerId}/seller-reviews`
+                : `/users/${productId}/user-reviews`;
 
         try {
             const response = await fetch(`http://localhost:5001${endpoint}`, {
@@ -74,43 +89,12 @@ document.addEventListener("DOMContentLoaded", function () {
             statusMessage.textContent = "Review submitted successfully!";
             statusMessage.style.color = "green";
             setTimeout(() => {
-                window.location.href = "my-reviews.html"; // Replace with the actual path to your reviews page
+                window.location.href = "history.html"; // Redirect to purchase history
             }, 1000);
         } catch (error) {
             console.error("Error submitting review:", error);
             statusMessage.textContent = "Error submitting review.";
             statusMessage.style.color = "red";
-        }
-
-    });
-    document.getElementById("review-subject").addEventListener("input", async function () {
-        const query = this.value.trim();
-        const reviewType = document.getElementById("review-type").value;
-        const suggestionsContainer = document.getElementById("suggestions");
-    
-        if (!query) {
-            suggestionsContainer.innerHTML = "";
-            return;
-        }
-    
-        try {
-            const response = await fetch(`http://localhost:5001/users/search?query=${query}&type=${reviewType}`);
-            if (!response.ok) throw new Error("Failed to fetch suggestions");
-    
-            const suggestions = await response.json();
-            suggestionsContainer.innerHTML = suggestions
-                .map(suggestion => `<div class="suggestion" data-id="${suggestion.id}">${suggestion.name}</div>`)
-                .join("");
-    
-            // Add click event to suggestions
-            document.querySelectorAll(".suggestion").forEach(suggestion => {
-                suggestion.addEventListener("click", function () {
-                    document.getElementById("review-subject").value = this.dataset.id;
-                    suggestionsContainer.innerHTML = "";
-                });
-            });
-        } catch (error) {
-            console.error("Error fetching suggestions:", error);
         }
     });
 });

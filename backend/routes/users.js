@@ -262,6 +262,83 @@ router.post("/:userId/checkout", (req, res) => {
     });
 });
 });
+
+router.post("/:userId/purchase", (req, res) => {
+  const { userId } = req.params;
+  const { productId, quantity } = req.body;
+
+  const getProductSql = `
+      SELECT price, seller_id, inventory
+      FROM products
+      WHERE product_id = ?
+  `;
+
+  db.query(getProductSql, [productId], (err, productResults) => {
+      if (err) {
+          console.error("Error fetching product:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+
+      if (productResults.length === 0) {
+          return res.status(404).json({ error: "Product not found" });
+      }
+
+      const product = productResults[0];
+      const totalCost = product.price * quantity;
+
+      if (product.inventory < quantity) {
+          return res.status(400).json({ error: "Insufficient inventory" });
+      }
+
+      // Deduct from buyer's wallet
+      const deductWalletSql = `
+          UPDATE user_info
+          SET wallet_balance = wallet_balance - ?
+          WHERE user_id = ? AND wallet_balance >= ?
+      `;
+
+      db.query(deductWalletSql, [totalCost, userId, totalCost], (err, deductResult) => {
+          if (err) {
+              console.error("Error deducting wallet balance:", err);
+              return res.status(500).json({ error: "Database error" });
+          }
+
+          if (deductResult.affectedRows === 0) {
+              return res.status(400).json({ error: "Insufficient funds" });
+          }
+
+          // Add to seller's wallet
+          const addWalletSql = `
+              UPDATE user_info
+              SET wallet_balance = wallet_balance + ?
+              WHERE user_id = ?
+          `;
+
+          db.query(addWalletSql, [totalCost, product.seller_id], (err, addResult) => {
+              if (err) {
+                  console.error("Error adding to seller's wallet:", err);
+                  return res.status(500).json({ error: "Database error" });
+              }
+
+              // Update product inventory
+              const updateInventorySql = `
+                  UPDATE products
+                  SET inventory = inventory - ?
+                  WHERE product_id = ?
+              `;
+
+              db.query(updateInventorySql, [quantity, productId], (err, updateResult) => {
+                  if (err) {
+                      console.error("Error updating inventory:", err);
+                      return res.status(500).json({ error: "Database error" });
+                  }
+
+                  res.json({ success: true, message: "Purchase successful" });
+              });
+          });
+      });
+  });
+});
 router.post("/:userId/increase-balance", (req, res) => {
   const userId = req.params.userId;
   const { amount } = req.body;
@@ -289,7 +366,29 @@ router.post("/:userId/increase-balance", (req, res) => {
       }
   });
 });
+router.post("/:userId/wallet/add", (req, res) => {
+  const { userId } = req.params;
+  const { amount } = req.body;
 
+  if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
+  }
+
+  const sql = `
+      UPDATE user_info
+      SET wallet_balance = wallet_balance + ?
+      WHERE user_id = ?
+  `;
+
+  db.query(sql, [amount, userId], (err, result) => {
+      if (err) {
+          console.error("Error updating wallet balance:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
+
+      res.json({ success: true, message: `Wallet updated by $${amount}` });
+  });
+});
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "../frontend/images/"); // Saves files in backend/uploads/
@@ -499,18 +598,19 @@ router.get("/:userId/reviews", async (req, res) => {
   }
 });
 router.post("/:userId/seller-reviews", (req, res) => {
-  const { comment, rating, review_source } = req.body;
+  const { comment, rating, review_source, product_id } = req.body;
   const review_subject = parseInt(req.params.userId);
 
-  if (!comment || !rating || !review_source || !review_subject) {
+  if (!comment || !rating || !review_source || !review_subject || !product_id) {
+    console.error("Missing required fields:", { comment, rating, review_source, review_subject, product_id });
       return res.status(400).json({ error: "All fields are required." });
   }
 
   const sql = `
-      INSERT INTO seller_reviews (comment, rating, review_source, review_subject) 
-      VALUES (?, ?, ?, ?)
+      INSERT INTO seller_reviews (comment, product_id, rating, review_source, review_subject) 
+      VALUES (?, ?, ?, ?, ?)
   `;
-  db.query(sql, [comment, rating, review_source, review_subject], (err, result) => {
+  db.query(sql, [comment, product_id, rating, review_source, review_subject], (err, result) => {
       if (err) {
           console.error("Error adding seller review:", err);
           return res.status(500).json({ error: "Database error" });
@@ -521,19 +621,20 @@ router.post("/:userId/seller-reviews", (req, res) => {
 
 // Add a user review for a specific user
 router.post("/:userId/user-reviews", (req, res) => {
-  const { comment, rating, comment_source } = req.body;
+  const { comment, rating, comment_source, product_id } = req.body;
+
   const comment_subject = parseInt(req.params.userId, 10);
 
-  if (!comment || !rating || !comment_subject || !comment_source ) {
-    console.error("Missing required fields:", { comment, rating, comment_subject, comment_source  });
+  if (!comment || !rating || !comment_subject || !comment_source || !product_id) {
+    console.error("Missing required fields:", { comment, rating, comment_subject, comment_source, product_id });
       return res.status(400).json({ error: "All fields are required." });
   }
 
   const sql = `
-      INSERT INTO user_reviews (comment, rating, comment_subject, comment_source) 
-      VALUES (?, ?, ?, ?)
+      INSERT INTO user_reviews (comment, product_id rating, comment_subject, comment_source) 
+      VALUES (?, ?, ?, ?, ?)
   `;
-  db.query(sql, [comment, rating,  comment_subject, comment_source], (err, result) => {
+  db.query(sql, [comment, product_id, rating,  comment_subject, comment_source], (err, result) => {
       if (err) {
           console.error("Error adding user review:", err);
           return res.status(500).json({ error: "Database error" });
@@ -565,13 +666,24 @@ router.get("/:userId/history", (req, res) => {
   const userId = req.params.userId;
 
   const sql = `
-      SELECT hi.history_items_id, hi.quantity, hi.price, 
-             p.product_name, p.p_description, p.p_image, p.seller_id
-      FROM history_itmes hi
-      JOIN products p ON hi.item_id = p.product_id
-      WHERE hi.user_id = ?
-      ORDER BY hi.history_items_id DESC
-  `;
+  SELECT 
+      hi.history_items_id, 
+      hi.quantity, 
+      hi.price, 
+      p.product_name, 
+      p.p_description, 
+      p.p_image, 
+      p.product_id,
+      p.seller_id,
+      ur.rating AS user_rating, 
+      ur.comment AS user_comment
+  FROM history_itmes hi
+  JOIN products p ON hi.item_id = p.product_id
+  LEFT JOIN user_reviews ur ON hi.item_id = ur.product_id AND hi.user_id = ur.comment_source
+  WHERE hi.user_id = ?
+  ORDER BY hi.history_items_id DESC
+`;
+
 
   db.query(sql, [userId], (err, results) => {
       if (err) {
@@ -681,7 +793,7 @@ router.get("/:userId/inbox", (req, res) => {
       res.json(results);
   });});
 
-// ✅ Fetch all notifications for a user
+
 router.get("/:userId/notifications", (req, res) => {
   const { userId } = req.params;
 
@@ -690,7 +802,7 @@ router.get("/:userId/notifications", (req, res) => {
         [userId],
         (err, results) => {
             if (err) {
-                console.error("❌ Error fetching notifications:", err);
+                console.error("Error fetching notifications:", err);
                 return res.status(500).json({ error: "Database error" });
             }
             res.json(results);
@@ -698,20 +810,20 @@ router.get("/:userId/notifications", (req, res) => {
     );
 });
 
-// ✅ Fetch unread notification count
+
 router.get("/:userId/notifications/count", (req, res) => {
   const { userId } = req.params;
 
   db.query("SELECT COUNT(*) AS unread_count FROM notifications WHERE user_id = ? AND is_read = 0", [userId], (error, results) => {
       if (error) {
-          console.error("❌ Error fetching unread notification count:", error);
+          console.error("Error fetching unread notification count:", error);
           return res.status(500).json({ error: "Server error" });
       }
       res.json({ unread_count: results[0].unread_count });
   });
 });
 
-// ✅ Mark a notification as read
+
 router.post("/:userId/notifications/mark-read/:notificationId", (req, res) => {
   const userId = req.params.userId;
   const notificationId = req.params.notificationId;

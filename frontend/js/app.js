@@ -131,7 +131,60 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        const productContainer = document.querySelector(".products");
     
+        productContainer.addEventListener("click", async function (event) {
+            if (event.target.classList.contains("view-reviews-button")) {
+                // Prevent the click event from propagating to the parent element
+                event.stopPropagation();
+                event.preventDefault();
+                const productId = event.target.getAttribute("data-product-id");
+    
+                try {
+                    const response = await fetch(`http://localhost:5001/products/${productId}/reviews`);
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch reviews");
+                    }
+    
+                    const reviews = await response.json();
+                    displayReviews(reviews, productId);
+                } catch (error) {
+                    console.error("Error fetching reviews:", error);
+                }
+            }
+            if (event.target.classList.contains("close-reviews-button")) {
+                const reviewsContainer = event.target.parentElement;
+                reviewsContainer.style.display = "none"; // Hide the reviews container
+            }
+        });
+    
+        function displayReviews(reviews, productId) {
+            const reviewsContainer = document.getElementById(`reviews-container-${productId}`);
+            reviewsContainer.innerHTML = ""; // Clear existing reviews
+            const closeButton = document.createElement("button");
+            closeButton.textContent = "Close Reviews";
+            closeButton.classList.add("close-reviews-button");
+            reviewsContainer.appendChild(closeButton);
+        
+            if (reviews.length === 0) {
+                reviewsContainer.innerHTML = "<p>No reviews available for this product.</p>";
+            } else {
+                reviews.forEach((review) => {
+                    const reviewElement = document.createElement("div");
+                    reviewElement.classList.add("review");
+                    reviewElement.innerHTML = `
+                        <p><strong>${review.reviewer}</strong> (${review.rating}/5):</p>
+                        <p>${review.comment}</p>
+                        <hr>
+                    `;
+                    reviewsContainer.appendChild(reviewElement);
+                });
+            }
+    
+            reviewsContainer.style.display = "block"; // Show the reviews container
+        }
+    });
     // Fetch Products from Backend
     function fetchProducts(tag = "") {
         let url = "http://localhost:5001/products";
@@ -153,9 +206,10 @@ document.addEventListener("DOMContentLoaded", function() {
     
         products.forEach(product => {
             const productElement = document.createElement("div");
+            
             productElement.classList.add("product");
             productElement.setAttribute("data-id", product.product_id);
-            productElement.innerHTML = `
+            productElement.innerHTML += `
                 <img src="images/${product.p_image}" alt="${product.product_name}" class="product-image">
                <div class="product-details"> 
                <p><b>Description:</b>${product.p_description}</p> 
@@ -164,15 +218,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 <b>Seller:</b> ${product.seller_name}<p>★★★★</p>
                 <a href="chat.html?receiverId=${product.seller_id}"><button class="chat-seller">Chat Seller</button></a>
                 <button class="add-cart" onclick="addToCart(${product.product_id}, '${product.product_name}', ${product.price})">Add to Cart</button>
+                 <button class="view-reviews-button" data-product-id="${product.product_id}">View Reviews</button>
+                    <div class="reviews-container" id="reviews-container-${product.product_id}" style="display: none;">
+                        <!-- Reviews will be dynamically loaded here -->
+                    </div>
             </div>
            
          `;
             productContainer.appendChild(productElement);
-            productElement.addEventListener("click", function() {
+            productElement.addEventListener("click", function (event) {
+                if (event.target.classList.contains("view-reviews-button")) {
+                    return; // Ignore clicks on the "View Reviews" button
+                }
+            
+                // Toggle product card details
                 const image = productElement.querySelector(".product-image");
                 const details = productElement.querySelector(".product-details");
                 productElement.classList.toggle("expanded");
-                
             });
             
         });
@@ -221,6 +283,31 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Insufficient funds!");
         }
     }    
+    function purchaseProduct(productId, quantity) {
+        const userId = localStorage.getItem("userId");
+    
+        if (!userId) {
+            alert("Please log in to make a purchase.");
+            return;
+        }
+    
+        fetch(`http://localhost:5001/users/${userId}/purchase`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ productId, quantity })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    // Optionally, update the wallet balance and inventory on the page
+                    fetchProducts(); // Refresh product list
+                } else {
+                    alert(data.error || "Failed to complete purchase.");
+                }
+            })
+            .catch(error => console.error("Error purchasing product:", error));
+    }
     document.getElementById("add-product-button").addEventListener("click", function() {
         const userId = localStorage.getItem("userId");
     

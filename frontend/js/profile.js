@@ -164,6 +164,38 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+document.getElementById("topup-button").addEventListener("click", function () {
+    const userId = localStorage.getItem("userId");
+    const amount = parseFloat(document.getElementById("topup-amount").value);
+
+    if (!userId) {
+        alert("Please log in to add funds.");
+        return;
+    }
+
+    if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+
+    fetch(`http://localhost:5001/users/${userId}/wallet/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                // Optionally, update the wallet balance on the page
+                const walletAmount = document.getElementById("wallet-amount");
+                walletAmount.textContent = `$${(parseFloat(walletAmount.textContent.replace("$", "")) + amount).toFixed(2)}`;
+            } else {
+                alert("Failed to add funds.");
+            }
+        })
+        .catch(error => console.error("Error adding funds:", error));
+});
 
 
 

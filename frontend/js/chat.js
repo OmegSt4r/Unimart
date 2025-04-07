@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     notificationBadge.style.display = data.unread_count > 0 ? "inline-block" : "none";
                 }
             })
-            .catch(error => console.error("❌ Error fetching notification count:", error));
+            .catch(error => console.error("Error fetching notification count:", error));
     }
     // Mark the notification as read (if applicable)
     if (notificationId) {

@@ -108,7 +108,32 @@ header {
     height:80px;
     margin-right: 10px;
 }
+.reviews-container {
+    margin-top: 10px;
+  background-color: #f9f9f9;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 300px; /* Set a max height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%;
+    margin: 0 auto; /*Center the container */
+    
 
+}
+.close-reviews-button {
+ 
+   justify-content: center;
+    
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.review{
+    border-bottom: 1px solid #ddd;
+  padding: 4px 0;
+}
 .wallet {
     background: green;
     padding: 5px 10px;

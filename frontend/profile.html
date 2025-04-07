@@ -8,13 +8,11 @@
     <link rel="icon" href="images/Senior Capstone Project Report.png">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
 </head>
 <body>
     <header>
         <div class="logo">
             <a href="index.html"><img src="images/Senior Capstone Project Report.png" alt="UniMart Logo"></a>
-            
         </div>
         <div class="search-container">
             <div class="dropdown">
@@ -28,110 +26,109 @@
                 </ul>
             </div>
             <input  type="text" placeholder="Search..." id="searchBar">
-            
         </div>
-       
-    <div class="user-actions">
-            
+        <div class="user-actions">
             <div class="wallet">
-            <p>Wallet:<span id="wallet-amount"></span></p>
+                <p>Wallet:<span id="wallet-amount"></span></p>
             </div>
-            <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
-        <div class="user-profile m-hidden">
-            <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
-            <a href="login.html"><button id="logout-button">Logout</button></a>
+            <a id="cart-link" href="#"><img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+            <div class="user-profile m-hidden">
+                <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
+                <a href="login.html"><button id="logout-button">Logout</button></a>
+            </div>
         </div>
-            
-    </div>
+    </header>
     
-</header>
-<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
-    <a href="my-reviews.html"><button>Reviews</button></a>
-    <a href="history.html"><button>History</button></a>
-    <a href="my-products.html"><button>My Products</button></a> 
-</nav>
+    <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
+        <a href="my-reviews.html"><button>Reviews</button></a>
+        <a href="history.html"><button>History</button></a>
+        <a href="my-products.html"><button>My Products</button></a> 
+    </nav>
+    
     <main>
-         <!-- Profile Container -->
-    <div class="max-w-4xl mx-auto p-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Profile Settings</h2>
+        <div class="max-w-4xl mx-auto p-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Profile Settings</h2>
 
-        <!-- Profile Card -->
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <div class="flex items-center space-x-4">
-                <img id="profilePic" class=" h-20 rounded-full border" src="images/profile.jpg" alt="Profile Picture">
-                <div class="user-profile">
-                    <h2 class="text-2xl font-semibold text-gray-800">Welcome, <span id="usernameDisplay">User</span>!</h2>
-                    <p id="email" class="text-gray-500"><span id="emailDisplay">Email</span></p>
+            <!-- Profile Card -->
+            <div class="bg-white shadow-md rounded-lg p-6">
+                <div class="flex items-center space-x-4">
+                    <!-- Profile Picture -->
+                    <img id="profilePic" class="h-20 w-20 rounded-full border"  alt="Profile Picture">
+
+                    <!-- User Info -->
+                    <div class="user-profile">
+                        <h2 class="text-2xl font-semibold text-gray-800">Welcome, <span id="usernameDisplay">User</span>!</h2>
+                        <p id="email" class="text-gray-500"><span id="emailDisplay">Email</span></p>
+                    </div>
+
+                    <!-- Change Photo -->
+                    <label class="ml-auto cursor-pointer">
+                        <input type="file" id="profilePicInput" class="hidden">
+                        <span class="text-blue-600 hover:underline">Change Photo</span>
+                    </label>
+                </div> 
+                <div id="profile-container">
+                    <!-- Other profile information -->
+                    <button id="upgradeButton" onclick="upgradeToSeller()">Upgrade to Seller</button>
                 </div>
-                <label class="ml-auto cursor-pointer">
-                    <input type="file" id="uploadAvatar" class="hidden">
-                    <span class="text-blue-600 hover:underline">Change Photo</span>
-                </label>
-            </div> 
-            <div id="profile-container">
-            <!-- Other profile information -->
-            <button id="upgradeButton" onclick="upgradeToSeller()">Upgrade to Seller</button>
-   </div>
-   <div class="wallet-topup">
-    <h3>Top-Up Wallet</h3>
-    <input type="number" id="topup-amount" placeholder="Enter amount" min="1">
-    <button id="topup-button">Add Funds</button>
-</div>
-        </div>
+                <div class="wallet-topup">
+                    <h3>Top-Up Wallet</h3>
+                    <input type="number" id="topup-amount" placeholder="Enter amount" min="1">
+                    <button id="topup-button">Add Funds</button>
+                </div>
+            </div>
 
-        <!-- Account Settings -->
-        <div class="bg-white shadow-md rounded-lg p-6 mt-6">
-            <h3 class="text-lg font-semibold mb-3">Account Settings</h3>
-            <label class="block mb-2 text-gray-700">Change Password:</label>
-            <input type="password" id="newPassword" class="w-full p-2 border rounded-md" placeholder="Enter new password">
-            <button id="updatePassword" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Password</button>
-        </div>
+            <!-- Account Settings -->
+            <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+                <h3 class="text-lg font-semibold mb-3">Account Settings</h3>
+                <label class="block mb-2 text-gray-700">Change Password:</label>
+                <input type="password" id="newPassword" class="w-full p-2 border rounded-md" placeholder="Enter new password">
+                <button id="updatePassword" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Update Password</button>
+            </div>
 
-        <!-- Seller Settings (Only for Sellers) -->
-        <div id="sellerSettings" class="hidden bg-white shadow-md rounded-lg p-6 mt-6">
-            <h3 class="text-lg font-semibold mb-3">Seller Settings</h3>
-            <label class="block mb-2 text-gray-700">Company Name:</label>
-            <input type="text" id="companyName" class="w-full p-2 border rounded-md">
-            <button id="updateCompany" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Update</button>
-        </div>
+            <!-- Seller Settings (Only for Sellers) -->
+            <div id="sellerSettings" class="hidden bg-white shadow-md rounded-lg p-6 mt-6">
+                <h3 class="text-lg font-semibold mb-3">Seller Settings</h3>
+                <label class="block mb-2 text-gray-700">Company Name:</label>
+                <input type="text" id="companyName" class="w-full p-2 border rounded-md">
+                <button id="updateCompany" class="mt-3 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">Update</button>
+            </div>
 
-        <!-- Danger Zone -->
-        <div class="bg-white shadow-md rounded-lg p-6 mt-6 border border-red-300">
-            <h3 class="text-lg font-semibold text-red-600 mb-3"></h3>
-            <button id="deleteAccount" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Account</button>
-            
+            <!-- Danger Zone -->
+            <div class="bg-white shadow-md rounded-lg p-6 mt-6 border border-red-300">
+                <h3 class="text-lg font-semibold text-red-600 mb-3"></h3>
+                <button id="deleteAccount" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete Account</button>
+            </div>
         </div>
-        </div>
+    </main>
+
+    <!-- Mobile Navbar -->
+    <div class="mobile-navbar">
+        <a href="index.html">
+            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo" class="logo">
+        </a>
+        <a href="profile.html">
+            <img src="images/profile.jpg" class="profile-pic" alt="Profile Picture">
+        </a>
+        <a id="cart-link" href="cart.html">
+            <img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon">
+        </a>
+        <button class="hamburger-menu" id="hamburger-menu">
+            <img src="images/Menu-Icon-PNG.png" alt="Menu" />
+        </button>
     </div>
+
+    <div class="hamburger-menu-content" id="hamburger-menu-content">
+        <ul>
+            <li><a href="add-product.html"><button id="add-product-button">+ Add Product</button></a></li>
+            <li><a href="my-reviews.html">Reviews</a></li>
+            <li><a href="history.html">History</a></li>
+            <li><a href="my-products.html">My Products</a></li>
+        </ul>
     </div>
-    
-       
- </main>
- <div class="mobile-navbar">
-    <a href="index.html">
-        <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo" class="logo">
-    </a>
-    <a href="profile.html">
-        <img src="images/profile.jpg" class="profile-pic" alt="Profile Picture">
-    </a>
-    <a id="cart-link" href="cart.html">
-        <img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon">
-    </a>
-    <button class="hamburger-menu" id="hamburger-menu">
-        <img src="images/Menu-Icon-PNG.png" alt="Menu" />
-    </button>
-</div>
-<div class="hamburger-menu-content" id="hamburger-menu-content">
-    <ul>
-        <li><a href="add-product.html"><button id="add-product-button">+ Add Product</button></a></li>
-        
-        <li><a href="my-reviews.html">Reviews</a></li>
-        <li><a href="history.html">History</a></li>
-        <li><a href="my-products.html">My Products</a></li>
-    </ul>
-</div>
-<script src="js/app.js"></script>
-<script src="js/wallet.js"></script>
-<script src="js/profile.js"></script>
+
+    <script src="js/app.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/profile.js"></script>
 </body>
 </html>

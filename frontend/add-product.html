@@ -6,36 +6,92 @@
     <title>Add Product - UniMart</title>
     <link rel="stylesheet" href="css/add-product.css">
     <link rel="icon" href="images/Senior Capstone Project Report.png">
+    
 </head>
 <body>
     <header>
+         
         <div class="logo">
-            <img src="images/Senior Capstone Project Report.png" alt="UniMart Logo">
-            <h1>UniMart</h1>
+           
+            <a href="index.html"><img src="images/Senior Capstone Project Report.png" alt="UniMart Logo"></a>
+            
+        </div><div class="filter-container">
+            <button class="filter-btn">Filters ▼</button>
+            <div class="filter-dropdown">
+                <div class="filter">
+                    <label for="sortPrice">Sort by:</label>
+                    <select id="sortPrice">
+                        <option value="">Select</option>
+                        <option value="low">Low to High</option>
+                        <option value="high">High to Low</option>
+                    </select>
+                    <label for="minPrice">Min Price:</label>
+                    <input type="number" id="minPrice" placeholder="Min Price">
+                    <label for="maxPrice">Max Price:</label>
+                    <input type="number" id="maxPrice" placeholder="Max Price">
+                </div>
+            </div> 
+            <button id="add-product-button">+ Add Product</button>
         </div>
-        <div class="user-actions">
+         
+       
+        <div class="search-container">
+            <div class="dropdown">
+                <button class="dropdown-toggle" id="category-dropdown">▼</button>
+                <ul class="dropdown-menu" id="category-menu">
+                    <li>Supplies</li>
+                    <li>Electronics</li>
+                    <li>Furniture</li>
+                    <li>Food</li>
+                    <li>Clothing</li>
+                </ul>
+            </div>
+            <input  type="text" placeholder="Search..." id="searchBar">
+            
+        </div>
+       
+    <div class="user-actions"> 
             <div class="wallet">
-                <p>Wallet:<span id="wallet-amount">$50.00</span></p>
+            <p>Wallet:<span id="wallet-amount"></span></p>
             </div>
-            <a href="cart.html"><img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
-            <input type="text" placeholder="Search..." id="searchBar">
-            <i class="fas fa-shopping-cart"></i>
-            <div class="user-profile">
-                <img src="images/profile.jpg" alt="User Profile Picture">
-                <a href="login.html"><button id="logout">Logout</button></a>
+
+    
+        <div id="notifications-container">            
+            
+           
+           
+           
+            <div id="inbox-container">
+          
+        <div id="inbox-icon"> 
+              <div style="margin-left:20px;" id="notification-icon">
+                🔔 <span id="notification-count" style="display: none;">0</span> 
+                <div id="temporary-notification" class="notification-popup"><div id="notifications-list" class="badge"></div></div>
             </div>
-        </div>
-    </header>
-    <nav>
-        
-        <a href="index.html"> <button class="active">Home</button></a>
-         <a href="trending.html"><button>Trending</button></a>
-         <a href= "my-reviews.html"><button>Reviews</button></a>
-         <a href= "reviews.html"><button>Reviews</button></a>
-         <a href="history.html"><button>Purchase History</button></a>
-         <a href="my-products.html"><button>My Products</button></a> 
      
-     </nav>
+            <a id="inboxButton" href="inbox.html"> 
+            <img class="inbox-icon" src="images/inbox.png">
+              
+        </a> 
+   
+    
+        </div>
+     </div>
+</div>
+            <a id="cart-link" href="#"><img src = "images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
+        <div class="user-profile m-hidden">
+            <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
+            <a href="login.html"><button id="logout-button">Logout</button></a>
+        </div>
+            
+    </div>
+    
+</header>
+<nav class="navbar fixed-top navbar-expand-md navbar-light bg-light n-color">
+    <a href="my-reviews.html"><button>Reviews</button></a>
+    <a href="history.html"><button>History</button></a>
+    <a href="my-products.html"><button>My Products</button></a> 
+</nav>
     <main class = "add-product-container">
         <h2>Add New Product</h2>
         <form id="add-product-form" class="add-product-form" enctype="multipart/form-data">

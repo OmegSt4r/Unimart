@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             itemElement.classList.add("purchase-item");
             itemElement.innerHTML = `
                 <div class="purchase-card">
-                    <img src="${item.p_image || 'images/placeholder.jpg'}" alt="${item.product_name}" class="purchase-image">
+                    <img src="images/${item.p_image || 'images/placeholder.jpg'}" alt="${item.product_name}" class="purchase-image">
                     <div class="purchase-details">
                         <h3>${item.product_name}</h3>
                         <p>${item.p_description}</p>

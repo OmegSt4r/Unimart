@@ -15,6 +15,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use('/frontend/images', express.static('frontend/images'));
+app.use("/frontend/images", express.static(path.join(__dirname, "../frontend/images")));
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

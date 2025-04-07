@@ -260,7 +260,300 @@ main {
     font-family: 'Arial', sans-serif;
     
 }
+.notification-item.unread {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: radial-gradient(circle, #333333 0%, #000000 100%);
+    color: white;
+    padding: 10px 20px;
+}
+.inbox-icon{
+    padding:10px;
+    cursor: pointer;
+    width: 50px;
+}
+.search-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0 20px;
+}
 
+#searchBar {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+   border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    
+    margin-right: 10px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: none;
+    padding: 10px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius:5px ;
+    cursor: pointer;
+}
+.notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    z-index: 1000;
+    display: none; /* Hidden by default */
+    animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(-10px); }
+    10% { opacity: 1; transform: translateY(0); }
+    90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}
+.badge{
+    color:black;
+    padding:5px;
+    border-radius:5px;
+    font-size:12px;
+    font-weight:bold;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: linear-gradient(to bottom, #777, #E0CDA9);
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    list-style: 12;
+    padding: 20px;
+    margin: 0;
+    z-index: 1000;
+}
+
+.dropdown-menu li {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width:80px;
+    height:80px;
+    margin-right: 10px;
+}
+.reviews-container {
+    margin-top: 10px;
+  background-color: #f9f9f9;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 300px; /* Set a max height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    width: 100%;
+    margin: 0 auto; /*Center the container */
+    
+
+}
+.close-reviews-button {
+ 
+   justify-content: center;
+    
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.review{
+    border-bottom: 1px solid #ddd;
+  padding: 4px 0;
+}
+.wallet {
+    background: green;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.user-actions input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.logout-btn {
+    background: blue;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.logout-btn:hover {
+    background: darkblue;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    width: 100%;  /* Makes nav stretch across the entire page */
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
+    flex-wrap: wrap;
+    justify-content: space-between; /* Adjusts spacing */
+
+}
+
+nav a {
+    flex: 1; /* Ensures each link takes equal space */
+    text-decoration: none; /* Removes underline */
+    
+}
+
+nav button {
+    width: 100%; /* Makes button fill the <a> */
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    background: linear-gradient(to bottom, #1A1A1A , #4A4A4A);
+    color: white;
+    display: block; /* Ensures button behaves properly inside <a> */
+}
+
+nav button.active {
+    background: linear-gradient(to top, #B39A60, #333333);
+    color: white;
+}
+nav button:hover {
+   
+    background: linear-gradient(to top, #1A1A1A, #333333);
+    color:white;
+}
+/* Sidebar */
+aside {
+    width: 200px;
+    position: fixed;
+   
+    left: 0;
+    
+    padding: 10px;
+    overflow:visible;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Category List */
+aside ul {
+    display:flex;
+    list-style: none;
+    padding: 0px;
+    flex-direction: column;
+    margin: 0;
+}
+ul button {
+    background:white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+ul button:hover {
+    background: rgb(0, 0, 180);
+    color:white;
+}
+ul button.active {
+    background: blue;
+    color: white;
+}
+aside li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+/* Filter Button */
+.filter-container {
+    position: relative;
+    margin-top: auto;
+    text-align: left;
+}
+
+.filter-btn {
+    
+    padding: 10px;
+    background: linear-gradient(to top, #B39A60, #333333);
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    border-radius:5px;
+}
+.filter-btn:hover {
+    background: linear-gradient(to top, #B39A90, #333333);
+}
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    bottom:auto;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    
+}
+
+
+.filter-container.active .filter-dropdown {
+    display: block;
+}
+
+
+.filter-dropdown label {
+    display: block;
+    padding: 5px;
+    cursor: pointer;
+}
+.filter-dropdown input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: blue;
+    cursor:pointer;
+}
 .add-product-container h2 {
     color: #333;
     text-align: center;
@@ -330,13 +623,26 @@ main {
 @media only screen and (max-width: 768px) {
     /* Hide the Unimart title */
     .add-product-container {
-        margin: 20px;
-        padding: 20px;
+       
+        
+        margin-bottom: 80px;
+        padding-bottom: 80px;
+        margin: 20px auto; /* Center the container */
+       
+        width: 100%; /* Ensure it fits within the screen */
+        max-width: 600px; /* Limit the maximum width */
+        box-sizing: border-box; /* Include padding in the width */
+        
     }
-
+    .add-product-form input,
+    .add-product-form select,
+    .add-product-form textarea {
+        width: 100%; /* Make form fields take full width */
+    }
     .add-product-form button {
         font-size: 14px;
         padding: 10px;
+        width:100%;
     }
     aside {
         display: none; /* Hide the aside on mobile */
@@ -472,7 +778,7 @@ main {
 
     /* Adjust main content to avoid overlapping with the navbar */
     main {
-        margin-left: 0; /* Remove the left margin when aside is hidden */
+       /* Remove the left margin when aside is hidden */
         padding: 10px; /* Adjust padding for mobile */
         width: 100%; /* Ensure main takes up the full width */
         box-sizing: border-box;

@@ -394,12 +394,33 @@ const storage = multer.diskStorage({
     cb(null, "../frontend/images/"); // Saves files in backend/uploads/
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+    cb(null, `${req.params.userId}-${Date.now()}${path.extname(file.originalname)}`); // Unique filename
   }
 });
 
 const upload = multer({ storage: storage });
+router.post("/:userId/upload-profile-pic", upload.single("profile_pic"), async (req, res) => {
+  const { userId } = req.params;
 
+  if (!req.file) {
+      console.error("No file uploaded"); // Debugging
+      return res.status(400).json({ error: "No file uploaded" });
+  }
+
+  const filePath =`/frontend/images/${req.file.filename}`;
+  console.log("Uploaded file path:", filePath); // Debugging
+
+  try {
+      // Update the user's profile picture in the database
+      const sql = "UPDATE users SET profile_pic = ? WHERE user_id = ?";
+      await db.promise().query(sql, [filePath, userId]);
+
+      res.status(200).json({ success: true, message: "Profile picture uploaded successfully", profile_pic: filePath });
+  } catch (error) {
+      console.error("Error updating profile picture:", error);
+      res.status(500).json({ error: "Failed to update profile picture" });
+  }
+});
 
 router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
   const userId = req.params.userId;
@@ -618,7 +639,23 @@ router.post("/:userId/seller-reviews", (req, res) => {
       res.status(201).json({ message: "Seller review added successfully", id: result.insertId });
   });
 });
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
 
+  const sql = "SELECT profile_pic FROM users WHERE user_id = ?";
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching user profile picture:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ profile_pic: results[0].profile_pic });
+  });
+});
 // Add a user review for a specific user
 router.post("/:userId/user-reviews", (req, res) => {
   const { comment, rating, comment_source, product_id } = req.body;

@@ -350,6 +350,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
+  `profile_pic` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -361,7 +362,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (3,'Abby'),(11,'Bora'),(5,'Ken'),(4,'Megan'),(6,'newusername'),(1,'originalguy'),(8,'paulannoyance'),(2,'sellerdude'),(9,'skinnypete'),(10,'twoarmslouise');
+INSERT INTO `users` VALUES (3,'Abby',NULL),(11,'Bora',NULL),(5,'Ken',NULL),(4,'Megan',NULL),(6,'newusername',NULL),(1,'originalguy',NULL),(8,'paulannoyance',NULL),(2,'sellerdude',NULL),(9,'skinnypete',NULL),(10,'twoarmslouise',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 

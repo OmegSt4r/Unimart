@@ -537,6 +537,43 @@ main {
         background: radial-gradient(circle, #333333 0%, #000000 100%);
         margin:0;
     }
+    .trending-slideshow {
+        border-radius: 0;
+        padding: 10px;
+    }
+ 
+    .trending-slide.active {
+        flex-direction: column; /* Stack products vertically */
+        padding: 10px 0;
+        align-items: center;
+    }
+
+    .trending-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .trending {
+        width: 90%; /* Almost full width on mobile */
+        max-width: 350px;
+    }
+
+    .trending img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .trending-btn {
+        top: auto;
+        bottom: 10px;
+        transform: none;
+        position: static;
+        margin: 10px 5px;
+    }
+
+   
+
 
     .slideshow-container {
         height: 200px;
@@ -713,7 +750,7 @@ main {
         background: #f1f1f1;
         border-radius: 5px;
     }
-
+.m-hidden{display:none;}
    
 nav{display:none;}
     /* Adjust main content to avoid overlapping with the navbar */

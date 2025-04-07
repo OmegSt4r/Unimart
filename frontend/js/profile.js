@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateProfilePictures(profilePicUrl) {
         document.querySelectorAll(".profile-pic").forEach(img => {
-            img.src = `http://localhost:5001/uploads/${profilePicUrl}`; // Ensure proper URL path
+            img.src = `http://localhost:5001/${profilePicUrl}`; // Ensure proper URL path
         });
     }
 
@@ -67,39 +67,67 @@ document.addEventListener("DOMContentLoaded", function () {
         const userId = localStorage.getItem("userId");
     
         if (userId) {
-            fetch(`http://localhost:5001/users/${userId}`)
-                .then(response => response.json())
-                .then(user => {
-                    if (user.profile_pic) {
-                        document.getElementById("profilePic").src = `http://localhost:5001/${user.profile_pic}`;
-                    }
-                })
-                .catch(error => console.error("Error fetching user data:", error));
-        }
-    });
-    
-    // Profile Picture Upload Handler
-    document.getElementById("uploadAvatar").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (!file) return;
-    
-        const formData = new FormData();
-        formData.append("profile_pic", file);
-    
+            ffetch(`http://localhost:5001/users/${userId}`)
+            .then(response => response.json())
+            .then(user => {
+                console.log("Fetched user data:", user); // Debugging
+                if (user.profile_pic) {
+                    document.getElementById("profilePic").src = `http://localhost:5001/${user.profile_pic}`;
+                } else {
+                    document.getElementById("profilePic").src = "images/default-profile.jpg"; // Default profile picture
+                }
+            })
+            .catch(error => console.error("Error fetching user data:", error));
+        }});
+    document.addEventListener("DOMContentLoaded", async function () {
         const userId = localStorage.getItem("userId");
-    
-        fetch(`http://localhost:5001/upload/${userId}/profile`, {
-            method: "POST",
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.profile_pic) {
-                document.getElementById("profilePic").src = `http://localhost:5001/${data.profile_pic}`;
-                alert("Profile picture updated!");
+        const profilePic = document.getElementById("profilePic");
+      
+        if (userId) {
+          try {
+            const response = await fetch(`http://localhost:5001/users/${userId}`);
+            if (!response.ok) {
+              throw new Error("Failed to fetch user data");
             }
-        })
-        .catch(error => console.error("Error uploading profile picture:", error));
+      
+            const user = await response.json();
+            if (user.profile_pic) {
+              profilePic.src = `http://localhost:5001/${user.profile_pic}`;
+            } else {
+              profilePic.src = "images/default-profile.jpg"; // Default profile picture
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        }
+      });
+      document.getElementById("profilePicInput").addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            console.log("Selected file:", file); // Debugging
+            const formData = new FormData();
+            formData.append("profile_pic", file);
+    
+            fetch(`http://localhost:5001/users/${userId}/upload-profile-pic`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Upload response:", data); // Debugging
+                alert(data.message);
+                if (data.success) {
+                    console.log("Upload response:", data); // Debugging
+                    document.getElementById("profilePic").src = `http://localhost:5001${data.profile_pic}`;
+                    alert("Profile picture updated!");
+                } else {
+                    alert("Failed to update profile picture");
+                }
+            })
+            .catch(err => console.error("Error updating profile picture:", err));
+        } else {
+            console.error("No file selected");
+        }
     });
 
     // Update Password

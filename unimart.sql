@@ -290,7 +290,7 @@ CREATE TABLE `user_info` (
   `u_password` varchar(255) NOT NULL,
   `email` varchar(45) NOT NULL,
   `wallet_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `profile_pic` varchar(255) DEFAULT NULL,
+  `profile_pic` varchar(255) DEFAULT 'images/default-profile.jpg',
   PRIMARY KEY (`info_id`),
   KEY `info_to_user_idx` (`user_id`),
   CONSTRAINT `info_to_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
@@ -303,7 +303,7 @@ CREATE TABLE `user_info` (
 
 LOCK TABLES `user_info` WRITE;
 /*!40000 ALTER TABLE `user_info` DISABLE KEYS */;
-INSERT INTO `user_info` VALUES (1,1,NULL,'OGpassword','original@academy.edu',50.00),(2,5,NULL,'kenspassword','ken@place.edu',50.00),(3,3,NULL,'abbyknowsbest','abby@place.edu',50.00),(4,4,NULL,'meganissmart','megan@university.com',50.00),(5,2,NULL,'sellingsogood','buymystuff@school.edu',50.00),(6,6,NULL,'newestpassword','newguy@email.edu',45.01),(7,11,NULL,'$2b$10$95in/0T5SPlnOe/lopUdNeO6sOa20FdDtSOeXLLvveztKfma9VA4S','borakutlu@oakland.edu',0.00);
+INSERT INTO `user_info` VALUES (1,1,NULL,'OGpassword','original@academy.edu',50.00,'images/default-profile.jpg'),(2,5,NULL,'kenspassword','ken@place.edu',50.00,'images/default-profile.jpg'),(3,3,NULL,'abbyknowsbest','abby@place.edu',50.00,'images/default-profile.jpg'),(4,4,NULL,'meganissmart','megan@university.com',50.00,'images/default-profile.jpg'),(5,2,NULL,'sellingsogood','buymystuff@school.edu',50.00,'images/default-profile.jpg'),(6,6,NULL,'newestpassword','newguy@email.edu',45.01,'images/default-profile.jpg'),(7,11,NULL,'$2b$10$95in/0T5SPlnOe/lopUdNeO6sOa20FdDtSOeXLLvveztKfma9VA4S','borakutlu@oakland.edu',0.00,'images/default-profile.jpg');
 /*!40000 ALTER TABLE `user_info` ENABLE KEYS */;
 UNLOCK TABLES;
 

@@ -477,6 +477,7 @@ main {
         margin-left: 10px;
     }
 
+    
     /* Move profile picture and cart to the bottom navbar */
     .user-actions {
         display: none; /* Hide user actions in the header */
@@ -565,7 +566,7 @@ main {
         background: #f1f1f1;
         border-radius: 5px;
     }
-
+.m-hidden{display:none;}
    
 nav{display:none;}
     /* Adjust main content to avoid overlapping with the navbar */

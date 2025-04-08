@@ -30,105 +30,105 @@ function upgradeToSeller() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    const userId = localStorage.getItem("userId"); // Use consistent key
+    const userId = localStorage.getItem("userId");
+    const BASE_URL = "http://localhost:5001";
+
     if (!userId) {
         alert("You must be logged in to view this page.");
         window.location.href = "login.html";
         return;
     }
 
+    const profileContainer = document.getElementById("profile-container");
+
     // Fetch user data
     fetch(`http://localhost:5001/users/${userId}`)
-        .then(res => res.json())
+        .then(response => response.json())
         .then(user => {
-            document.getElementById("usernameDisplay").textContent = user.username;
-            document.getElementById("wallet-amount").textContent = `$${user.wallet_balance}`;
+            profileContainer.innerHTML = `
+                <form id="profile-form" class="profile-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" value="${user.username}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="wallet-amount">Wallet Balance</label>
+                        <input type="text" id="wallet-amount" name="wallet_balance" value="$${user.wallet_balance}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePicInput">Profile Picture</label>
+                        <input type="file" id="profilePicInput" name="profile_pic" accept="image/*">
+                        <img id="profilePic" src="${user.profile_pic ? `http://localhost:5001/${user.profile_pic}` : 'images/default-profile.jpg'}" alt="Profile Picture" class="profile-image">
+                    </div>
+                    ${user.is_seller ? `
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" name="company_name" value="${user.company_name || ''}">
+                        </div>
+                    ` : ''}
+                    <button type="submit" id="updateProfileButton">Update Profile</button>
+                </form>
+            `;
 
-            if (user.profile_pic) {
-                localStorage.setItem("profilePic", user.profile_pic);
-                updateProfilePictures(user.profile_pic);
-            }
+            // Add event listener for profile picture upload
+            document.getElementById("profilePicInput").addEventListener("change", function (event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    console.error("No file selected");
+                    return;
+                }
 
-            if (user.is_seller) {
-                document.getElementById("sellerSettings").classList.remove("hidden");
-                document.getElementById("companyName").value = user.company_name || "";
-            }
-        })
-        .catch(err => console.error("Error fetching user data:", err));
+                const formData = new FormData();
+                formData.append("profile_pic", file);
 
-    function updateProfilePictures(profilePicUrl) {
-        document.querySelectorAll(".profile-pic").forEach(img => {
-            img.src = `http://localhost:5001/${profilePicUrl}`; // Ensure proper URL path
+                fetch(`http://localhost:5001/users/${userId}/upload-profile-pic`, {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const profilePic = document.getElementById("profilePic");
+                            profilePic.src = `http://localhost5001/${data.profile_pic}?t=${Date.now()}`; // Cache-busting query
+                            alert("Profile picture updated successfully!");
+                        } else {
+                            alert("Failed to update profile picture: " + data.error);
+                        }
+                    })
+                    .catch(error => console.error("Error uploading profile picture:", error));
+            });
+           
+            // Add event listener for profile update
+            document.getElementById("profile-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+            
+                const userId = localStorage.getItem("userId");
+                const BASE_URL = "http://localhost:5001";
+            
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries()); // Convert FormData to a plain object
+            
+                fetch(`${BASE_URL}/users/${userId}/update-profile`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Profile updated successfully!");
+                            location.reload(); // Reload the page to reflect changes
+                        } else {
+                            alert("Failed to update profile: " + data.error);
+                        }
+                    })
+                    .catch(error => console.error("Error updating profile:", error));
+            });
         });
-    }
-
-    // Update Profile Picture
-    document.addEventListener("DOMContentLoaded", function () {
-        const userId = localStorage.getItem("userId");
-    
-        if (userId) {
-            ffetch(`http://localhost:5001/users/${userId}`)
-            .then(response => response.json())
-            .then(user => {
-                console.log("Fetched user data:", user); // Debugging
-                if (user.profile_pic) {
-                    document.getElementById("profilePic").src = `http://localhost:5001/${user.profile_pic}`;
-                } else {
-                    document.getElementById("profilePic").src = "images/default-profile.jpg"; // Default profile picture
-                }
-            })
-            .catch(error => console.error("Error fetching user data:", error));
-        }});
-    document.addEventListener("DOMContentLoaded", async function () {
-        const userId = localStorage.getItem("userId");
-        const profilePic = document.getElementById("profilePic");
-      
-        if (userId) {
-          try {
-            const response = await fetch(`http://localhost:5001/users/${userId}`);
-            if (!response.ok) {
-              throw new Error("Failed to fetch user data");
-            }
-      
-            const user = await response.json();
-            if (user.profile_pic) {
-              profilePic.src = `http://localhost:5001/${user.profile_pic}`;
-            } else {
-              profilePic.src = "images/default-profile.jpg"; // Default profile picture
-            }
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
-        }
-      });
-      document.getElementById("profilePicInput").addEventListener("change", function (event) {
-        const file = event.target.files[0];
-        if (file) {
-            console.log("Selected file:", file); // Debugging
-            const formData = new FormData();
-            formData.append("profile_pic", file);
-    
-            fetch(`http://localhost:5001/users/${userId}/upload-profile-pic`, {
-                method: "POST",
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                console.log("Upload response:", data); // Debugging
-                alert(data.message);
-                if (data.success) {
-                    console.log("Upload response:", data); // Debugging
-                    document.getElementById("profilePic").src = `http://localhost:5001${data.profile_pic}`;
-                    alert("Profile picture updated!");
-                } else {
-                    alert("Failed to update profile picture");
-                }
-            })
-            .catch(err => console.error("Error updating profile picture:", err));
-        } else {
-            console.error("No file selected");
-        }
     });
+
+// Profile picture upload
+
 
     // Update Password
     document.getElementById("updatePassword").addEventListener("click", function () {
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.error("Error deleting account:", err));
         }
     });
-});
+
 document.addEventListener("DOMContentLoaded", function () {
     const hamburgerMenu = document.getElementById("hamburger-menu");
     const hamburgerMenuContent = document.getElementById("hamburger-menu-content");
@@ -224,6 +224,7 @@ document.getElementById("topup-button").addEventListener("click", function () {
         })
         .catch(error => console.error("Error adding funds:", error));
 });
+
 
 
 

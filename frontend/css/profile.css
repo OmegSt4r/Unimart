@@ -248,7 +248,112 @@ main {
     height: calc(100vh - 155px); /* Adjust based on the height of the header and nav */
 }
 
+main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
+main h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+main .profile-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+main .profile-card img {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+}
+
+main .profile-card .user-profile {
+    flex: 1;
+}
+
+main .profile-card .user-profile h2 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+main .profile-card .user-profile p {
+    font-size: 14px;
+    color: #777;
+}
+
+main .profile-card .upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+main .profile-card .upload-section input[type="file"] {
+    display: none;
+}
+
+main .profile-card .upload-section label {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+}
+
+main .profile-card .upload-section button {
+    margin-top: 10px;
+    background-color: #28a745;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+main .wallet-topup, main .account-settings, main .seller-settings, main .danger-zone {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+main .wallet-topup h3, main .account-settings h3, main .seller-settings h3, main .danger-zone h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+main .wallet-topup input, main .account-settings input, main .seller-settings input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+main .wallet-topup button, main .account-settings button, main .seller-settings button, main .danger-zone button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+}
+
+main .danger-zone button {
+    background-color: #dc3545;
+}
 
 
 
@@ -306,8 +411,10 @@ main {
 @media only screen and (max-width: 768px) {
     header {
       padding:20px; /* Reduce padding for smaller screens */
-        flex-direction: row; /* Stack elements vertically */
+        flex-direction: column; /* Stack elements vertically */
         background: radial-gradient(circle, #333333 0%, #000000 100%);
+        align-items:flex-start; /* Align items to the start */
+        justify-content: center; /* Center items */
         margin:0;
     }
 

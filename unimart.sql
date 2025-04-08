@@ -290,6 +290,7 @@ CREATE TABLE `user_info` (
   `u_password` varchar(255) NOT NULL,
   `email` varchar(45) NOT NULL,
   `wallet_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `profile_pic` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`info_id`),
   KEY `info_to_user_idx` (`user_id`),
   CONSTRAINT `info_to_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
@@ -350,7 +351,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
-  `profile_pic` VARCHAR(255) DEFAULT NULL,
+  `profile_pic` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

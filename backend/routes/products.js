@@ -11,14 +11,19 @@ router.get("/", (req, res) => {
     `;
     const params = [];
     if (tag) {
-        sql += 'JOIN tags_list tl ON p.product_id = tl.linked_item JOIN tags t ON tl.linked_tag = t.tag_id WHERE t.tag_name = ?';
-    params.push(tag);
+        sql += `
+            JOIN tags_list tl ON p.product_id = tl.linked_item 
+            JOIN tags t ON tl.linked_tag = t.tag_id 
+            WHERE t.tag_name = ?
+        `;
+        params.push(tag);
     }
     db.query(sql, params, (err, results) => {
         if (err) {
             console.error("Error fetching products:", err);
             res.status(500).json({ error: "Database error" });
         } else {
+            // Debugging
             res.json(results);
         }
     });
@@ -52,6 +57,7 @@ router.get("/", (req, res) => {
     router.post("/users/:userId/add-product", (req, res) => {
         const { userId } = req.params;
         const { name, price, description, tags } = req.body;
+    
         const sql = "INSERT INTO products (name, price, description, seller_id) VALUES (?, ?, ?, ?)";
         db.query(sql, [name, price, description, userId], (err, result) => {
             if (err) {
@@ -59,18 +65,25 @@ router.get("/", (req, res) => {
                 res.status(500).json({ error: "Database error" });
             } else {
                 const productId = result.insertId;
+                console.log("Product added with ID:", productId); // Debugging
+    
                 if (tags && tags.length > 0) {
-                    const tagValues = tags.map(tag => [tag, productId]);
+                    const parsedTags = Array.isArray(tags) ? tags : JSON.parse(tags);
+                    const tagValues = parsedTags.map(tag => [tag, productId]);
+                    console.log("Tag values to insert:", tagValues); // Debugging
+                
                     const tagSql = "INSERT INTO tags_list (linked_tag, linked_item) VALUES ?";
                     db.query(tagSql, [tagValues], (tagErr) => {
                         if (tagErr) {
                             console.error("Error associating tags:", tagErr);
                             res.status(500).json({ error: "Database error" });
                         } else {
+                            console.log("Tags associated successfully:", tagValues); // Debugging
                             res.status(201).json({ success: true });
                         }
                     });
                 } else {
+                    console.log("No tags provided for the product."); // Debugging
                     res.status(201).json({ success: true });
                 }
             }

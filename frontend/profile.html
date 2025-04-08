@@ -6,8 +6,7 @@
     <title>UniMart Homepage</title>
     <link rel="stylesheet" href="css/profile.css">
     <link rel="icon" href="images/Senior Capstone Project Report.png">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
 </head>
 <body>
     <header>
@@ -53,20 +52,24 @@
             <div class="bg-white shadow-md rounded-lg p-6">
                 <div class="flex items-center space-x-4">
                     <!-- Profile Picture -->
-                    <img id="profilePic" class="h-20 w-20 rounded-full border"  alt="Profile Picture">
-
+                    
+                    <div id="profile-container"></div>
                     <!-- User Info -->
-                    <div class="user-profile">
-                        <h2 class="text-2xl font-semibold text-gray-800">Welcome, <span id="usernameDisplay">User</span>!</h2>
-                        <p id="email" class="text-gray-500"><span id="emailDisplay">Email</span></p>
+                    <div class="profile-card">
+                        
+                        <img id="profilePic" src="images/default-profile.jpg" alt="Profile Picture">
+                        <div class="user-profile">
+                            <h2>Welcome, <span id="usernameDisplay">User</span>!</h2>
+                            <p id="emailDisplay">Email</p>
+                        </div>
+                        <div class="upload-section">
+                            <label for="profilePicInput">Change Photo</label>
+                            <input type="file" id="profilePicInput"/>
+                            <button id="uploadButton">Upload</button>
+                        </div>
                     </div>
-
-                    <!-- Change Photo -->
-                    <label class="ml-auto cursor-pointer">
-                        <input type="file" id="profilePicInput" class="hidden">
-                        <span class="text-blue-600 hover:underline">Change Photo</span>
-                    </label>
-                </div> 
+                </div>
+            </div>
                 <div id="profile-container">
                     <!-- Other profile information -->
                     <button id="upgradeButton" onclick="upgradeToSeller()">Upgrade to Seller</button>
@@ -77,7 +80,6 @@
                     <button id="topup-button">Add Funds</button>
                 </div>
             </div>
-
             <!-- Account Settings -->
             <div class="bg-white shadow-md rounded-lg p-6 mt-6">
                 <h3 class="text-lg font-semibold mb-3">Account Settings</h3>

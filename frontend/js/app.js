@@ -445,11 +445,11 @@ document.addEventListener("DOMContentLoaded", function() {
         const notificationBadge = document.getElementById("notification-count");
     
         if (!userId) {
-            console.error("❌ User ID not found in localStorage.");
+            console.error("User ID not found in localStorage.");
             return;
         }
     
-        // ✅ Fetch notifications
+        // Fetch notifications
         function fetchNotifications() {
             const userId = localStorage.getItem("userId");
     if (!userId) {
@@ -475,7 +475,7 @@ document.addEventListener("DOMContentLoaded", function() {
             fetch(`http://localhost:5001/users/${userId}/notifications`)
                 .then(response => response.json())
                 .then(notifications => {
-                    console.log("📩 Fetched notifications:", notifications);
+                    console.log("Fetched notifications:", notifications);
                     notificationsContainer.innerHTML = ""; // Clear old notifications
     
                     if (notifications.length > 0) {
@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         notificationsContainer.appendChild(notificationDiv);
                     });
                 })
-                .catch(error => console.error("❌ Error fetching notifications:", error));
+                .catch(error => console.error("Error fetching notifications:", error));
         }
        
         function updateNotificationBadge() {
@@ -516,7 +516,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         notificationBadge.style.display = data.unread_count > 0 ? "inline-block" : "none";
                     }
                 })
-                .catch(error => console.error("❌ Error fetching notification count:", error));
+                .catch(error => console.error("Error fetching notification count:", error));
         }
         // ✅ Fetch unread notification count
         function fetchUnreadCount() {
@@ -533,10 +533,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                     }
                 })
-                .catch(error => console.error("❌ Error fetching notification count:", error));
+                .catch(error => console.error("Error fetching notification count:", error));
         }
     
-        // ✅ Mark a notification as read
+        // Mark a notification as read
         notificationsContainer.addEventListener("click", function (event) {
             const notificationItem = event.target.closest(".notification-item");
     
@@ -544,31 +544,31 @@ document.addEventListener("DOMContentLoaded", function() {
                 const notificationId = notificationItem.dataset.notificationId;
     
                 if (!userId || !notificationId) {
-                    console.error("❌ Missing userId or notificationId.");
+                    console.error("Missing userId or notificationId.");
                     return;
                 }
     
-                console.log(`📩 Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
+                console.log(`Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
     
                 fetch(`http://localhost:5001/users/${userId}/notifications/mark-read/${notificationId}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" }
                 })
                 .then(response => {
-                    console.log("🔍 Full Response:", response);
+                    console.log("Full Response:", response);
                     if (!response.ok) {
                         throw new Error(`Server returned ${response.status} ${response.statusText}`);
                     }
                     return response.text(); // Read raw response first
                 })
                 .then(text => {
-                    console.log("📜 Server Response Text:", text);
+                    console.log("Server Response Text:", text);
                     return JSON.parse(text); // Try parsing JSON
                 })
                 .then(data => {
-                    console.log("✅ Parsed JSON Response:", data);
+                    console.log("Parsed JSON Response:", data);
                 })
-                .catch(error => console.error("❌ Error marking notification as read:", error));
+                .catch(error => console.error("Error marking notification as read:", error));
             }
         });
         // ✅ Load notifications and unread count on page load

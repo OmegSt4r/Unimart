@@ -109,28 +109,27 @@ router.post("/login", async (req, res) => {
 });
 
 // Get user information
-router.get("/:id", (req, res) => {
-  const userId = req.params.id;
+router.get("/:userId", (req, res) => {
+  const userId = req.params.userId;
+    const sql = `
+        SELECT u.username, ui.email, ui.wallet_balance, u.profile_pic
+        FROM users u
+        JOIN user_info ui ON u.user_id = ui.user_id
+        WHERE u.user_id = ?
+    `;
 
-  const sql = `
-    SELECT u.user_id, u.username, ui.email, ui.wallet_balance
-    FROM users u
-    JOIN user_info ui ON u.user_id = ui.user_id
-    WHERE u.user_id = ?
-  `;
+    db.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error("Error fetching user data:", err);
+            return res.status(500).json({ error: 'Database error' });
+        }
 
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error("Error fetching user information:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-    if (results.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json(results[0]);
-  });
+        res.json(results[0]);
+    });
 });
 
 // Reset password
@@ -399,81 +398,180 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-router.post("/:userId/upload-profile-pic", upload.single("profile_pic"), async (req, res) => {
+
+// Upload profile picture route
+router.post('/:userId/upload-profile-pic', upload.single('profile_pic'), (req, res) => {
   const { userId } = req.params;
 
+  // Check if a file was uploaded
   if (!req.file) {
-      console.error("No file uploaded"); // Debugging
-      return res.status(400).json({ error: "No file uploaded" });
+    console.error("No file uploaded");
+    return res.status(400).json({ error: 'No file uploaded' });
   }
 
-  const filePath =`/frontend/images/${req.file.filename}`;
-  console.log("Uploaded file path:", filePath); // Debugging
+  const filePath = `/images/${req.file.filename}`; // Adjusted to match the new destination
+  console.log("File path being saved:", filePath); // Debugging
 
-  try {
-      // Update the user's profile picture in the database
-      const sql = "UPDATE users SET profile_pic = ? WHERE user_id = ?";
-      await db.promise().query(sql, [filePath, userId]);
+  // Update the user's profile picture in the database
+  const updateSql = 'UPDATE users SET profile_pic = ? WHERE user_id = ?';
+  db.query(updateSql, [filePath, userId], (updateErr) => {
+    if (updateErr) {
+      console.error("Error updating profile picture:", updateErr);
+      return res.status(500).json({ error: 'Database error while updating profile picture' });
+    }
 
-      res.status(200).json({ success: true, message: "Profile picture uploaded successfully", profile_pic: filePath });
-  } catch (error) {
-      console.error("Error updating profile picture:", error);
-      res.status(500).json({ error: "Failed to update profile picture" });
-  }
+    // Fetch the updated user data
+    const fetchSql = 'SELECT profile_pic FROM users WHERE user_id = ?';
+    db.query(fetchSql, [userId], (fetchErr, results) => {
+      if (fetchErr) {
+        console.error("Error fetching updated user data:", fetchErr);
+        return res.status(500).json({ error: 'Database error while fetching updated user data' });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const updatedUser = results[0];
+      res.status(200).json({
+        success: true,
+        message: 'Profile picture uploaded successfully',
+        profile_pic: updatedUser.profile_pic
+      });
+    });
+  });
+});
+router.put('/:userId/update-profile', (req, res) => {
+  const userId = req.params.userId;
+  const { username, company_name } = req.body;
+
+  // Update the user's profile
+  const updateSql = `
+    UPDATE users u
+    LEFT JOIN sellers s ON u.user_id = s.owner_id
+    SET u.username = ?, s.company_name = COALESCE(?, s.company_name)
+    WHERE u.user_id = ?
+  `;
+
+  db.query(updateSql, [username, company_name, userId], (err, result) => {
+    if (err) {
+      console.error("Error updating profile:", err);
+      return res.status(500).json({ error: "Database error while updating profile" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found or no changes made" });
+    }
+
+    res.json({ success: true, message: "Profile updated successfully" });
+  });
 });
 
 router.post("/:userId/add-product", upload.single('p_image'), (req, res) => {
   const userId = req.params.userId;
-  const { product_name, p_description, price, inventory } = req.body;
+  const { product_name, p_description, price, inventory, tags } = req.body;
   const p_image = req.file ? req.file.filename : null;
 
   // Check if the user is a seller
   const checkSellerSQL = "SELECT * FROM sellers WHERE owner_id = ?";
   db.query(checkSellerSQL, [userId], (err, results) => {
-    if (err) {
-      console.error("Error checking seller existence:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
+      if (err) {
+          console.error("Error checking seller existence:", err);
+          return res.status(500).json({ error: "Database error" });
+      }
 
-    if (results.length > 0) {
-      // User is a seller
-      const sellerId = results[0].seller_id;
-      insertProduct(sellerId);  // Call insertProduct with the sellerId
-    } else {
-      // User is not a seller
-      return res.status(403).json({ message: "Only sellers can add products. Please upgrade your account." });
-    }
+      if (results.length > 0) {
+          // User is a seller
+          const sellerId = results[0].seller_id;
+          insertProduct(sellerId); // Call insertProduct with the sellerId
+      } else {
+          // User is not a seller
+          return res.status(403).json({ message: "Only sellers can add products. Please upgrade your account." });
+      }
   });
 
   function insertProduct(sellerId) {
-    const sql = `
-      INSERT INTO products (product_name, seller_id, price, inventory, p_description, p_image)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    db.query(sql, [product_name, sellerId, price, inventory, p_description, p_image], (err) => {
-      if (err) {
-        console.error("Error adding product:", err);
-        return res.status(500).json({ error: "Database error" });
-      }
-      res.json({ success: true });
-    });
+      const sql = `
+        INSERT INTO products (product_name, seller_id, price, inventory, p_description, p_image)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+      db.query(sql, [product_name, sellerId, price, inventory, p_description, p_image], (err, result) => {
+          if (err) {
+              console.error("Error adding product:", err);
+              return res.status(500).json({ error: "Database error" });
+          }
+
+          const productId = result.insertId; // Get the inserted product ID
+          console.log("Product added with ID:", productId);
+
+          // Handle tags
+          if (tags && tags.length > 0) {
+            let parsedTags;
+            try {
+                // Parse tags if it's a JSON string
+                parsedTags = Array.isArray(tags) ? tags : JSON.parse(tags);
+        
+                // Ensure all tags are integers and filter out invalid values
+                parsedTags = parsedTags
+                    .map(tag => parseInt(tag, 10)) // Convert to integers
+                    .filter(tag => !isNaN(tag)); // Remove invalid values
+        
+                if (parsedTags.length === 0) {
+                    throw new Error("No valid tags provided");
+                }
+            } catch (parseError) {
+                console.error("Error parsing tags:", parseError);
+                return res.status(400).json({ error: "Invalid tags format" });
+            }
+        
+            const tagValues = parsedTags.map(tag => [tag, productId]);
+            console.log("Tag values to insert:", tagValues);
+        
+            const tagSql = "INSERT INTO tags_list (linked_tag, linked_item) VALUES ?";
+            db.query(tagSql, [tagValues], (tagErr) => {
+                if (tagErr) {
+                    console.error("Error associating tags:", tagErr);
+                    return res.status(500).json({ error: "Database error" });
+                }
+                console.log("Tags associated successfully:", tagValues);
+                res.json({ success: true });
+            });
+        } else {
+            res.json({ success: true });
+        }
+      });
   }
 });
-
 // Fetch user's products
 router.get("/:userId/my-products", (req, res) => {
   const userId = req.params.userId;
- 
+
   const sql = `
-      SELECT * FROM products
-      WHERE seller_id = ?
+      SELECT 
+          p.product_id, 
+          p.product_name, 
+          p.p_description, 
+          p.price, 
+          p.inventory, 
+          p.p_image, 
+          GROUP_CONCAT(t.tag_id) AS tags
+      FROM products p
+      LEFT JOIN tags_list tl ON p.product_id = tl.linked_item
+      LEFT JOIN tags t ON tl.linked_tag = t.tag_id
+      WHERE p.seller_id = ?
+      GROUP BY p.product_id
   `;
   db.query(sql, [userId], (err, results) => {
       if (err) {
           console.error("Error fetching user's products:", err);
           return res.status(500).json({ error: "Database error" });
       }
-    
+
+      // Parse tags into arrays
+      results.forEach(product => {
+          product.tags = product.tags ? product.tags.split(',').map(Number) : [];
+      });
+
       res.json(results);
   });
 });
@@ -482,12 +580,13 @@ router.get("/:userId/my-products", (req, res) => {
 router.put("/:userId/update-product/:productId", upload.single('p_image'), (req, res) => {
   const userId = req.params.userId;
   const productId = req.params.productId;
-  const { product_name, p_description, price, inventory } = req.body;
+  const { product_name, p_description, price, inventory, tags } = req.body;
   const p_image = req.file ? req.file.filename : null;
 
+  // Update the product details
   const sql = `
       UPDATE products
-      SET product_name = ?, p_description = ?, price = ?, inventory = ?, p_image = ?
+      SET product_name = ?, p_description = ?, price = ?, inventory = ?, p_image = COALESCE(?, p_image)
       WHERE product_id = ? AND seller_id = ?
   `;
   db.query(sql, [product_name, p_description, price, inventory, p_image, productId, userId], (err, result) => {
@@ -495,7 +594,50 @@ router.put("/:userId/update-product/:productId", upload.single('p_image'), (req,
           console.error("Error updating product:", err);
           return res.status(500).json({ error: "Database error" });
       }
-      res.json({ success: true });
+
+      // Handle tags
+      if (tags && tags.length > 0) {
+          let parsedTags;
+          try {
+              // Parse tags if it's a JSON string
+              parsedTags = Array.isArray(tags) ? tags : JSON.parse(tags);
+
+              // Ensure all tags are integers and filter out invalid values
+              parsedTags = parsedTags
+                  .map(tag => parseInt(tag, 10)) // Convert to integers
+                  .filter(tag => !isNaN(tag)); // Remove invalid values
+
+              if (parsedTags.length === 0) {
+                  throw new Error("No valid tags provided");
+              }
+          } catch (parseError) {
+              console.error("Error parsing tags:", parseError);
+              return res.status(400).json({ error: "Invalid tags format" });
+          }
+
+          // Delete existing tags for the product
+          const deleteTagSql = "DELETE FROM tags_list WHERE linked_item = ?";
+          db.query(deleteTagSql, [productId], (deleteErr) => {
+              if (deleteErr) {
+                  console.error("Error deleting existing tags:", deleteErr);
+                  return res.status(500).json({ error: "Database error" });
+              }
+
+              // Insert new tags
+              const tagValues = parsedTags.map(tag => [tag, productId]);
+              const insertTagSql = "INSERT INTO tags_list (linked_tag, linked_item) VALUES ?";
+              db.query(insertTagSql, [tagValues], (insertErr) => {
+                  if (insertErr) {
+                      console.error("Error associating tags:", insertErr);
+                      return res.status(500).json({ error: "Database error" });
+                  }
+                  console.log("Tags updated successfully:", tagValues);
+                  res.json({ success: true });
+              });
+          });
+      } else {
+          res.json({ success: true });
+      }
   });
 });
 
@@ -504,16 +646,27 @@ router.delete("/:userId/delete-product/:productId", (req, res) => {
   const userId = req.params.userId;
   const productId = req.params.productId;
 
-  const sql = `
-      DELETE FROM products
-      WHERE product_id = ? AND seller_id = ?
-  `;
-  db.query(sql, [productId, userId], (err, result) => {
-      if (err) {
-          console.error("Error deleting product:", err);
-          return res.status(500).json({ error: "Database error" });
+  // Delete associated tags first
+  const deleteTagsSql = "DELETE FROM tags_list WHERE linked_item = ?";
+  db.query(deleteTagsSql, [productId], (deleteTagsErr) => {
+      if (deleteTagsErr) {
+          console.error("Error deleting associated tags:", deleteTagsErr);
+          return res.status(500).json({ error: "Database error while deleting associated tags" });
       }
-      res.json({ success: true });
+
+      // Delete the product
+      const deleteProductSql = `
+          DELETE FROM products
+          WHERE product_id = ? AND seller_id = ?
+      `;
+      db.query(deleteProductSql, [productId, userId], (deleteProductErr) => {
+          if (deleteProductErr) {
+              console.error("Error deleting product:", deleteProductErr);
+              return res.status(500).json({ error: "Database error while deleting product" });
+          }
+
+          res.json({ success: true, message: "Product deleted successfully" });
+      });
   });
 });
 router.get("/products", (req, res) => {
@@ -640,21 +793,20 @@ router.post("/:userId/seller-reviews", (req, res) => {
   });
 });
 router.get("/:userId", (req, res) => {
-  const userId = req.params.userId;
+  const { userId } = req.params;
 
-  const sql = "SELECT profile_pic FROM users WHERE user_id = ?";
-  db.query(sql, [userId], (err, results) => {
-    if (err) {
-      console.error("Error fetching user profile picture:", err);
-      return res.status(500).json({ error: "Database error" });
+    try {
+        const [user] = db.query('SELECT username, profile_pic FROM users WHERE user_id = ?', [userId]);
+
+        if (user.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json(user[0]);
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ error: 'Failed to fetch user data' });
     }
-
-    if (results.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json({ profile_pic: results[0].profile_pic });
-  });
 });
 // Add a user review for a specific user
 router.post("/:userId/user-reviews", (req, res) => {

@@ -32,7 +32,7 @@
             </div>
             <a id="cart-link" href="#"><img src="images/shopping-cart-white-icon.png" alt="Cart Icon" class="cart-icon"></a>
             <div class="user-profile m-hidden">
-                <a href="profile.html"><img src="images/default-profile.jpg" class="profile-pic" alt="Profile Picture"></a>
+                <a href="profile.html"><img id="profilePic" src="images/default-profile.jpg"  class="profile-pic" alt="Profile Picture"></a>
                 <a href="login.html"><button id="logout-button">Logout</button></a>
             </div>
         </div>
@@ -53,27 +53,24 @@
                 <div class="flex items-center space-x-4">
                     <!-- Profile Picture -->
                     
-                    <div id="profile-container"></div>
+                    
                     <!-- User Info -->
                     <div class="profile-card">
-                        
-                        <img id="profilePic" src="images/default-profile.jpg" alt="Profile Picture">
-                        <div class="user-profile">
-                            <h2>Welcome, <span id="usernameDisplay">User</span>!</h2>
+                       <div class="user-profile">
                             <p id="emailDisplay">Email</p>
-                        </div>
-                        <div class="upload-section">
-                            <label for="profilePicInput">Change Photo</label>
-                            <input type="file" id="profilePicInput"/>
-                            <button id="uploadButton">Upload</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                <div id="profile-container">
+                            <div id="profile-container"></div>
+                            
+                        
+                            <div id="profile-container">
                     <!-- Other profile information -->
                     <button id="upgradeButton" onclick="upgradeToSeller()">Upgrade to Seller</button>
                 </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+                
                 <div class="wallet-topup">
                     <h3>Top-Up Wallet</h3>
                     <input type="number" id="topup-amount" placeholder="Enter amount" min="1">

@@ -23,7 +23,9 @@ body {
     margin:0 auto 15px;
     width: 100px;
 }
-
+.hidden {
+    display: none;
+}
 
 .tabs {
     position: absolute;

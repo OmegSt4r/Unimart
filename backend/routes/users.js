@@ -735,6 +735,66 @@ router.post('/:userId/upgrade', (req, res) => {
       });
   });
 });
+router.get("/:userId/my-reviews", (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+
+  if (isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+  }
+
+  const userReviewsQuery = `
+      SELECT ur.review_id, ur.comment, ur.rating, 
+             ur.product_id, p.product_name
+      FROM user_reviews ur
+      LEFT JOIN products p ON ur.product_id = p.product_id
+      WHERE ur.comment_source = ?
+  `;
+
+  const sellerReviewsQuery = `
+      SELECT sr.review_id, sr.comment, sr.rating, 
+             sr.product_id, s.company_name
+      FROM seller_reviews sr
+      LEFT JOIN sellers s ON sr.review_subject = s.seller_id
+      WHERE sr.review_source = ?
+  `;
+
+  db.query(userReviewsQuery, [userId], (userErr, userReviews) => {
+      if (userErr) {
+          console.error("Error fetching user reviews:", userErr);
+          return res.status(500).json({ error: "Database error while fetching user reviews" });
+      }
+
+      db.query(sellerReviewsQuery, [userId], (sellerErr, sellerReviews) => {
+          if (sellerErr) {
+              console.error("Error fetching seller reviews:", sellerErr);
+              return res.status(500).json({ error: "Database error while fetching seller reviews" });
+          }
+
+          res.json({ userReviews, sellerReviews });
+      });
+  });
+});
+router.delete("/:userId/seller-reviews/:reviewId", (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+  const reviewId = parseInt(req.params.reviewId, 10);
+
+  if (isNaN(userId) || isNaN(reviewId)) {
+      return res.status(400).json({ error: "Invalid user ID or review ID" });
+  }
+
+  const deleteReviewSql = `
+      DELETE FROM seller_reviews 
+      WHERE review_id = ? AND review_source = ?
+  `;
+  db.query(deleteReviewSql, [reviewId, userId], (err, result) => {
+      if (err) {
+          console.error("Error deleting seller review:", err);
+          return res.status(500).json({ error: "Database error while deleting seller review" });
+      }
+
+      res.json({ success: true, message: "Seller review deleted successfully" });
+  });
+});
 router.get("/:userId/reviews", async (req, res) => {
   const userId = parseInt(req.params.userId, 10);
   if (isNaN(userId)) {

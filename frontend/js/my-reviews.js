@@ -87,6 +87,97 @@ if (isNaN(userId)) {
          }
          
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        const userId = localStorage.getItem("userId");
+        const BASE_URL = "http://localhost:5001";
+        const reviewsContainer = document.getElementById("reviews-container");
+    
+        if (!userId) {
+            reviewsContainer.innerHTML = "<p>You must be logged in to view your reviews.</p>";
+            return;
+        }
+    
+        // Fetch reviews made by the user
+        fetch(`${BASE_URL}/users/${userId}/my-reviews`)
+            .then(response => response.json())
+            .then(data => {
+                const { userReviews, sellerReviews } = data;
+    
+                reviewsContainer.innerHTML = "<h2>Your Reviews</h2>";
+    
+                // Display user reviews
+                if (userReviews.length > 0) {
+                    const userReviewsSection = document.createElement("div");
+                    userReviewsSection.innerHTML = "<h3>Product Reviews</h3>";
+                    userReviews.forEach(review => {
+                        const reviewElement = document.createElement("div");
+                        reviewElement.className = "review";
+                        reviewElement.innerHTML = `
+                            <p><strong>Product:</strong> ${review.product_name || "Unknown"}</p>
+                            <p><strong>Rating:</strong> ${review.rating}</p>
+                            <p><strong>Comment:</strong> ${review.comment}</p>
+                            <button class="delete-review" data-review-id="${review.review_id}">Delete</button>
+
+                        `;
+                        userReviewsSection.appendChild(reviewElement);
+                    });
+                    reviewsContainer.appendChild(userReviewsSection);
+                } else {
+                    reviewsContainer.innerHTML += "<p>No product reviews found.</p>";
+                }
+    
+                // Display seller reviews
+                if (sellerReviews.length > 0) {
+                    const sellerReviewsSection = document.createElement("div");
+                    sellerReviewsSection.innerHTML = "<h3>Seller Reviews</h3>";
+                    sellerReviews.forEach(review => {
+                        const reviewElement = document.createElement("div");
+                        reviewElement.className = "review";
+                        reviewElement.innerHTML = `
+                            <p><strong>Seller:</strong> ${review.company_name || "Unknown"}</p>
+                            <p><strong>Rating:</strong> ${review.rating}</p>
+                            <p><strong>Comment:</strong> ${review.comment}</p>
+                            <button class="delete-review" data-review-id="${review.review_id}">Delete</button>
+
+                        `;
+                        sellerReviewsSection.appendChild(reviewElement);
+                    });
+                    reviewsContainer.appendChild(sellerReviewsSection);
+                } else {
+                    reviewsContainer.innerHTML += "<p>No seller reviews found.</p>";
+                }
+                document.querySelectorAll(".delete-review").forEach(button => {
+                    button.addEventListener("click", function () {
+                        const reviewId = this.getAttribute("data-review-id");
+                        const isSellerReview = this.closest(".review").parentElement.innerHTML.includes("Seller Reviews");
+    
+                        const deleteUrl = isSellerReview
+                            ? `${BASE_URL}/users/${userId}/seller-reviews/${reviewId}`
+                            : `${BASE_URL}/users/${userId}/reviews/${reviewId}`;
+    
+                        if (confirm("Are you sure you want to delete this review?")) {
+                            fetch(deleteUrl, {
+                                method: "DELETE",
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert("Review deleted successfully!");
+                                        this.closest(".review").remove(); // Remove the review from the DOM
+                                    } else {
+                                        alert("Failed to delete review: " + data.error);
+                                    }
+                                })
+                                .catch(error => console.error("Error deleting review:", error));
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error("Error fetching reviews:", error);
+                reviewsContainer.innerHTML = "<p>Error fetching your reviews. Please try again later.</p>";
+            });
+    });
    
     
 

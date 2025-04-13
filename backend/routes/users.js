@@ -956,7 +956,7 @@ router.post("/:userId/chat/messages", (req, res) => {
       [senderId, receiverId, message],
       (err, result) => {
           if (err) {
-              console.error("❌ Error inserting message:", err);
+              console.error("Error inserting message:", err);
               return res.status(500).json({ error: "Database error while inserting message" });
           }
 
@@ -966,7 +966,7 @@ router.post("/:userId/chat/messages", (req, res) => {
               [receiverId, `You have a new message from user ${senderId}`],
               (err, notificationResult) => {
                   if (err) {
-                      console.error("❌ Error creating notification:", err);
+                      console.error("Error creating notification:", err);
                       return res.status(500).json({ error: "Database error while creating notification" });
                   }
 

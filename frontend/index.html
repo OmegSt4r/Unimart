@@ -105,51 +105,20 @@
     
 
     <main>
-        <div class="trending-slideshow">
-           
-            <div class="trending-slide active">
-                <div class="trending-container">
-                    <div class="trending">
-                        <img src="images/iphone_charger.jpg" alt="Product 1">
-                        <p class="trending-caption">Phone Charger</p>
-                    </div> 
-                    <div class="trending">
-                        <img src="images/laptop.jpg" alt="Product 2">
-                        <p class="trending-caption">Laptop</p>
-                    </div>
-                    <div class="trending">
-                        <img src="images/led_strip_lights.jpg" alt="Product 3">
-                        <p class="trending-caption">LED Light Strips</p>
-                    </div>
-                </div>
-            </div>
         
-            <div class="trending-slide">
-                <div class="trending-container">
-                    <div class="trending">
-                        <img src="images/backpack.jpg" alt="Product 4">
-                        <p class="trending-caption">Back-to-School Backpacks</p>
-                    </div>
-                    <div class="trending">
-                        <img src="images/ou_hoodie_women.jpg" alt="Product 5">
-                        <p class="trending-caption">OU Hoodie</p>
-                    </div>
-                    <div class="trending">
-                        <img src="images/clock_radio.jpg" alt="Product 6">
-                        <p class="trending-caption">Clock-Radio</p>
-                    </div>
+       <div class="trending-slideshow">
+        <div class="trending-slides-container" >
+            <button class="prev">&lt;</button> <!-- Previous Button -->
+            <div class="trending-slides-wrapper">
+                <div class="trending-slides ">
+                    <!-- Slides will be dynamically added here by JavaScript -->
                 </div>
             </div>
-            <div class="products product-grid" id="data-id">
+            <button class="next">&gt;</button>  <!-- Next Button -->
+        </div>
+        <div class="products product-grid" id="data-id">
             <!-- Products will be added dynamically -->
-            </div>
-            
-           
-            <button class="trending-btn  prev">&#10094;</button>
-            <button class="trending-btn next">&#10095;</button>
-        </div>   
-       
-        
+            </div></div>
  </main>
  <div class="mobile-navbar">
     <a href="index.html">
@@ -181,7 +150,7 @@
 
 <script src="js/app.js"></script>
 <script src="js/wallet.js"></script>
-<script>src="js/profile.js"</script>
+<script src="js/profile.js"></script>
 <script src="js/profile-pic.js"></script>
 <script>document.addEventListener("DOMContentLoaded", function () {
     const userId = localStorage.getItem("userId"); // Logged-in user's ID

@@ -264,7 +264,7 @@ router.post("/:userId/checkout", (req, res) => {
 
 router.post("/:userId/purchase", (req, res) => {
   const { userId } = req.params;
-  const { productId, quantity } = req.body;
+  const { orderId, productId, quantity } = req.body;
 
   const getProductSql = `
       SELECT price, seller_id, inventory
@@ -331,12 +331,21 @@ router.post("/:userId/purchase", (req, res) => {
                       console.error("Error updating inventory:", err);
                       return res.status(500).json({ error: "Database error" });
                   }
-
+const sql = "INSERT INTO order_items (order_id, product_id, quantity) VALUES (?, ?, ?)";
+    db.query(sql, [orderId, productId, quantity], (err, result) => {
+        if (err) {
+            console.error("Error recording purchase:", err);
+            res.status(500).json({ error: "Database error" });
+        } else {
+            res.status(201).json({ success: true, message: "Purchase recorded" });
+        }
+    });
                   res.json({ success: true, message: "Purchase successful" });
               });
           });
       });
   });
+    
 });
 router.post("/:userId/increase-balance", (req, res) => {
   const userId = req.params.userId;
@@ -852,6 +861,29 @@ router.post("/:userId/seller-reviews", (req, res) => {
       res.status(201).json({ message: "Seller review added successfully", id: result.insertId });
   });
 });
+router.post("/:userId/reviews/:reviewId/reply", (req, res) => {
+  const userId = parseInt(req.params.userId, 10);
+  const reviewId = parseInt(req.params.reviewId, 10);
+  const { reply } = req.body;
+
+  if (isNaN(userId) || isNaN(reviewId) || !reply) {
+      return res.status(400).json({ error: "Invalid user ID, review ID, or missing reply content." });
+  }
+
+  const sql = `
+      INSERT INTO review_replies (review_id, user_id, reply) 
+      VALUES (?, ?, ?)
+  `;
+  db.query(sql, [reviewId, userId, reply], (err, result) => {
+      if (err) {
+          console.error("Error adding reply:", err);
+          return res.status(500).json({ error: "Database error while adding reply." });
+      }
+
+      res.status(201).json({ success: true, message: "Reply added successfully." });
+  });
+});
+
 router.get("/:userId", (req, res) => {
   const { userId } = req.params;
 

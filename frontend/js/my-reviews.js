@@ -64,13 +64,13 @@ if (isNaN(userId)) {
                 const reviewElement = document.createElement("div");
                 reviewElement.classList.add("review");
                 reviewElement.innerHTML = `
-                    <div class="review-card">
-                        <p><strong>Reviewer:</strong> ${review.reviewer}</p>
-                        <p><strong>Reviewed Consumer:</strong> ${review.reviewed_user}</p>
-                        <p><strong>Comment:</strong>${review.comment}</p>
-                        <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
-                        <button class="rply-btn">Reply</button>
-                    </div>`;
+                    <div class="review-card" data-review-id="${review.review_id}">
+        <p><strong>Reviewer:</strong> ${review.reviewer}</p>
+        <p><strong>Reviewed Seller:</strong> ${review.seller}</p>
+        <p><strong>Comment:</strong>${review.comment}</p>
+        <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
+        <button class="rply-btn">Reply</button>
+    </div>`;
                 userReviewsList.appendChild(reviewElement);
                 
             });
@@ -114,7 +114,7 @@ if (isNaN(userId)) {
                         reviewElement.className = "review";
                         reviewElement.innerHTML = `
                             <p><strong>Product:</strong> ${review.product_name || "Unknown"}</p>
-                            <p><strong>Rating:</strong> ${review.rating}</p>
+                            <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
                             <p><strong>Comment:</strong> ${review.comment}</p>
                             <button class="delete-review" data-review-id="${review.review_id}">Delete</button>
 
@@ -135,7 +135,7 @@ if (isNaN(userId)) {
                         reviewElement.className = "review";
                         reviewElement.innerHTML = `
                             <p><strong>Seller:</strong> ${review.company_name || "Unknown"}</p>
-                            <p><strong>Rating:</strong> ${review.rating}</p>
+                            <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div>
                             <p><strong>Comment:</strong> ${review.comment}</p>
                             <button class="delete-review" data-review-id="${review.review_id}">Delete</button>
 
@@ -177,6 +177,38 @@ if (isNaN(userId)) {
                 console.error("Error fetching reviews:", error);
                 reviewsContainer.innerHTML = "<p>Error fetching your reviews. Please try again later.</p>";
             });
+    });
+    document.querySelectorAll(".rply-btn").forEach(function (button) {
+        button.addEventListener("click", function () {
+            const reviewCard = this.closest(".review-card");
+            const reviewId = reviewCard.getAttribute("data-review-id");
+            const replyContent = prompt("Enter your reply:");
+    
+            if (replyContent) {
+                fetch(`http://localhost:5001/users/${userId}/reviews/${reviewId}/reply`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ reply: replyContent }),
+                })
+                    .then(function (response) {
+                        return response.json();
+                    })
+                    .then(function (data) {
+                        if (data.success) {
+                            alert("Reply added successfully!");
+                            // Optionally, append the reply to the review card
+                            const replyElement = document.createElement("p");
+                            replyElement.innerHTML = `<strong>Your Reply:</strong> ${replyContent}`;
+                            reviewCard.appendChild(replyElement);
+                        } else {
+                            alert("Failed to add reply: " + data.error);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error("Error adding reply:", error);
+                    });
+            }
+        });
     });
    
     

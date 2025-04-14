@@ -158,7 +158,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 reviewsContainer.style.display = "none"; // Hide the reviews container
             }
         });
-    
+        function generateStars(rating) {
+            rating = Math.round(rating); // Round to the nearest whole number
+            return "★".repeat(rating) + "☆".repeat(5 - rating);
+        }
         function displayReviews(reviews, productId) {
             const reviewsContainer = document.getElementById(`reviews-container-${productId}`);
             reviewsContainer.innerHTML = ""; // Clear existing reviews
@@ -174,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const reviewElement = document.createElement("div");
                     reviewElement.classList.add("review");
                     reviewElement.innerHTML = `
-                        <p><strong>${review.reviewer}</strong> (${review.rating}/5):</p>
+                        <p><strong>${review.reviewer}</strong> <div class="stars">${"★".repeat(review.rating)}${"☆".repeat(5 - review.rating)}</div></p>
                         <p>${review.comment}</p>
                         <hr>
                     `;
@@ -357,21 +360,90 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     });
-    document.addEventListener("DOMContentLoaded", function () {
-        let slides = document.querySelectorAll(".trending-slide");
-        let currentSlide = 0;
-        
-        function showSlide(index) {
-            slides[currentSlide].classList.remove("active");
-            currentSlide = (index + slides.length) % slides.length;
-            slides[currentSlide].classList.add("active");
+    function fetchTrendingProducts() {
+        fetch("http://localhost:5001/products/trending?limit=8")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch trending products");
+                }
+                return response.json();
+            })
+            .then(products => {
+                displayTrendingSlides(products);
+            })
+            .catch(error => console.error("Error fetching trending products:", error));
+    }
+    
+    function displayTrendingSlides(products) {
+        const slidesContainer = document.querySelector(".trending-slides");
+        if (!slidesContainer) {
+            console.error("Trending slides container not found.");
+            return;
         }
     
-        document.querySelector(".prev").addEventListener("click", () => showSlide(currentSlide - 1));
-        document.querySelector(".next").addEventListener("click", () => showSlide(currentSlide + 1));
+        slidesContainer.innerHTML = ""; // Clear existing slides
     
-        setInterval(() => showSlide(currentSlide + 1), 10000); // Auto-slide every 5 sec
-    });
+        // Group products into sets of three
+        for (let i = 0; i < products.length; i += 3) {
+            const slide = document.createElement("div");
+            slide.classList.add("trending-slide"); // Each slide contains up to 3 products
+            slide.style.display = "flex"; // Flex container for products
+            slide.style.justifyContent = "space-between"; // Space between products
+    
+            const productGroup = products.slice(i, i + 3); // Get a group of 3 products
+            productGroup.forEach(function (product) {
+                const productElement = document.createElement("div");
+                productElement.classList.add("product");
+                productElement.style.flex = "1"; // Ensure products are evenly spaced
+                productElement.style.margin = "0 10px"; // Add some spacing between products
+    
+                productElement.innerHTML += `
+                    <img src="images/${product.p_image}" alt="${product.product_name}" class="product-image">
+                    <p>${product.product_name}</p>
+                    <p>$${product.price}</p>
+                `;
+                slide.appendChild(productElement);
+            });
+    
+            slidesContainer.appendChild(slide);
+        }
+    
+        initializeSlideNavigation(products.length / 2); // Pass the number of slides
+    }
+    
+    function initializeSlideNavigation(totalSlides) {
+        const slidesContainer = document.querySelector(".trending-slides");
+        if (!slidesContainer) {
+            console.error("Trending slides container not found.");
+            return;
+        }
+    
+        const slideWidth = slidesContainer.offsetWidth / 2; // Assuming 3 slides per view
+        let currentIndex = 0;
+    
+        function updateSlidePosition() {
+            slidesContainer.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+        }
+    
+        document.querySelector(".prev").addEventListener("click", function () {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlidePosition();
+        });
+    
+        document.querySelector(".next").addEventListener("click", function () {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlidePosition();
+        });
+    
+        // Auto-slide every 5 seconds
+        setInterval(function () {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlidePosition();
+        }, 10000);
+    }
+    
+    // Fetch and display trending products on page load
+    document.addEventListener("DOMContentLoaded", fetchTrendingProducts);
     function fetchMessages(senderId, receiverId) {
         fetch(`http://localhost:5001/users/${senderId}/chat/messages?userId2=${receiverId}`)
             .then(response => {
@@ -518,7 +590,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(error => console.error("Error fetching notification count:", error));
         }
-        // ✅ Fetch unread notification count
+        //Fetch unread notification count
         function fetchUnreadCount() {
             fetch(`http://localhost:5001/users/${userId}/notifications/count`)
                 .then(response => response.json())

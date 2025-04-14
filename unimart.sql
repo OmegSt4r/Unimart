@@ -93,6 +93,7 @@ CREATE TABLE `products` (
   `inventory` int NOT NULL DEFAULT 0,
   `p_description` varchar(255) NOT NULL,
   `p_image` varchar(255) DEFAULT NULL,
+  `views` INT DEFAULT 0,
   PRIMARY KEY (`product_id`),
   UNIQUE KEY `product_id_UNIQUE` (`product_id`),
   KEY `product_to_seller_idx` (`seller_id`),
@@ -106,31 +107,37 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants','msu_sweatpants.jpg'),(2,'Backpack',3,20.00,1,'16-inch sport backpack','backpack.jpg'),(3,'Notebook',4,4.99,5,'wide ruled notebook','notebook.jpg'),(4,'Pencils',3,4.00,2,'24-pack #2 pencils','pencils.jpg'),(5,'Laptop',2,84.36,1,'Macbook','laptop.jpg'),(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock','clock_radio.jpg'),(7, 'Surge Protector', 2, 4.99, 50, '8-socket surge protector', 'surge_protector.jpg'),
-(8, 'iPhone Charger', 3, 2.00, 100, 'Lightning to USB charging cord', 'iphone_charger.jpg'),
-(9, 'OU Sweatpants', 4, 20.00, 30, 'OU men\'s sweatpants', 'ou_sweatpants_men.jpg'),
-(10, 'OU Sweatpants', 4, 20.00, 35, 'OU women\'s sweatpants', 'ou_sweatpants_women.jpg'),
-(11, 'UofM Sweatpants', 4, 20.00, 25, 'UofM men\'s sweatpants', 'uofm_sweatpants_men.jpg'),
-(12, 'UofM Sweatpants', 4, 20.00, 25, 'UofM women\'s sweatpants', 'uofm_sweatpants_women.jpg'),
-(13, 'MSU Sweatpants', 4, 20.00, 25, 'MSU men\'s sweatpants', 'msu_sweatpants_men.jpg'),
-(14, 'OU Hoodie', 4, 25.00, 30, 'OU men\'s hoodie', 'ou_hoodie_men.jpg'),
-(15, 'OU Hoodie', 4, 25.00, 34, 'OU women\'s hoodie', 'ou_hoodie_women.jpg'),
-(16, 'UofM Hoodie', 4, 25.00, 25, 'UofM men\'s hoodie', 'uofm_hoodie_men.jpg'),
-(17, 'UofM Hoodie', 4, 25.00, 25, 'UofM women\'s hoodie', 'uofm_hoodie_women.jpg'),
-(18, 'MSU Hoodie', 4, 25.00, 25, 'MSU men\'s hoodie', 'msu_hoodie_men.jpg'),
-(19, 'MSU Hoodie', 4, 25.00, 25, 'MSU women\'s hoodie', 'msu_hoodie_women.jpg'),
-(20, 'Graphing Calculator', 1, 30.00, 15, 'TI-83', 'graphing_calculator.jpg'),
-(21, 'Non-Graphing Calculator', 1, 25.00, 15, 'TI-30Xa', 'non_graphing_calculator.jpg'),
-(22, 'LED strip lights', 3, 5.00, 3, '30-ft LED strip lights with controller', 'led_strip_lights.jpg'),
-(23, 'Dragon Ball Anime Tapestry', 3, 30.00, 1, 'Character design wall tapestry', 'dragon_ball_tapestry.jpg'),
-(24, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Beef Ramen 12-pack', 'ramen_beef.jpg'),
-(25, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Shrimp Ramen 12-pack', 'ramen_shrimp.jpg'),
-(26, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Chicken Ramen 12-pack', 'ramen_chicken.jpg'),
-(27, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Pork Ramen 12-pack', 'ramen_pork.jpg'),
-(28, 'Winter Coat', 1, 10.00, 1, 'Cold-Weather Jacket', 'winter_coat.jpg'),
-(29, 'Water Bottle Case', 2, 7.00, 30, 'Ice Mountain 16.9oz Water Bottle 48-pack', 'water_bottle_case.jpg'),
-(30, 'Phone Case', 1, 20.00, 5, 'Clear iPhone 15 Case', 'phone_case.jpg'),
-(31, 'Pen', 5, 4.00, 34, 'black pen', 'pen.jpg');
+INSERT INTO `products` VALUES (1,'MSU Sweatpants',4,20.00,25,'MSU women\'s sweatpants','msu_sweatpants.jpg',0),
+(2,'Backpack',3,20.00,1,'16-inch sport backpack','backpack.jpg',0),
+(3,'Notebook',4,4.99,5,'wide ruled notebook','notebook.jpg',0),
+(4,'Pencils',3,4.00,2,'24-pack #2 pencils','pencils.jpg',0),
+(5,'Laptop',2,84.36,1,'Macbook','laptop.jpg',0),
+(6,'Clock Radio',1,15.00,3,'AM/FM radio with alarm clock','clock_radio.jpg',0),
+(7, 'Surge Protector', 2, 4.99, 50, '8-socket surge protector', 'surge_protector.jpg',0),
+(8, 'iPhone Charger', 3, 2.00, 100, 'Lightning to USB charging cord', 'iphone_charger.jpg',0),
+(9, 'OU Sweatpants', 4, 20.00, 30, 'OU men\'s sweatpants', 'ou_sweatpants_men.jpg',0),
+(10, 'OU Sweatpants', 4, 20.00, 35, 'OU women\'s sweatpants', 'ou_sweatpants_women.jpg',0),
+(11, 'UofM Sweatpants', 4, 20.00, 25, 'UofM men\'s sweatpants', 'uofm_sweatpants_men.jpg',0),
+(12, 'UofM Sweatpants', 4, 20.00, 25, 'UofM women\'s sweatpants', 'uofm_sweatpants_women.jpg',0),
+(13, 'MSU Sweatpants', 4, 20.00, 25, 'MSU men\'s sweatpants', 'msu_sweatpants_men.jpg',8),
+(14, 'OU Hoodie', 4, 25.00, 30, 'OU men\'s hoodie', 'ou_hoodie_men.jpg',7),
+(15, 'OU Hoodie', 4, 25.00, 34, 'OU women\'s hoodie', 'ou_hoodie_women.jpg',6),
+(16, 'UofM Hoodie', 4, 25.00, 25, 'UofM men\'s hoodie', 'uofm_hoodie_men.jpg',0),
+(17, 'UofM Hoodie', 4, 25.00, 25, 'UofM women\'s hoodie', 'uofm_hoodie_women.jpg',1),
+(18, 'MSU Hoodie', 4, 25.00, 25, 'MSU men\'s hoodie', 'msu_hoodie_men.jpg',2),
+(19, 'MSU Hoodie', 4, 25.00, 25, 'MSU women\'s hoodie', 'msu_hoodie_women.jpg',0),
+(20, 'Graphing Calculator', 1, 30.00, 15, 'TI-83', 'graphing_calculator.jpg',3),
+(21, 'Non-Graphing Calculator', 1, 25.00, 15, 'TI-30Xa', 'non_graphing_calculator.jpg',4),
+(22, 'LED strip lights', 3, 5.00, 3, '30-ft LED strip lights with controller', 'led_strip_lights.jpg',0),
+(23, 'Dragon Ball Anime Tapestry', 3, 30.00, 1, 'Character design wall tapestry', 'dragon_ball_tapestry.jpg',5),
+(24, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Beef Ramen 12-pack', 'ramen_beef.jpg',0),
+(25, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Shrimp Ramen 12-pack', 'ramen_shrimp.jpg',0),
+(26, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Chicken Ramen 12-pack', 'ramen_chicken.jpg',0),
+(27, 'Ramen 12-pack', 2, 3.00, 10, 'Maruchan Pork Ramen 12-pack', 'ramen_pork.jpg',0),
+(28, 'Winter Coat', 1, 10.00, 1, 'Cold-Weather Jacket', 'winter_coat.jpg',0),
+(29, 'Water Bottle Case', 2, 7.00, 30, 'Ice Mountain 16.9oz Water Bottle 48-pack', 'water_bottle_case.jpg',0),
+(30, 'Phone Case', 1, 20.00, 5, 'Clear iPhone 15 Case', 'phone_case.jpg',0),
+(31, 'Pen', 5, 4.00, 34, 'black pen', 'pen.jpg',0);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,6 +349,28 @@ INSERT INTO `user_reviews` VALUES (1,2,'Thank you for your purchase of the Backp
 UNLOCK TABLES;
 
 --
+-- Table structure for table `review_replies`
+--
+
+DROP TABLE IF EXISTS `review_replies`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `review_replies` (
+	`reply_id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `review_id` int NOT NULL,
+	`user_id` int NOT NULL,
+	`reply` TEXT NOT NULL,
+	`created_at` TIMESTAMP DEFAULT current_timestamp,
+     FOREIGN KEY (review_id) REFERENCES user_reviews(review_id) ON DELETE CASCADE, -- Link to user_reviews
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE -- Link to users
+); 
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `review_replies`
+--
+
+--
 -- Table structure for table `users`
 --
 
@@ -408,6 +437,27 @@ CREATE TABLE notifications (
 
 --
 -- Dumping data for table `notifications`
+--
+
+--
+-- Table structure for table `order_items`
+--
+
+DROP TABLE IF EXISTS `order_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE order_items (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_items`
 --
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -1,308 +1,294 @@
-
-html, body {
-    font-family: Arial, sans-serif;
-    height:100%;
-    margin:0;
-    padding:0;
-    background: linear-gradient(to bottom, #777, #E0CDA9);
-   background-attachment: fixed;
-}
-
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: black;
-    color: white;
-    padding: 10px 20px;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-}
-
-.logo img {
-    width: 50px;
-    margin-right: 10px;
-}
-
-.wallet {
-    background: green;
-    padding: 5px 10px;
-    border-radius: 5px;
-}
-
-.user-actions {
-    display: flex;
-    align-items: center;
-}
-
-.user-actions input {
-    padding: 5px;
-    margin-right: 10px;
-}
-
-.logout-btn {
-    background: blue;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-.logout-btn:hover {
-    background: darkblue;
-}
-
-/* Navigation */
-nav {
-    display: flex;
-    width: 100%;  /* Makes nav stretch across the entire page */
-    padding: 10px;
-    flex-wrap: wrap;
-    justify-content: space-between; /* Adjusts spacing */
-
-}
-
-nav a {
-    flex: 1; /* Ensures each link takes equal space */
-    text-decoration: none; /* Removes underline */
-}
-
-nav button {
-    width: 100%; /* Makes button fill the <a> */
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    display: block; /* Ensures button behaves properly inside <a> */
-}
-
-nav button.active {
-    background: blue;
-    color: white;
-}
-nav button:hover {
-    background: darkblue;
-    color:white;
-}
-/* Sidebar */
-aside {
-    width: 200px;
-    position: fixed;
-    top: 155px;
-    left: 0;
-    background: white;
-    padding: 10px;
-    overflow:visible;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Category List */
-aside ul {
-    display:flex;
-    list-style: none;
-    padding: 0px;
-    flex-direction: column;
+body, h1, h2, h3, p, ul, li, a, button, input, textarea, select {
     margin: 0;
-}
-ul button {
-    background:white;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-ul button:hover {
-    background: rgb(0, 0, 180);
-    color:white;
-}
-ul button.active {
-    background: blue;
-    color: white;
-}
-aside li {
-    padding: 8px;
-    cursor: pointer;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
 }
 
-/* Filter Button */
-.filter-container {
-    position: relative;
-    margin-top: auto;
-    text-align: left;
+/* Body Styling */
+body {
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
 }
 
-.filter-btn {
-    
-    padding: 10px;
-    background: blue;
-    color: white;
+
+
+
+header .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+header .user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+header .user-profile button {
+    background-color: #ff4d4d;
+    color: #fff;
     border: none;
-    cursor: pointer;
-    text-align: left;
-}
-.filter-btn:hover {
-    background: darkblue;
-}
-
-.filter-dropdown {
-    display: none;
-    position: absolute;
-    bottom:auto;
-    left: 0;
-    width: 100%;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    
-}
-
-
-.filter-container.active .filter-dropdown {
-    display: block;
-}
-
-
-.filter-dropdown label {
-    display: block;
-    padding: 5px;
-    cursor: pointer;
-}
-.filter-dropdown input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: blue;
-    cursor:pointer;
-}
-
-
-main {
-    margin-top:100px;
-    margin-left: 800px; /* Adjust based on the width of the aside */
-  
-    
-    
-}
-
-.product {
-    background: white;
-    padding: 10px;
+    padding: 8px 12px;
     border-radius: 5px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    
-}
-.cart-icon {
-    
-   padding:10px;
     cursor: pointer;
-    width: 50px;}
-
-.product img {
-    width: 100%;
-    height: auto;
+    font-size: 14px;
 }
-.products{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+
+header .user-profile button:hover {
+    background-color: #e60000;
+}
+
+/* Container Styling */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
     padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.add-cart {
-    background: green;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    margin-top: 5px;
+.container h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    border-bottom: 2px solid #B39A60;
+    padding-bottom: 10px;
 }
-.user-profile {
-    display: flex;
+
+/* Form Styling */
+form { display: flex;
     flex-direction: column;
     align-items: center;
-}
-.autocomplete-suggestions {
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-    background-color: white;
-    position: absolute;
-    z-index: 1000;
+    
 }
 
-.suggestion {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.suggestion:hover {
-    background-color: #f0f0f0;
-}
-.user-profile img {
-    height: 50px;
-    border-radius: 50%;
+form label {
     margin-bottom: 5px;
+    font-weight: bold;
+    color: #1A1A1A;
+    
 }
-.add-box{
-    background: white;
+
+form input, form textarea, form select, form button {
+    margin-bottom: 15px;
     padding: 10px;
-    border-radius: 5px;
-    width: 200px;
-    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    background: #f9f9f9;
+    transition: border-color 0.3s ease;width: 100%;
+    
+}
+
+form input:focus, form textarea:focus, form select:focus {
+    border-color: #B39A60;
+    outline: none;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+form button {
+    background: #1A1A1A;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease; 
+}
+
+form button:hover { 
+    background: #B39A60;
+    color: #1A1A1A;
+    
+}
+.hidden{
+    display: none;
+}
+
+/* Status Message Styling */
+#status-message {
     text-align: center;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-}
-
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-
-    text-align: center;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-label {
+    font-weight: bold;
     margin-top: 10px;
 }
 
-input, select, textarea, button {
-    margin-top: 5px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
+/* Mobile Navbar Styling */
 
-button {
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-    margin-top: 15px;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-.hamburger-menu-content {
-    display: none;
-}
-.mobile-navbar {
-    display: none;
-}
-/* Media query for iPhone X and similar devices */
-/* General Mobile Styles */
-/* General Mobile Styles */
-/* Media query for mobile devices */
+/* Responsive Design */
 @media only screen and (max-width: 768px) {
+    .mobile-navbar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 10px;
+        background-color: #007bff;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-navbar a {
+        text-decoration: none;
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .mobile-navbar img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .mobile-navbar .hamburger-menu img {
+        width: 25px;
+        height: 25px;
+    }
+    
+    /* Hamburger Menu Styling */
+    .hamburger-menu-content {
+        display: none;
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .hamburger-menu-content ul {
+        list-style: none;
+        padding: 10px;
+    }
+    
+    .hamburger-menu-content ul li {
+        margin: 10px 0;
+    }
+    
+    .hamburger-menu-content ul li a {
+        text-decoration: none;
+        color: #333;
+        font-size: 16px;
+    }
+    
+    .hamburger-menu-content ul li a:hover {
+        color: #007bff;
+    }
+    header {
+      padding:20px; /* Reduce padding for smaller screens */
+        flex-direction: row; /* Stack elements vertically */
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
+        margin:0;
+    }
+    .trending-slideshow {
+        border-radius: 0;
+        padding: 10px;
+    }
+ 
+    .trending-slide.active {
+        flex-direction: column; /* Stack products vertically */
+        padding: 10px 0;
+        align-items: center;
+    }
+
+    .trending-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .trending {
+        width: 90%; /* Almost full width on mobile */
+        max-width: 350px;
+    }
+
+    .trending img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .trending-btn {
+        top: auto;
+        bottom: 10px;
+        transform: none;
+        position: static;
+        margin: 10px 5px;
+    }
+
+   
+
+
+    .slideshow-container {
+        height: 200px;
+    }
+
+    .slideshow-controls button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+       gap:5px;
+       justify-content: center;
+      }
+    .search-container {
+        flex-direction: row; /* Stack search bar elements vertically */
+        /* Make elements take full width */
+        /* Add spacing between elements */
+    }
+
+    .search-container input[type="text"] {
+        width: 100%; /* Make the input field take full width */
+    }
+
+   
+
+    .user-actions {
+        display: none; /* Hide user actions in the header on mobile */
+    }
+    html, body {
+       font-family: Arial, sans-serif;  
+       margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-y: hidden;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background: #FFD814;
+        color: black;
+        text-align: center;
+        border-radius: 6px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      }
+      
+      .section {
+        background: white;
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
     /* Hide the Unimart title */
     aside {
         display: none; /* Hide the aside on mobile */
@@ -319,19 +305,7 @@ button:hover {
     }
 
     /* Header adjustments */
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: black;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-    }
-
+    
     /* Keep categories and search bar in the header */
     .categories {
         flex: 1;
@@ -351,13 +325,12 @@ button:hover {
     }
 
     .mobile-navbar {
-       
         justify-content: space-around;
         align-items: center;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: black;
+        background: radial-gradient(circle, #333333 0%, #000000 100%);
         border-top: 1px solid #ddd;
         padding: 10px 0;
         z-index: 1000;
@@ -434,13 +407,39 @@ button:hover {
         background: #f1f1f1;
         border-radius: 5px;
     }
-
-
+.m-hidden{display:none;}
+   
+nav{display:none;}
     /* Adjust main content to avoid overlapping with the navbar */
     main {
+         /* Account for the fixed header */
+        margin-bottom: 60px; /* Account for the fixed mobile-navbar */
         margin-left: 0; /* Remove the left margin when aside is hidden */
         padding: 10px; /* Adjust padding for mobile */
         width: 100%; /* Ensure main takes up the full width */
         box-sizing: border-box;
+       
+    }
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    header .logo img {
+        height: 40px;
+    }
+
+    header .user-profile img {
+        width: 35px;
+        height: 35px;
+    }
+
+    form input, form textarea, form select, form button {
+        font-size: 14px;
     }
 }

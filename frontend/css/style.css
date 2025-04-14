@@ -469,7 +469,7 @@ main {
 }
 
 /* Individual product */
-.trending {
+.trending-slide {
     flex: 1; /* Ensures equal size for all products */
     text-align: center;
    background:linear-gradient( lightblue, #E0CDA9);
@@ -480,7 +480,7 @@ main {
 }
 
 /* Product images */
-.trending img {
+.trending-slide img {
    
     max-width: 300px; /* Prevents it from getting too big */
     
@@ -762,5 +762,92 @@ nav{display:none;}
         width: 100%; /* Ensure main takes up the full width */
         box-sizing: border-box;
        
+    }
+}
+.trending-slides-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+
+
+.trending-slide {
+    flex: 0 0 100%; /* Each slide takes 100% of the container width */
+    display: flex;
+    justify-content: space-between; /* Space between products */
+    align-items: center;
+   
+    text-align: center;
+   background:linear-gradient( lightblue, #E0CDA9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+}
+.trending-slides-wrapper {
+    overflow: hidden;
+    width: 100%;
+}
+
+.trending-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* Smooth sliding transition */
+}
+
+
+
+.trending-slide img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.trending-slide p {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+button.prev, button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+button.prev {
+    left: 10px;
+}
+
+button.next {
+    right: 10px;
+}
+
+button.prev:hover, button.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    .trending-slide {
+        flex: 0 0 50%; /* Each slide takes 50% of the container width on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .trending-slide {
+        flex: 0 0 100%; /* Each slide takes 100% of the container width on very small screens */
+    }
+
+    button.prev, button.next {
+        padding: 5px;
     }
 }

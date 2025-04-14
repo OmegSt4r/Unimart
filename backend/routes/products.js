@@ -147,27 +147,42 @@ router.get("/", (req, res) => {
             }
         });
     });
-    router.get("/products/trending", (req, res) => {
+    router.get("/trending", (req, res) => {
+        const limit = parseInt(req.query.limit, 10) || 9; // Default to 9 products if no limit is provided
         const sql = `
             SELECT 
                 p.product_id, 
-                p.name, 
+                p.product_name, 
                 p.price, 
-                p.image, 
-                SUM(oi.quantity) AS total_purchases
+                p.p_image, 
+                COALESCE(SUM(oi.quantity), 0) AS total_purchases,
+                p.views
             FROM products p
-            JOIN order_items oi ON p.product_id = oi.product_id
+            LEFT JOIN order_items oi ON p.product_id = oi.product_id
             GROUP BY p.product_id
-            ORDER BY total_purchases DESC
-            LIMIT 10
+            ORDER BY total_purchases DESC, p.views DESC
+            LIMIT ?
         `;
     
-        db.query(sql, (err, results) => {
+        db.query(sql, [limit], (err, results) => {
             if (err) {
                 console.error("Error fetching trending products:", err);
                 res.status(500).json({ error: "Database error" });
             } else {
                 res.json(results);
+            }
+        });
+    });
+    router.post("/:productId/view", (req, res) => {
+        const { productId } = req.params;
+        const sql = "UPDATE products SET views = views + 1 WHERE product_id = ?";
+    
+        db.query(sql, [productId], (err, result) => {
+            if (err) {
+                console.error("Error updating product views:", err);
+                res.status(500).json({ error: "Database error" });
+            } else {
+                res.status(200).json({ success: true, message: "Product view updated" });
             }
         });
     });
@@ -191,6 +206,24 @@ router.get("/", (req, res) => {
             if (err) {
                 console.error("Error fetching reviews:", err);
                 return res.status(500).json({ error: "Database error" });
+            }
+    
+            res.json(results);
+        });
+    });
+    router.get("/average-ratings", (req, res) => {
+        const sql = `
+            SELECT p.product_id, p.product_name, 
+                   COALESCE(AVG(ur.rating), 0) AS average_rating
+            FROM products p
+            LEFT JOIN user_reviews ur ON p.product_id = ur.product_id
+            GROUP BY p.product_id
+        `;
+    
+        db.query(sql, (err, results) => {
+            if (err) {
+                console.error("Error fetching average ratings:", err);
+                return res.status(500).json({ error: "Database error while fetching average ratings." });
             }
     
             res.json(results);

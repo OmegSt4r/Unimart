@@ -397,10 +397,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 productElement.style.flex = "1"; // Ensure products are evenly spaced
                 productElement.style.margin = "0 10px"; // Add some spacing between products
     
-                productElement.innerHTML += `
-                    <img src="images/${product.p_image}" alt="${product.product_name}" class="product-image">
+                productElement.innerHTML += `<div class="trending-product">
+                    <img class="trending-product-img" src="images/${product.p_image}" alt="${product.product_name}">
+
                     <p>${product.product_name}</p>
                     <p>$${product.price}</p>
+                    <button class="add-cart" onclick="addToCart(${product.product_id}, '${product.product_name}', ${product.price})">Add to Cart</button>
+                    </div>
+                    
                 `;
                 slide.appendChild(productElement);
             });
@@ -408,7 +412,7 @@ document.addEventListener("DOMContentLoaded", function() {
             slidesContainer.appendChild(slide);
         }
     
-        initializeSlideNavigation(products.length / 2); // Pass the number of slides
+        initializeSlideNavigation(products.length / 3); // Pass the number of slides
     }
     
     function initializeSlideNavigation(totalSlides) {
@@ -418,8 +422,8 @@ document.addEventListener("DOMContentLoaded", function() {
             return;
         }
     
-        const slideWidth = slidesContainer.offsetWidth / 2; // Assuming 3 slides per view
-        let currentIndex = 0;
+        const slideWidth = slidesContainer.parentElement.offsetWidth; // Get the width of the parent container
+    let currentIndex = 0;
     
         function updateSlidePosition() {
             slidesContainer.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
@@ -440,6 +444,9 @@ document.addEventListener("DOMContentLoaded", function() {
             currentIndex = (currentIndex + 1) % totalSlides;
             updateSlidePosition();
         }, 10000);
+        window.addEventListener("resize", function () {
+            updateSlidePosition();
+        });
     }
     
     // Fetch and display trending products on page load
@@ -674,3 +681,24 @@ document.addEventListener("DOMContentLoaded", function() {
             })
             .catch(error => console.error("Error fetching user data:", error));
     });
+    window.alert = function(message) {
+        if (typeof showUniMartToast === "function") {
+          showUniMartToast(message);
+        } else {
+          console.log("Toast fallback:", message);
+        }
+      };
+      function showUniMartToast(message) {
+        const toast = document.getElementById("unimart-toast");
+        const msgSpan = document.getElementById("unimart-toast-message");
+      
+        msgSpan.textContent = message;
+        toast.classList.remove("hidden");
+        toast.classList.add("show");
+      
+        // Hide after 3 seconds
+        setTimeout(() => {
+          toast.classList.remove("show");
+          setTimeout(() => toast.classList.add("hidden"), 300); // for fade-out effect
+        }, 3000);
+      }

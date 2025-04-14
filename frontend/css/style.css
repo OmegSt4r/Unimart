@@ -440,15 +440,7 @@ main {
 }
 
 /* Slide container */
-.trending-slide {
-    display: none;
-    width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    justify-content: center;
-    align-items: center;
-    transition: 1s ease-in-out; /* Fade effect */
-}
+
 
 /* Active slide */
 .trending-slide.active {
@@ -469,15 +461,7 @@ main {
 }
 
 /* Individual product */
-.trending-slide {
-    flex: 1; /* Ensures equal size for all products */
-    text-align: center;
-   background:linear-gradient( lightblue, #E0CDA9);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    justify-content: center;
-}
+
 
 /* Product images */
 .trending-slide img {
@@ -537,42 +521,104 @@ main {
         background: radial-gradient(circle, #333333 0%, #000000 100%);
         margin:0;
     }
-    .trending-slideshow {
-        border-radius: 0;
-        padding: 10px;
-    }
- 
-    .trending-slide.active {
-        flex-direction: column; /* Stack products vertically */
-        padding: 10px 0;
-        align-items: center;
-    }
+    /* Mobile-specific adjustments */
 
-    .trending-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 15px;
+   /* Container for the slideshow */
+.trending-slideshow {
+    padding: 10px;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Slide wrapper stays centered and prevents overflow */
+  .trending-slides-wrapper {
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  /* All the slides in a row (one "slide" = a group of products) */
+  .trending-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  /* Each slide contains a group of products */
+  .trending-slide {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .trending-slide .product {
+    flex: 1;
+    max-width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Individual product inside a slide */
+  .trending-product {
+    flex: 1;
+    max-width: 150px;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .trending-product-img {
+    width: 100%;
+    height: 150px; /* Keep height consistent */
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .trending-product p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* Arrow buttons */
+  button.prev,
+  button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  button.prev:hover,
+  button.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  button.prev {
+    left: 10px;
+  }
+  
+  button.next {
+    right: 10px;
+  }
+  
+  
+    .product-grid {
+      grid-template-columns: 1fr; /* One product per row */
+      justify-items: center;
     }
-
-    .trending {
-        width: 90%; /* Almost full width on mobile */
-        max-width: 350px;
-    }
-
-    .trending img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .trending-btn {
-        top: auto;
-        bottom: 10px;
-        transform: none;
-        position: static;
-        margin: 10px 5px;
-    }
-
-   
+  
+  
+    
+      
 
 
     .slideshow-container {
@@ -598,7 +644,7 @@ main {
     .search-container input[type="text"] {
         width: 100%; /* Make the input field take full width */
     }
-
+    
    
 
     .user-actions {
@@ -768,25 +814,26 @@ nav{display:none;}
     position: relative;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+ 
     overflow: hidden;
+    display: flex;
+ 
 }
 
 
 
 .trending-slide {
-    flex: 0 0 100%; /* Each slide takes 100% of the container width */
+    flex: 0 0 100%;
     display: flex;
-    justify-content: space-between; /* Space between products */
+    justify-content: center; /* centers content horizontally */
     align-items: center;
-   
+    flex-wrap: wrap; /* allows items to wrap on small screens */
     text-align: center;
-   background:linear-gradient( lightblue, #E0CDA9);
+    background: linear-gradient(lightblue, #E0CDA9);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    justify-content: center;
-}
+  }
 .trending-slides-wrapper {
     overflow: hidden;
     width: 100%;
@@ -797,7 +844,9 @@ nav{display:none;}
     transition: transform 0.5s ease-in-out; /* Smooth sliding transition */
 }
 
-
+.trending-slide:hover {
+    transform: scale(1.05);
+}
 
 .trending-slide img {
     width: 100%;
@@ -806,9 +855,10 @@ nav{display:none;}
 }
 
 .trending-slide p {
-    margin-top: 10px;
-    font-size: 16px;
+    margin: 8px 0 4px;
+    font-size: 14px;
     font-weight: bold;
+    color: #333;
 }
 
 button.prev, button.next {
@@ -836,18 +886,31 @@ button.prev:hover, button.next:hover {
 }
 
 /* Responsive Design for Mobile */
-@media (max-width: 768px) {
-    .trending-slide {
-        flex: 0 0 50%; /* Each slide takes 50% of the container width on smaller screens */
-    }
-}
 
-@media (max-width: 480px) {
-    .trending-slide {
-        flex: 0 0 100%; /* Each slide takes 100% of the container width on very small screens */
-    }
-
-    button.prev, button.next {
-        padding: 5px;
-    }
-}
+.unimart-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #fff;
+    color: #222;
+    padding: 16px 20px;
+    border-left: 6px solid #a57c00; /* accent color */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+  }
+  
+  .unimart-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .hidden {
+    display: none;
+  }
+  

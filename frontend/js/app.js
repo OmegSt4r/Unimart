@@ -590,6 +590,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 })
                 .catch(error => console.error("Error fetching notification count:", error));
         }
+        // Fetch unread notification count
         //Fetch unread notification count
         function fetchUnreadCount() {
             fetch(`http://localhost:5001/users/${userId}/notifications/count`)

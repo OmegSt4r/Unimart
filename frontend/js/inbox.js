@@ -151,16 +151,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const notificationBadge = document.getElementById("notification-count");
 
     if (!userId) {
-        console.error("❌ User ID not found in localStorage.");
+        console.error("User ID not found in localStorage.");
         return;
     }
 
-    // ✅ Fetch notifications
+    // Fetch notifications
     function fetchNotifications() {
         fetch(`http://localhost:5001/users/${userId}/notifications`)
             .then(response => response.json())
             .then(notifications => {
-                console.log("📩 Fetched notifications:", notifications);
+                console.log("Fetched notifications:", notifications);
                 notificationsContainer.innerHTML = ""; // Clear old notifications
     
                 const unreadNotifications = notifications.filter(notification => !notification.is_read);
@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     notificationsContainer.appendChild(notificationDiv);
                 });
             })
-            .catch(error => console.error("❌ Error fetching notifications:", error));
+            .catch(error => console.error("Error fetching notifications:", error));
     }
     function updateNotificationBadge() {
         const userId = localStorage.getItem("userId");
@@ -197,14 +197,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     notificationBadge.style.display = data.unread_count > 0 ? "inline-block" : "none";
                 }
             })
-            .catch(error => console.error("❌ Error fetching notification count:", error));
+            .catch(error => console.error("Error fetching notification count:", error));
     }
-    // ✅ Fetch unread notification count
+    // Fetch unread notification count
     function fetchUnreadCount() {
         fetch(`http://localhost:5001/users/${userId}/notifications/count`)
             .then(response => response.json())
             .then(data => {
-                console.log("🔔 Notification count:", data.unread_count);
+                console.log("Notification count:", data.unread_count);
                 if (notificationBadge) {
                     if (data.unread_count > 0) {
                         notificationBadge.textContent = data.unread_count;
@@ -214,10 +214,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             })
-            .catch(error => console.error("❌ Error fetching notification count:", error));
+            .catch(error => console.error("Error fetching notification count:", error));
     }
 
-    // ✅ Mark a notification as read
+    // Mark a notification as read
     notificationsContainer.addEventListener("click", function (event) {
         const notificationItem = event.target.closest(".notification-item");
 
@@ -225,11 +225,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const notificationId = notificationItem.dataset.notificationId;
 
             if (!userId || !notificationId) {
-                console.error("❌ Missing userId or notificationId.");
+                console.error("Missing userId or notificationId.");
                 return;
             }
 
-            console.log(`📩 Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
+            console.log(`Marking notification as read: userId=${userId}, notificationId=${notificationId}`);
 
             fetch(`http://localhost:5001/users/${userId}/notifications/mark-read/${convo.notification_id}`, {
                 method: "POST",
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = `chat.html?receiverId=${convo.other_user_id}`;
             });
     }
-    // ✅ Load notifications and unread count on page load
+    // Load notifications and unread count on page load
     fetchNotifications();
     fetchUnreadCount();
     updateNotificationBadge();

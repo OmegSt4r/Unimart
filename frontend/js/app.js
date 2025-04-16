@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <h1>Welcome to UniMart!</h1>
             <p>Please <a href="login.html">log in</a> to access your account.</p>
         `;
+        fetchProducts(); // Fetch all products if user is not logged in
     }
 });
  // Dropdown category functionality

@@ -1,12 +1,13 @@
 const mysql = require("mysql2");
 require("dotenv").config();
-
+const isProduction = process.env.NODE_ENV === 'production';
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
+  host: isProduction ? process.env.DB_HOST : 'localhost',
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  port: isProduction ? process.env.DB_PORT: 5000,
+  ssl: isProduction ? { rejectUnauthorized: true } : false,
 });
 console.log("Connecting to MySQL with the following details:");
 console.log("Host:", process.env.DB_HOST);
